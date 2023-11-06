@@ -25,6 +25,9 @@ public class User {
 
   private String address;
 
+  @Column(unique = true)
+  private String phoneNumber;
+
   @Enumerated(value = EnumType.STRING)
   private UserRoleEnum role;
 
@@ -32,21 +35,23 @@ public class User {
   @Enumerated(value = EnumType.STRING)
   private OAuthProviderEnum oAuthProvider;
 
-  public User(String username, String password, String nickname, String address, UserRoleEnum role,
+  public User(String username, String password, String nickname, String phoneNumber, UserRoleEnum role,
       OAuthProviderEnum oAuthProvider) {
     this.username = username;
     this.password = password;
     this.nickname = nickname;
-    this.address = address;
+    this.phoneNumber = phoneNumber;
     this.role = role;
     this.oAuthProvider = oAuthProvider;
   }
 
-  public User(String username, String password, String nickname, UserRoleEnum role,
-      OAuthProviderEnum oAuthProvider) {
+  public User(String username, String password, String nickname, String address, String phoneNumber,
+      UserRoleEnum role, OAuthProviderEnum oAuthProvider) {
     this.username = username;
     this.password = password;
     this.nickname = nickname;
+    this.address = address;
+    this.phoneNumber = phoneNumber;
     this.role = role;
     this.oAuthProvider = oAuthProvider;
   }
