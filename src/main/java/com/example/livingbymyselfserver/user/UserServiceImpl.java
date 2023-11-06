@@ -21,15 +21,16 @@ public class UserServiceImpl implements UserService{
   public ApiResponseDto signup(SignupRequestDto dto) {
     String username = dto.getUsername();
     String password = passwordEncoder.encode(dto.getPassword());
+    String phoneNumber =dto.getPhoneNumber();
 
     UserRoleEnum role = UserRoleEnum.MEMBER;
     OAuthProviderEnum oAuthProviderEnum = OAuthProviderEnum.ORIGIN;
 
     // 비밀번호 확인
     if(!passwordEncoder.matches(dto.getPasswordCheck(), password)) {
-      throw  new IllegalArgumentException("비밀번호가 맞지 않습니다.");
+      throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
     }
-    User user = new User(username, password, username, role, oAuthProviderEnum);
+    User user = new User(username, password, username, phoneNumber, role, oAuthProviderEnum);
     userRepository.save(user);
     return new ApiResponseDto("회원가입 성공", 201);
   }
