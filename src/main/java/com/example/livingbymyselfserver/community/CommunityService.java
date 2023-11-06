@@ -10,4 +10,6 @@ public interface CommunityService {
     ApiResponseDto updateCommunity(User user, Long communityId, CommunityRequestDto requestDto);
 
     ApiResponseDto deleteCommunity(User user, Long communityId);
+
+    Community findCommunity(Long id);
 }

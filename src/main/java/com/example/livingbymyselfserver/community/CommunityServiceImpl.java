@@ -44,7 +44,7 @@ public class CommunityServiceImpl implements CommunityService{
         return new ApiResponseDto("커뮤니티 게시글 삭제", 200);
     }
 
-    private Community findCommunity(Long id) {
+    public Community findCommunity(Long id) {
         return communityRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
     }
 
