@@ -2,6 +2,7 @@ package com.example.livingbymyselfserver.fairs;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
+import com.example.livingbymyselfserver.fairs.dto.FairResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +24,11 @@ public class FairController{
 
 
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
+  }
+  @Operation(summary = "공구 게시글 상세조회")
+  @GetMapping("/{fairId}")
+  public FairResponseDto getFair(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long fairId) {
+   return fairService.getFair(userDetails.getUser(), fairId);
   }
   @Operation(summary = "공구 게시글 수정")
   @PutMapping("/{fairId}")

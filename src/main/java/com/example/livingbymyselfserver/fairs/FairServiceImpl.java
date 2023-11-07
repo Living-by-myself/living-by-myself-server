@@ -2,6 +2,7 @@ package com.example.livingbymyselfserver.fairs;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
+import com.example.livingbymyselfserver.fairs.dto.FairResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,12 @@ public class FairServiceImpl implements FairService {
     return new ApiResponseDto("공동구매 게시글 삭제완료", 200);
   }
 
+  @Override
+  public FairResponseDto getFair(User user, Long fairId) {
+    Fair fair = findFair(fairId);
+
+    return new FairResponseDto(fair);
+  }
 
 
   private Fair findFair(Long id) {
