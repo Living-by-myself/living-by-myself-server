@@ -68,4 +68,15 @@ public class Fair {
     this.lng =requestDto.getLng();
     this.host = user;
   }
+  public void updateFair(FairRequestDto requestDto){
+    this.title = requestDto.getTitle();
+    this.description = requestDto.getDescription();
+    this.itemLink = requestDto.getItemLink();
+    this.maxUser = requestDto.getMaxUser();
+    this.perUserPrice = requestDto.getPerUserPrice();
+    this.address = requestDto.getAddress();
+    this.enumShare = requestDto.getEnumShare();
+    this.lat = requestDto.getLat();
+    this.lng =requestDto.getLng();
+  }
 }
