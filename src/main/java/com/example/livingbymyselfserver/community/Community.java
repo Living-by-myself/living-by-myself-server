@@ -1,18 +1,24 @@
 package com.example.livingbymyselfserver.community;
 
+import com.example.livingbymyselfserver.comment.entity.CommnuityComment;
+import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
+import com.example.livingbymyselfserver.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "communities")
 @NoArgsConstructor
 @DynamicUpdate
-public class Community {
+public class Community extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,9 +32,18 @@ public class Community {
     @Enumerated(value = EnumType.STRING)
     private CommunityCategoryEnum category;
 
+    @Column(nullable = false)
+    private int viewCnt = 0;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE)
+    private List<CommunityLike> likeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE)
+    private List<CommnuityComment> commentList = new ArrayList<>();
 
     public void setTitle(String title) {
         this.title = title;

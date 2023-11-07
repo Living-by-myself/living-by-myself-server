@@ -17,10 +17,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 public class CommnuityComment extends Comment {
-
     @ManyToOne
     @JoinColumn(name = "community_id")
     private Community community;
+
     public CommnuityComment(CommentRequestDto requestDto, User user, Community community) {
         super.description = requestDto.getDescription();
         super.user = user;

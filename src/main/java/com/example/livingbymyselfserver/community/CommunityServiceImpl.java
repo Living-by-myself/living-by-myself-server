@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.community;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,13 @@ public class CommunityServiceImpl implements CommunityService{
         communityRepository.delete(community);
 
         return new ApiResponseDto("커뮤니티 게시글 삭제", 200);
+    }
+
+    @Override
+    public CommunityDetailResponseDto getCommunityDetailInfo(Long communityId) {
+        Community community = findCommunity(communityId);
+
+        return new CommunityDetailResponseDto(community);
     }
 
     public Community findCommunity(Long id) {
