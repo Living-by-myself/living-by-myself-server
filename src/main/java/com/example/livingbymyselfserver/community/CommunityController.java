@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.community;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/home/communities")
 public class CommunityController {
     private final CommunityService communityService;
+
+    @GetMapping("/{communityId}")
+    public ResponseEntity<CommunityDetailResponseDto> getCommunityDetailInfo(@PathVariable Long communityId) {
+        CommunityDetailResponseDto result = communityService.getCommunityDetailInfo(communityId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponseDto> createCommunity(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CommunityRequestDto requestDto) {
