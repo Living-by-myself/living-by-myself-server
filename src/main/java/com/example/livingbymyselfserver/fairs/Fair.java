@@ -1,20 +1,15 @@
 package com.example.livingbymyselfserver.fairs;
 
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
+import com.example.livingbymyselfserver.like.entity.FairLikePick;
 import com.example.livingbymyselfserver.user.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -52,6 +47,10 @@ public class Fair {
 
   @Column(nullable = false)
   private double lng;   //구매자 설정 경도
+
+  @OneToMany(mappedBy = "fair", cascade = CascadeType.REMOVE)
+  private List<FairLikePick> likePickList = new ArrayList<>();
+
 
   @ManyToOne
   @JoinColumn(name = "user_id")
