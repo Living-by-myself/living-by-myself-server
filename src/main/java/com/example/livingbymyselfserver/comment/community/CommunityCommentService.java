@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.comment.community;
 
 import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
+import com.example.livingbymyselfserver.comment.entity.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
 
@@ -10,4 +11,6 @@ public interface CommunityCommentService {
     ApiResponseDto updateCommunityComment(User user, Long commentId, CommentRequestDto requestDto);
 
     ApiResponseDto deleteCommunityComment(User user, Long commentId);
+
+    CommunityComment findCommunityComment(Long commentId);
 }
