@@ -1,6 +1,5 @@
-package com.example.livingbymyselfserver.comment.entity;
+package com.example.livingbymyselfserver.like.entity;
 
-import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.Entity;
@@ -13,16 +12,15 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@Table(name = "community_comments")
+@Table(name = "community_likes")
 @DynamicUpdate
 @NoArgsConstructor
-public class CommnuityComment extends Comment {
+public class CommunityLike extends Like {
     @ManyToOne
     @JoinColumn(name = "community_id")
     private Community community;
 
-    public CommnuityComment(CommentRequestDto requestDto, User user, Community community) {
-        super.description = requestDto.getDescription();
+    public CommunityLike(User user, Community community) {
         super.user = user;
         this.community = community;
     }
