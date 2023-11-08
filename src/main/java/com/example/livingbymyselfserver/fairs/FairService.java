@@ -16,4 +16,6 @@ public interface FairService {
   ApiResponseDto applicationFair(User user, Long fairId);
 
   ApiResponseDto applicationDeleteFair(User user, Long fairId);
+
+  ApiResponseDto closeFair(Long fairId, User user);
 }

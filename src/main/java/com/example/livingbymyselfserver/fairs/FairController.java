@@ -31,7 +31,7 @@ public class FairController{
     ApiResponseDto result = fairService.applicationFair(userDetails.getUser(),fairId);
 
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
   @Operation(summary = "공구 지원 취소")
   @DeleteMapping("/{fairId}/application")
@@ -39,7 +39,7 @@ public class FairController{
     ApiResponseDto result = fairService.applicationDeleteFair(userDetails.getUser(),fairId);
 
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{fairId}")
@@ -59,6 +59,14 @@ public class FairController{
     ApiResponseDto result = fairService.deleteFair(fairId, userDetails.getUser());
 
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
+  @Operation(summary = "공구 마감")
+  @PutMapping("/{fairId}/close")   //공구 마감
+  public ResponseEntity<ApiResponseDto> closeFair(@PathVariable Long fairId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    ApiResponseDto result = fairService.closeFair(fairId, userDetails.getUser());
+
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 }

@@ -14,7 +14,9 @@ public class FairResponseDto {
     //MultipartFile multipartFile;
     Integer perUserPrice;
     FairShareEnum enumShare;
+    int viewCnt;
     String address;
+    String beobJeongDong;
     double lat;
     double lng;
     public FairResponseDto(Fair fair){
@@ -25,6 +27,8 @@ public class FairResponseDto {
         this.perUserPrice = fair.getPerUserPrice();
         this.address = fair.getAddress();
         this.enumShare = fair.getEnumShare();
+        this.viewCnt = fair.getViewCnt();
+        this.beobJeongDong = fair.getBeobJeongDong();
         this.lat = fair.getLat();
         this.lng =fair.getLng();
     }

@@ -12,6 +12,7 @@ public class FairRequestDto {
   Integer perUserPrice;
   FairShareEnum enumShare;
   String address;
+  String beobJeongDong;
   double lat;
   double lng;
 }

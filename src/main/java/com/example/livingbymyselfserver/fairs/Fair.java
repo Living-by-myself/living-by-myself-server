@@ -40,8 +40,17 @@ public class Fair {
   @Enumerated(value = EnumType.STRING)
   private FairShareEnum enumShare;  //나눔인지 공동구매인지
 
+  @Enumerated(value = EnumType.STRING)
+  private FairStatusEnum enumStatus;  //마감상태
+
+  @Column(nullable = false)
+  private int viewCnt = 0;
+
   @Column(nullable = false)
   private String address; //주소
+
+  @Column(nullable = false)
+  private String beobJeongDong; //주소
 
   @Column(nullable = false)
   private double lat;   //구매자 설정 위도
@@ -55,10 +64,13 @@ public class Fair {
   @OneToMany(mappedBy = "fair", cascade = CascadeType.REMOVE)
   private List<ApplicationUsers> appUsers = new ArrayList<>();
 
-
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User host;
+
+  public void setStatus(FairStatusEnum fairStatusEnum){
+    this.enumStatus = fairStatusEnum;
+  }
   public Fair(FairRequestDto requestDto,User user){
     this.title = requestDto.getTitle();
     this.description = requestDto.getDescription();
@@ -66,7 +78,9 @@ public class Fair {
     this.maxUser = requestDto.getMaxUser();
     this.perUserPrice = requestDto.getPerUserPrice();
     this.address = requestDto.getAddress();
+    this.beobJeongDong = requestDto.getBeobJeongDong();
     this.enumShare = requestDto.getEnumShare();
+    this.enumStatus = FairStatusEnum.ONGOING;
     this.lat = requestDto.getLat();
     this.lng =requestDto.getLng();
     this.host = user;
@@ -78,6 +92,7 @@ public class Fair {
     this.maxUser = requestDto.getMaxUser();
     this.perUserPrice = requestDto.getPerUserPrice();
     this.address = requestDto.getAddress();
+    this.beobJeongDong = requestDto.getBeobJeongDong();
     this.enumShare = requestDto.getEnumShare();
     this.lat = requestDto.getLat();
     this.lng =requestDto.getLng();

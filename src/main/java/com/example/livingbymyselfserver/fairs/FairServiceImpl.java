@@ -1,12 +1,10 @@
 package com.example.livingbymyselfserver.fairs;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
-import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.fairs.application.ApplicationUsers;
 import com.example.livingbymyselfserver.fairs.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
 import com.example.livingbymyselfserver.fairs.dto.FairResponseDto;
-import com.example.livingbymyselfserver.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +38,8 @@ public class FairServiceImpl implements FairService {
     fairUserVerification(fair,user);
     fairRepository.delete(fair);
 
+    fair.setStatus(FairStatusEnum.DEADLINE);  //공고 마감공고로 상태 변경
+
     return new ApiResponseDto("공동구매 게시글 삭제완료", 200);
   }
 
@@ -57,6 +57,8 @@ public class FairServiceImpl implements FairService {
     Fair fair = findFair(fairId);
     if(applicationUsersRepository.existsByFairAndUser(fair, user))
       throw new IllegalArgumentException("이미 신청한 공고입니다.");
+    if(fair.getEnumStatus() == FairStatusEnum.DEADLINE)
+      throw new IllegalArgumentException("마감된 공고입니다.");
     //유저에 캐쉬 추가한 뒤 캐쉬 확인 차감작업
 //    if(user.getCash()<fair.getPerUserPrice()){
 //      throw new IllegalArgumentException("캐쉬가 부족합니다. 충전해주세요!");
@@ -86,6 +88,18 @@ public class FairServiceImpl implements FairService {
     applicationUsersRepository.delete(applicationUsers);
 
     return new ApiResponseDto("공고 지원 취소", 200);
+  }
+
+  @Override
+  @Transactional
+  public ApiResponseDto closeFair(Long fairId, User user) {
+    Fair fair = findFair(fairId);
+
+    fairUserVerification(fair,user);
+
+    fair.setStatus(FairStatusEnum.DEADLINE);
+
+    return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
   }
 
 
