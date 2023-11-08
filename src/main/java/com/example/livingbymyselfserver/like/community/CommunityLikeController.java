@@ -27,4 +27,18 @@ public class CommunityLikeController {
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
+    @PostMapping("/comment/{commentId}/like")
+    public ResponseEntity<ApiResponseDto> createCommunityCommentLike(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId) {
+        ApiResponseDto result = communityLikeService.createCommunityCommentLike(userDetails.getUser(), commentId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @DeleteMapping("/comment/{commentId}/like")
+    public ResponseEntity<ApiResponseDto> deleteCommunityCommentLike(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId) {
+        ApiResponseDto result = communityLikeService.deleteCommunityCommentLike(userDetails.getUser(), commentId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 }
