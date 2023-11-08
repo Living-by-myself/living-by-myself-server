@@ -1,5 +1,6 @@
 package com.example.livingbymyselfserver.fairs;
 
+import com.example.livingbymyselfserver.fairs.application.ApplicationUsers;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
 import com.example.livingbymyselfserver.like.entity.FairLikePick;
 import com.example.livingbymyselfserver.user.User;
@@ -50,6 +51,9 @@ public class Fair {
 
   @OneToMany(mappedBy = "fair", cascade = CascadeType.REMOVE)
   private List<FairLikePick> likePickList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "fair", cascade = CascadeType.REMOVE)
+  private List<ApplicationUsers> appUsers = new ArrayList<>();
 
 
   @ManyToOne

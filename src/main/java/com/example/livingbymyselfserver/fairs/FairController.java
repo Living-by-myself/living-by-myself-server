@@ -25,6 +25,22 @@ public class FairController{
 
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
+  @Operation(summary = "공구 신청")
+  @PostMapping("/{fairId}/application")
+  public ResponseEntity<ApiResponseDto> applicationFair(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long fairId) {
+    ApiResponseDto result = fairService.applicationFair(userDetails.getUser(),fairId);
+
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+  }
+  @Operation(summary = "공구 지원 취소")
+  @DeleteMapping("/{fairId}/application")
+  public ResponseEntity<ApiResponseDto> applicationDeleteFair(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long fairId) {
+    ApiResponseDto result = fairService.applicationDeleteFair(userDetails.getUser(),fairId);
+
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+  }
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{fairId}")
   public FairResponseDto getFair(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long fairId) {
