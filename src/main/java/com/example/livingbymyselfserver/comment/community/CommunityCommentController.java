@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.comment.community;
 
 import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
+import com.example.livingbymyselfserver.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +10,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/home/community")
 @RequiredArgsConstructor
 public class CommunityCommentController {
     private final CommunityCommentService communityCommentService;
+
+    @GetMapping("/{communityId}/comments")
+    public ResponseEntity<List<CommunityCommentResponseDto>> getCommunityComments(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long communityId){
+        List<CommunityCommentResponseDto> result = communityCommentService.getCommunityComments(communityId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
     @PostMapping("/{communityId}/comments")
     public ResponseEntity<ApiResponseDto> createCommunityComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
