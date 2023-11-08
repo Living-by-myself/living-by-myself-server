@@ -5,6 +5,7 @@ import com.example.livingbymyselfserver.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.comment.entity.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface CommunityCommentService {
 
     CommunityComment findCommunityComment(Long commentId);
 
-    List<CommunityCommentResponseDto> getCommunityComments(Long communityId);
+    List<CommunityCommentResponseDto> getCommunityComments(Long communityId, Pageable pageable);
 }

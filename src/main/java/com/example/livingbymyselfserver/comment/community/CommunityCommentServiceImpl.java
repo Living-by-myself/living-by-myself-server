@@ -8,6 +8,7 @@ import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +22,9 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
     private final CommunityCommentRepository communityCommentRepository;
 
     @Override
-    public List<CommunityCommentResponseDto> getCommunityComments(Long communityId) {
+    public List<CommunityCommentResponseDto> getCommunityComments(Long communityId, Pageable pageable) {
         Community community = communityService.findCommunity(communityId);
-        return communityCommentRepository.findByCommunity(community)
+        return communityCommentRepository.findByCommunityOrderByCreatedAtDesc(community,pageable)
                 .stream()
                 .map(CommunityCommentResponseDto::new)
                 .collect(Collectors.toList());

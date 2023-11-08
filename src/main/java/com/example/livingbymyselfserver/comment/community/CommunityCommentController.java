@@ -5,6 +5,7 @@ import com.example.livingbymyselfserver.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,8 +22,9 @@ public class CommunityCommentController {
     @GetMapping("/{communityId}/comments")
     public ResponseEntity<List<CommunityCommentResponseDto>> getCommunityComments(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long communityId){
-        List<CommunityCommentResponseDto> result = communityCommentService.getCommunityComments(communityId);
+            @PathVariable Long communityId,
+            Pageable pageable){
+        List<CommunityCommentResponseDto> result = communityCommentService.getCommunityComments(communityId, pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
