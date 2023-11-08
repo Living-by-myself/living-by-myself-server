@@ -16,12 +16,12 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "community_comments")
 @DynamicUpdate
 @NoArgsConstructor
-public class CommnuityComment extends Comment {
+public class CommunityComment extends Comment {
     @ManyToOne
     @JoinColumn(name = "community_id")
     private Community community;
 
-    public CommnuityComment(CommentRequestDto requestDto, User user, Community community) {
+    public CommunityComment(CommentRequestDto requestDto, User user, Community community) {
         super.description = requestDto.getDescription();
         super.user = user;
         this.community = community;

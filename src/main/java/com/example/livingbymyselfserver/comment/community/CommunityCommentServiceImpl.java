@@ -1,7 +1,7 @@
 package com.example.livingbymyselfserver.comment.community;
 
 import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
-import com.example.livingbymyselfserver.comment.entity.CommnuityComment;
+import com.example.livingbymyselfserver.comment.entity.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
@@ -19,7 +19,7 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
     public ApiResponseDto createCommunityComment(User user, Long communityId, CommentRequestDto requestDto) {
         Community community = communityService.findCommunity(communityId);
 
-        CommnuityComment comment = new CommnuityComment(requestDto, user, community);
+        CommunityComment comment = new CommunityComment(requestDto, user, community);
 
         communityCommentRepository.save(comment);
 
@@ -29,7 +29,7 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
     @Override
     @Transactional
     public ApiResponseDto updateCommunityComment(User user, Long commentId, CommentRequestDto requestDto) {
-        CommnuityComment comment = findCommunityComment(commentId);
+        CommunityComment comment = findCommunityComment(commentId);
         comment.setDescription(requestDto.getDescription());
 
         communityCommentUserVerification(comment, user);
@@ -40,18 +40,18 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
     @Override
     @Transactional
     public ApiResponseDto deleteCommunityComment(User user, Long commentId) {
-        CommnuityComment comment = findCommunityComment(commentId);
+        CommunityComment comment = findCommunityComment(commentId);
         communityCommentUserVerification(comment, user);
 
         communityCommentRepository.delete(comment);
         return new ApiResponseDto("댓글 삭제 성공", 200);
     }
 
-    private CommnuityComment findCommunityComment(Long id) {
+    public CommunityComment findCommunityComment(Long id) {
         return communityCommentRepository.findById(id).orElseThrow(()->new IllegalArgumentException("댓글이 존재하지 않습니다."));
     }
 
-    private void communityCommentUserVerification(CommnuityComment comment, User user) {
+    private void communityCommentUserVerification(CommunityComment comment, User user) {
         if(!comment.getUser().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("댓글을 작성한 유저가 아닙니다");
         }

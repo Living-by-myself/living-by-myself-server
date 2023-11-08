@@ -1,6 +1,6 @@
 package com.example.livingbymyselfserver.community;
 
-import com.example.livingbymyselfserver.comment.entity.CommnuityComment;
+import com.example.livingbymyselfserver.comment.entity.CommunityComment;
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.like.entity.CommunityLike;
@@ -43,7 +43,7 @@ public class Community extends TimeStamped {
     private List<CommunityLike> likeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE)
-    private List<CommnuityComment> commentList = new ArrayList<>();
+    private List<CommunityComment> commentList = new ArrayList<>();
 
     public void setTitle(String title) {
         this.title = title;
