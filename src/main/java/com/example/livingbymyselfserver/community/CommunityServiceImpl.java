@@ -49,30 +49,7 @@ public class CommunityServiceImpl implements CommunityService{
         communityUserVerification(community, user);
 
         if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
-            AttachmentCommunityUrl attachmentUrl = attachmentCommunityUrlRepository.findByCommunity(community);
-            if (attachmentUrl != null) {
-
-                String[] fileList = attachmentUrl.getFileName().split(",");
-
-                for (String file : fileList) {
-                    s3Service.deleteFile(file);
-                }
-                attachmentUrl.setFileName("");
-
-                if ((multipartFiles.length) > 5) {
-                    throw new IllegalArgumentException("사진의 최대개수는 5개 입니다.");
-                }
-                List<String> uploadFileNames = s3Service.uploadFiles(multipartFiles);
-                String combineUploadFileName = s3Service.CombineString(uploadFileNames);
-
-                String replaceUploadFileName = combineUploadFileName.replaceFirst("^,", "");
-                String result = (replaceUploadFileName).replaceFirst("^,",
-                        "");
-
-                attachmentUrl.setFileName(result);
-            } else {
-                uploadImage(multipartFiles, community);
-            }
+            updateS3Image(community, multipartFiles);
         }
 
         community.setTitle(communityRequestDto.getTitle());
@@ -80,6 +57,33 @@ public class CommunityServiceImpl implements CommunityService{
         community.setCategory(communityRequestDto.getCategory());
 
         return new ApiResponseDto("커뮤니티 게시글 수정 완료", 200);
+    }
+
+    private void updateS3Image(Community community,  MultipartFile[] multipartFiles) {
+        AttachmentCommunityUrl attachmentUrl = attachmentCommunityUrlRepository.findByCommunity(community);
+
+        if (attachmentUrl != null) {
+            String[] fileList = attachmentUrl.getFileName().split(",");
+
+            for (String file : fileList) {
+                s3Service.deleteFile(file);
+            }
+            attachmentUrl.setFileName("");
+
+            if ((multipartFiles.length) > 5) {
+                throw new IllegalArgumentException("사진의 최대개수는 5개 입니다.");
+            }
+            List<String> uploadFileNames = s3Service.uploadFiles(multipartFiles);
+            String combineUploadFileName = s3Service.CombineString(uploadFileNames);
+
+            String replaceUploadFileName = combineUploadFileName.replaceFirst("^,", "");
+            String result = (replaceUploadFileName).replaceFirst("^,",
+                    "");
+
+            attachmentUrl.setFileName(result);
+        } else {
+            uploadImage(multipartFiles, community);
+        }
     }
 
     @Override

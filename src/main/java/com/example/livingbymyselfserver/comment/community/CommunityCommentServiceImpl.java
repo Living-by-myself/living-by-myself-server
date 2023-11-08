@@ -1,20 +1,35 @@
 package com.example.livingbymyselfserver.comment.community;
 
 import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
+import com.example.livingbymyselfserver.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.comment.entity.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CommunityCommentServiceImpl implements CommunityCommentService {
     private final CommunityService communityService;
     private final CommunityCommentRepository communityCommentRepository;
+
+    @Override
+    public List<CommunityCommentResponseDto> getCommunityComments(Long communityId, Pageable pageable) {
+        Community community = communityService.findCommunity(communityId);
+        return communityCommentRepository.findByCommunityOrderByCreatedAtDesc(community,pageable)
+                .stream()
+                .map(CommunityCommentResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public ApiResponseDto createCommunityComment(User user, Long communityId, CommentRequestDto requestDto) {
         Community community = communityService.findCommunity(communityId);
