@@ -1,5 +1,6 @@
 package com.example.livingbymyselfserver.fairs;
 
+import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.fairs.application.ApplicationUsers;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
 import com.example.livingbymyselfserver.like.entity.FairLikePick;
@@ -17,7 +18,7 @@ import java.util.List;
 @Table(name = "fair")
 @NoArgsConstructor
 @DynamicUpdate
-public class Fair {
+public class Fair extends TimeStamped {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -42,6 +43,9 @@ public class Fair {
 
   @Enumerated(value = EnumType.STRING)
   private FairStatusEnum enumStatus;  //마감상태
+
+  @Enumerated(value = EnumType.STRING)
+  private FairCategoryEnum enumCategory;  //카테고리
 
   @Column(nullable = false)
   private int viewCnt = 0;
@@ -81,6 +85,7 @@ public class Fair {
     this.beobJeongDong = requestDto.getBeobJeongDong();
     this.enumShare = requestDto.getEnumShare();
     this.enumStatus = FairStatusEnum.ONGOING;
+    this.enumCategory = requestDto.getEnumCategory();
     this.lat = requestDto.getLat();
     this.lng =requestDto.getLng();
     this.host = user;
@@ -94,6 +99,7 @@ public class Fair {
     this.address = requestDto.getAddress();
     this.beobJeongDong = requestDto.getBeobJeongDong();
     this.enumShare = requestDto.getEnumShare();
+    this.enumCategory = requestDto.getEnumCategory();
     this.lat = requestDto.getLat();
     this.lng =requestDto.getLng();
   }

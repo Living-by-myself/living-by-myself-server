@@ -24,6 +24,7 @@ public class FairResponseDto {
         this.description = fair.getDescription();
         this.itemLink = fair.getItemLink();
         this.maxUser = fair.getMaxUser();
+        this.current_user_count = fair.getAppUsers().size();
         this.perUserPrice = fair.getPerUserPrice();
         this.address = fair.getAddress();
         this.enumShare = fair.getEnumShare();

@@ -1,12 +1,15 @@
 package com.example.livingbymyselfserver.fairs;
 
+import com.example.livingbymyselfserver.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
 import com.example.livingbymyselfserver.fairs.dto.FairResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/home/fairs")
 public class FairController{
   final private FairService fairService;
+  @Operation(summary = "공구 게시글 전체 조회")
+  @GetMapping
+  public ResponseEntity<List<FairResponseDto>> getCommunityComments(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      Pageable pageable){
+    List<FairResponseDto> result = fairService.getFairs(userDetails.getUser(),pageable);
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
   @Operation(summary = "공구 게시글 등록")
   @PostMapping
   public ResponseEntity<ApiResponseDto> createFair(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody FairRequestDto requestDto) {

@@ -1,12 +1,17 @@
 package com.example.livingbymyselfserver.fairs;
 
+import com.example.livingbymyselfserver.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.fairs.application.ApplicationUsers;
 import com.example.livingbymyselfserver.fairs.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.fairs.dto.FairRequestDto;
 import com.example.livingbymyselfserver.fairs.dto.FairResponseDto;
 import com.example.livingbymyselfserver.user.User;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,6 +105,15 @@ public class FairServiceImpl implements FairService {
     fair.setStatus(FairStatusEnum.DEADLINE);
 
     return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
+  }
+
+  @Override
+  public List<FairResponseDto> getFairs(User user, Pageable pageable) {
+
+    return fairRepository.findAll(pageable)
+        .stream()
+        .map(FairResponseDto::new)
+        .collect(Collectors.toList());
   }
 
 

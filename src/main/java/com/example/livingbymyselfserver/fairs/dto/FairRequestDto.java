@@ -1,5 +1,6 @@
 package com.example.livingbymyselfserver.fairs.dto;
 
+import com.example.livingbymyselfserver.fairs.FairCategoryEnum;
 import com.example.livingbymyselfserver.fairs.FairShareEnum;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ public class FairRequestDto {
   Integer maxUser;
   Integer perUserPrice;
   FairShareEnum enumShare;
+  FairCategoryEnum enumCategory;
   String address;
   String beobJeongDong;
   double lat;
