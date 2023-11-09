@@ -24,13 +24,9 @@ import org.springframework.util.StringUtils;
 
 @Slf4j(topic = "JwtUtil")
 @Component
-
+@RequiredArgsConstructor
 public class JwtUtil {
   private final RedisUtil redisUtil;
-
-  public JwtUtil(RedisUtil redisUtil) {
-    this.redisUtil = redisUtil;
-  }
 
   // Header KEY 값
   public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -41,7 +37,7 @@ public class JwtUtil {
 
   // 토큰 만료시간
   public static final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
-  private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+  public static final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
   @Value("${jwt.secret.key}") // Base64 Encoded SecretKey
   private String secretKey;
