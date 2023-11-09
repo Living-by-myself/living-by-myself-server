@@ -1,6 +1,6 @@
 package com.example.livingbymyselfserver.fairs;
 
-public enum FairStatusEnum {
+public enum GroupBuyingStatusEnum {
   ONGOING,
   DEADLINE,
 }

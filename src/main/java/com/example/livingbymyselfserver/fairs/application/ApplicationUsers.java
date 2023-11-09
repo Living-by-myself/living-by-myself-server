@@ -1,6 +1,6 @@
 package com.example.livingbymyselfserver.fairs.application;
 
-import com.example.livingbymyselfserver.fairs.Fair;
+import com.example.livingbymyselfserver.fairs.GroupBuying;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -18,11 +18,11 @@ public class ApplicationUsers {
     protected User user;
 
     @ManyToOne
-    @JoinColumn(name = "fairs_id")
-    protected Fair fair;
+    @JoinColumn(name = "group_buying_id")
+    protected GroupBuying groupBuying;
 
-    public ApplicationUsers(User user,Fair fair){
+    public ApplicationUsers(User user, GroupBuying groupBuying){
         this.user = user;
-        this.fair = fair;
+        this.groupBuying = groupBuying;
     }
 }
