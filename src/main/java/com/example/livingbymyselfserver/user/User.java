@@ -35,6 +35,8 @@ public class User {
   @Enumerated(value = EnumType.STRING)
   private OAuthProviderEnum oAuthProvider;
 
+  private Long cash;
+
   public User(String username, String password, String nickname, String phoneNumber, UserRoleEnum role,
       OAuthProviderEnum oAuthProvider) {
     this.username = username;
@@ -46,7 +48,7 @@ public class User {
   }
 
   public User(String username, String password, String nickname, String address, String phoneNumber,
-      UserRoleEnum role, OAuthProviderEnum oAuthProvider) {
+      UserRoleEnum role, OAuthProviderEnum oAuthProvider, Long cash) {
     this.username = username;
     this.password = password;
     this.nickname = nickname;
@@ -54,6 +56,7 @@ public class User {
     this.phoneNumber = phoneNumber;
     this.role = role;
     this.oAuthProvider = oAuthProvider;
+    this.cash = cash;
   }
 
   public void setPassword(String password) {
@@ -70,6 +73,10 @@ public class User {
 
   public void setRole(UserRoleEnum role) {
     this.role = role;
+  }
+
+  public void setCash(Long cash) {
+    this.cash = cash;
   }
 
   public void setoAuthProvider(OAuthProviderEnum oAuthProvider) {
