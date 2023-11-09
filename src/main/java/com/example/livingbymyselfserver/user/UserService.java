@@ -15,4 +15,6 @@ public interface UserService {
   TokenResponseDto reissue(User user, HttpServletRequest request);
 
   User findUser(String username);
+
+  ApiResponseDto logout(User user, HttpServletRequest request);
 }

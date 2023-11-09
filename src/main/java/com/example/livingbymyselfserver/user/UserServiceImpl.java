@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +63,26 @@ public class UserServiceImpl implements UserService{
   public TokenResponseDto reissue(User user, HttpServletRequest request) {
     String newArk = jwtUtil.createToken(user.getUsername(), user.getRole());
     return new TokenResponseDto(newArk, null);
+  }
+
+  @Override
+  @Transactional
+  public ApiResponseDto logout(User user, HttpServletRequest request) {
+    String atk = jwtUtil.resolveToken(request);
+    String username = user.getUsername();
+
+    if(!redisUtil.hasKey(username)) { // key가 username인 refreshToken의 존재유무 검사
+      throw  new IllegalArgumentException("username을 key값으로 가지는 refreshToken이 존재하지 않습니다.");
+    }
+
+    // Redis에서 RefreshToken 삭제
+    redisUtil.delete(username);
+
+    // AccessToken 유효시간 가지고 오기 및 BlackList에 저장
+    Long expiration = jwtUtil.expireTime(atk);
+    redisUtil.setBlackList(atk, expiration);
+
+    return new ApiResponseDto("로그아웃 완료", 200);
   }
 
   @Override
