@@ -34,6 +34,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.error("Token Error");
         return;
       }
+      if(request.getRequestURI().equals("/home/users/reissue")) {
+        String username = jwtUtil.getUsernameFromToken(token);
+        if(!jwtUtil.checkRefreshToken(username, token)) return;
+      }
       Claims info = jwtUtil.getUserInfoFromToken(token);
       setAuthentication(info.getSubject());
     }
