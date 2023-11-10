@@ -1,6 +1,6 @@
-package com.example.livingbymyselfserver.like.fair;
+package com.example.livingbymyselfserver.like.groupBuying;
 
-import com.example.livingbymyselfserver.fairs.GroupBuying;
+import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.like.entity.GroupBuyingPickLike;
 import com.example.livingbymyselfserver.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

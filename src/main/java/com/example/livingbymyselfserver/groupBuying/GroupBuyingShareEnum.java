@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 public enum GroupBuyingShareEnum {
   SHARE, //나눔

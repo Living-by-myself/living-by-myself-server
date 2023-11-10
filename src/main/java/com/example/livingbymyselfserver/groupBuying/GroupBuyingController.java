@@ -1,8 +1,8 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingRequestDto;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -78,7 +78,7 @@ public class GroupBuyingController {
   }
 
   @Operation(summary = "공구 마감")
-  @PutMapping("/{groupBuyingId}/close")   //공구 마감
+  @PatchMapping("/{groupBuyingId}/close")   //공구 마감
   public ResponseEntity<ApiResponseDto> closeGroupBuying(@PathVariable Long groupBuyingId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
     ApiResponseDto result = groupBuyingService.closeGroupBuying(groupBuyingId, userDetails.getUser());
 

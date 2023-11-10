@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 public enum GroupBuyingCategoryEnum {
   LIFE, // 생활/잡화

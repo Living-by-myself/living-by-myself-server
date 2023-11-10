@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.like.fair;
+package com.example.livingbymyselfserver.like.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;

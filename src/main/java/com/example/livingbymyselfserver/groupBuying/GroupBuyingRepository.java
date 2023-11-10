@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

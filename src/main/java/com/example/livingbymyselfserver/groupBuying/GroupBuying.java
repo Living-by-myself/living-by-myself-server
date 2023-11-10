@@ -1,8 +1,8 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
-import com.example.livingbymyselfserver.fairs.application.ApplicationUsers;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.like.entity.GroupBuyingPickLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;

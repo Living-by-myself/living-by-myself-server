@@ -6,6 +6,7 @@ import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;

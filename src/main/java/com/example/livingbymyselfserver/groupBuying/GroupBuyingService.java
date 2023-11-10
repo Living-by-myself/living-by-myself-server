@@ -1,8 +1,8 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingRequestDto;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import java.util.List;
 import org.springframework.data.domain.Pageable;

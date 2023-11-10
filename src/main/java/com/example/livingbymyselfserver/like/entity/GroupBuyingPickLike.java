@@ -1,7 +1,7 @@
 package com.example.livingbymyselfserver.like.entity;
 
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
-import com.example.livingbymyselfserver.fairs.GroupBuying;
+import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,10 +1,10 @@
-package com.example.livingbymyselfserver.fairs;
+package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
-import com.example.livingbymyselfserver.fairs.application.ApplicationUsers;
-import com.example.livingbymyselfserver.fairs.application.ApplicationUsersRepository;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingRequestDto;
-import com.example.livingbymyselfserver.fairs.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
+import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,23 +62,24 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   public ApiResponseDto createApplication(User user, Long groupBuyingId) {
 
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
-    if(applicationUsersRepository.existsByGroupBuyingAndUser(groupBuying, user))
+    if (applicationUsersRepository.existsByGroupBuyingAndUser(groupBuying, user))
       throw new IllegalArgumentException("이미 신청한 공고입니다.");
-    if(groupBuying.getEnumStatus() == GroupBuyingStatusEnum.DEADLINE)
+    if (groupBuying.getEnumStatus() == GroupBuyingStatusEnum.DEADLINE)
       throw new IllegalArgumentException("마감된 공고입니다.");
     //유저에 캐쉬 추가한 뒤 캐쉬 확인 차감작업
-//    if(user.getCash()<fair.getPerUserPrice()){
-//      throw new IllegalArgumentException("캐쉬가 부족합니다. 충전해주세요!");
-//    }
-    if(groupBuying.getAppUsers().size()+2 > groupBuying.getMaxUser()){
+    if (user.getCash() < groupBuying.getPerUserPrice()) {
+      throw new IllegalArgumentException("캐쉬가 부족합니다. 충전해주세요!");
+    }
+    if (groupBuying.getAppUsers().size() + 1 > groupBuying.getMaxUser()) {
       throw new IllegalArgumentException("인원이 가득 찼습니다.");
     }
     ApplicationUsers applicationUsers = new ApplicationUsers(user, groupBuying);
+    user.setCash(user.getCash()-groupBuying.getPerUserPrice());
     applicationUsersRepository.save(applicationUsers);
-
-
     return new ApiResponseDto("공동구매 신청완료", 200);
-  }
+    }
+
+
 
   @Override
   @Transactional
@@ -89,9 +90,8 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
       throw new IllegalArgumentException("해당 공고를 신청한 유저가 아닙니다.");
     }
 
-    //유저 캐쉬 업데이트시 캐쉬 반환 로직 추가하기
-
     ApplicationUsers applicationUsers = applicationUsersRepository.findByGroupBuyingAndUser(groupBuying, user);
+    user.setCash(user.getCash()+groupBuying.getPerUserPrice());
     applicationUsersRepository.delete(applicationUsers);
 
     return new ApiResponseDto("공고 지원 취소", 200);

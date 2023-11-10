@@ -1,8 +1,8 @@
-package com.example.livingbymyselfserver.like.fair;
+package com.example.livingbymyselfserver.like.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
-import com.example.livingbymyselfserver.fairs.GroupBuying;
-import com.example.livingbymyselfserver.fairs.GroupBuyingService;
+import com.example.livingbymyselfserver.groupBuying.GroupBuying;
+import com.example.livingbymyselfserver.groupBuying.GroupBuyingService;
 import com.example.livingbymyselfserver.like.entity.GroupBuyingPickLike;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;

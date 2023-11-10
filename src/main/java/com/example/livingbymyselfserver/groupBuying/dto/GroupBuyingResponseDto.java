@@ -1,7 +1,7 @@
-package com.example.livingbymyselfserver.fairs.dto;
+package com.example.livingbymyselfserver.groupBuying.dto;
 
-import com.example.livingbymyselfserver.fairs.GroupBuying;
-import com.example.livingbymyselfserver.fairs.GroupBuyingShareEnum;
+import com.example.livingbymyselfserver.groupBuying.GroupBuying;
+import com.example.livingbymyselfserver.groupBuying.GroupBuyingShareEnum;
 import lombok.Getter;
 
 @Getter
