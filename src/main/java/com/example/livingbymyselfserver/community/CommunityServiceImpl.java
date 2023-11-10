@@ -138,23 +138,15 @@ public class CommunityServiceImpl implements CommunityService{
 
     @Override
     public List<CommunityListResponseDto> getCommunityListInfo(Pageable pageable) {
-        List<Community> communities = communityRepository.findAllByOrderByCreatedAtDesc(pageable);
-        List<CommunityListResponseDto> responseDtos = new ArrayList<>();
-
-        for (Community community : communities) {
-            AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
-            CommunityListResponseDto responseDto;
-            if (attachmentCommunityUrl == null) {
-                responseDto = new CommunityListResponseDto(community);
-            } else {
-                responseDto = new CommunityListResponseDto(community, attachmentCommunityUrl);
-            }
-
-            responseDtos.add(responseDto);
-        }
-
-        return responseDtos;
+        return communityRepository.findAllByOrderByCreatedAtDesc(pageable)
+                .stream()
+                .map(community -> {
+                    AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
+                    return (attachmentCommunityUrl == null) ? new CommunityListResponseDto(community) : new CommunityListResponseDto(community, attachmentCommunityUrl);
+                })
+                .collect(Collectors.toList());
     }
+
 
     public Community findCommunity(Long id) {
         return communityRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
