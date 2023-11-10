@@ -79,7 +79,7 @@ public class User {
     this.cash = cash;
   }
 
-  public void setoAuthProvider(OAuthProviderEnum oAuthProvider) {
+  public void setOAuthProvider(OAuthProviderEnum oAuthProvider) {
     this.oAuthProvider = oAuthProvider;
   }
 }
