@@ -10,6 +10,7 @@ import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -151,6 +152,7 @@ public class CommunityServiceImpl implements CommunityService{
     public Community findCommunity(Long id) {
         return communityRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
     }
+
 
     private void communityUserVerification(Community community, User user) {
         if (!community.getUser().getUsername().equals(user.getUsername())) {
