@@ -91,6 +91,10 @@ public class JwtUtil {
   public boolean validateToken(String token) {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+      if (redisUtil.hasKeyBlackList(token)) { // 로그아웃한 토큰인지 확인 (redis에 key값으로 존재 유무 확인)
+        // TODO 에러 발생시키는 부분 수정
+        throw new RuntimeException("로그아웃한 토큰");
+      }
       return true;
     } catch (SecurityException | MalformedJwtException | SignatureException e) {
       log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -110,6 +114,15 @@ public class JwtUtil {
     return storedToken !=null && storedToken.equals(token);
   }
 
+  // atk 남은 만료 시간
+  public Long expireTime(String token) {
+    // 토큰 만료 시간
+    Long expirationTime = getUserInfoFromToken(token).getExpiration().getTime();
+    // 현재 시간
+    Long dateTime = new Date().getTime();
+
+    return expirationTime - dateTime;
+  }
 
 
 

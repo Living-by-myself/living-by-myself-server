@@ -37,6 +37,8 @@ public class User {
 
   private Long cash;
 
+  private Long level;
+
   public User(String username, String password, String nickname, String phoneNumber, UserRoleEnum role,
       OAuthProviderEnum oAuthProvider) {
     this.username = username;
@@ -48,7 +50,7 @@ public class User {
   }
 
   public User(String username, String password, String nickname, String address, String phoneNumber,
-      UserRoleEnum role, OAuthProviderEnum oAuthProvider, Long cash) {
+      UserRoleEnum role, OAuthProviderEnum oAuthProvider, Long cash, Long level) {
     this.username = username;
     this.password = password;
     this.nickname = nickname;
@@ -57,6 +59,7 @@ public class User {
     this.role = role;
     this.oAuthProvider = oAuthProvider;
     this.cash = cash;
+    this.level = level;
   }
 
   public void setPassword(String password) {
