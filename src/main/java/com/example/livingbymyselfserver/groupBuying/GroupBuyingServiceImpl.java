@@ -1,10 +1,12 @@
 package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.config.redis.RedisViewCountUtil;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.user.User;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
   final private GroupBuyingRepository groupBuyingRepository;
   final private ApplicationUsersRepository applicationUsersRepository;
-
+  final private RedisViewCountUtil redisViewCountUtil;
   @Override
   public ApiResponseDto createGroupBuying(User user, GroupBuyingRequestDto requestDto) {
     GroupBuying groupBuying = new GroupBuying(requestDto,user);
@@ -54,7 +56,15 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   public GroupBuyingResponseDto getGroupBuying(User user, Long groupBuyingId) {
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
 
-    return new GroupBuyingResponseDto(groupBuying);
+    // 조회수 증가 로직
+    if (redisViewCountUtil.checkAndIncrementViewCount(groupBuyingId.toString(),
+        user.getId().toString())) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
+      redisViewCountUtil.incrementPostViewCount(groupBuying.getId().toString());
+    }
+
+    Double viewCount = redisViewCountUtil.getViewPostCount(groupBuyingId.toString());
+
+    return new GroupBuyingResponseDto(groupBuying,viewCount);
   }
 
   @Override

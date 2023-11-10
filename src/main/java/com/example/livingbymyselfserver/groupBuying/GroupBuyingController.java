@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 @Tag(name = "GroupBuying API", description = "공동구매/나눔 게시물 API")
 @RequiredArgsConstructor
 @RestController
