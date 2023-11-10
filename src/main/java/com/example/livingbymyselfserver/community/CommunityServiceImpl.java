@@ -5,17 +5,21 @@ import com.example.livingbymyselfserver.attachment.community.AttachmentCommunity
 import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -130,6 +134,26 @@ public class CommunityServiceImpl implements CommunityService{
         } else {
             return new CommunityDetailResponseDto(community, attachmentCommunityUrl);
         }
+    }
+
+    @Override
+    public List<CommunityListResponseDto> getCommunityListInfo(Pageable pageable) {
+        List<Community> communities = communityRepository.findAllByOrderByCreatedAtDesc(pageable);
+        List<CommunityListResponseDto> responseDtos = new ArrayList<>();
+
+        for (Community community : communities) {
+            AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
+            CommunityListResponseDto responseDto;
+            if (attachmentCommunityUrl == null) {
+                responseDto = new CommunityListResponseDto(community);
+            } else {
+                responseDto = new CommunityListResponseDto(community, attachmentCommunityUrl);
+            }
+
+            responseDtos.add(responseDto);
+        }
+
+        return responseDtos;
     }
 
     public Community findCommunity(Long id) {
