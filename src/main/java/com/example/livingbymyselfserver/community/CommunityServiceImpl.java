@@ -5,17 +5,22 @@ import com.example.livingbymyselfserver.attachment.community.AttachmentCommunity
 import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -132,9 +137,22 @@ public class CommunityServiceImpl implements CommunityService{
         }
     }
 
+    @Override
+    public List<CommunityListResponseDto> getCommunityListInfo(Pageable pageable) {
+        return communityRepository.findAllByOrderByCreatedAtDesc(pageable)
+                .stream()
+                .map(community -> {
+                    AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
+                    return (attachmentCommunityUrl == null) ? new CommunityListResponseDto(community) : new CommunityListResponseDto(community, attachmentCommunityUrl);
+                })
+                .collect(Collectors.toList());
+    }
+
+
     public Community findCommunity(Long id) {
         return communityRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
     }
+
 
     private void communityUserVerification(Community community, User user) {
         if (!community.getUser().getUsername().equals(user.getUsername())) {

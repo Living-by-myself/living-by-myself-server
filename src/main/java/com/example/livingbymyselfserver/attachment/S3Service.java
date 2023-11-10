@@ -76,6 +76,8 @@ public class S3Service {
     public void deleteFile(String originalFilename) {
         String fileName = originalFilename.substring(originalFilename.lastIndexOf("/") + 1);
         log.info(fileName);
+
         amazonS3.deleteObject(bucket, fileName);
+        amazonS3.deleteObject(bucket, "resize/"+fileName);
     }
 }
