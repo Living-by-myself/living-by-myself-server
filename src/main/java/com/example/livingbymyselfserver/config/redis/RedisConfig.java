@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.config;
+package com.example.livingbymyselfserver.config.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
