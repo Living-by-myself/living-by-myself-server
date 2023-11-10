@@ -11,12 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "User Profile API", description = "유저 프로필 API")
 @RestController
@@ -30,6 +26,7 @@ public class ProfileController {
     public ResponseEntity<ProfileResponseDto> getUserProfile(@AuthenticationPrincipal
         UserDetailsImpl userDetails) {
         ProfileResponseDto result = profileService.getUserProfile(userDetails.getUser());
+
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -37,6 +34,7 @@ public class ProfileController {
     @GetMapping("/other/{userId}")
     public ResponseEntity<OtherUserProfileResponseDto> getOtherUserProfile(@PathVariable Long userId) {
         OtherUserProfileResponseDto result = profileService.getOtherUserProfile(userId);
+
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -44,7 +42,18 @@ public class ProfileController {
     @PutMapping
     public ResponseEntity<ApiResponseDto> updateUserProfile(@RequestBody ProfileRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         ApiResponseDto result = profileService.updateUserProfile(requestDto, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(result);
 
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Operation(summary = "유저 이미지 수정")
+    @PatchMapping("/image")
+    public ResponseEntity<ApiResponseDto> updateUserProfileImage(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart("fileName") MultipartFile multipartFiles
+    ) {
+        ApiResponseDto result = profileService.updateUserProfileImage(userDetails.getUser(), multipartFiles);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
