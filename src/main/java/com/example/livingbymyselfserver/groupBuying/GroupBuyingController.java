@@ -4,6 +4,7 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 @Tag(name = "GroupBuying API", description = "공동구매/나눔 게시물 API")
 @RequiredArgsConstructor
 @RestController
@@ -33,8 +36,11 @@ public class GroupBuyingController {
 
   @Operation(summary = "공구 게시글 등록")
   @PostMapping
-  public ResponseEntity<ApiResponseDto> createGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody GroupBuyingRequestDto requestDto) {
-    ApiResponseDto result = groupBuyingService.createGroupBuying(userDetails.getUser(), requestDto);
+  public ResponseEntity<ApiResponseDto> createGroupBuying(
+          @AuthenticationPrincipal UserDetailsImpl userDetails,
+          @RequestPart("requestDto") String requestDto,
+          @RequestPart("fileName") MultipartFile[] multipartFiles) throws JsonProcessingException {
+    ApiResponseDto result = groupBuyingService.createGroupBuying(userDetails.getUser(), requestDto, multipartFiles);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
@@ -63,8 +69,12 @@ public class GroupBuyingController {
 
   @Operation(summary = "공구 게시글 수정")
   @PutMapping("/{groupBuyingId}")
-  public ResponseEntity<ApiResponseDto> updateGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId, @RequestBody GroupBuyingRequestDto requestDto) {
-    ApiResponseDto result = groupBuyingService.updateGroupBuying(userDetails.getUser(),groupBuyingId, requestDto);
+  public ResponseEntity<ApiResponseDto> updateGroupBuying(
+          @AuthenticationPrincipal UserDetailsImpl userDetails,
+          @PathVariable Long groupBuyingId,
+          @RequestPart("requestDto") String requestDto,
+          @RequestPart("fileName") MultipartFile[] multipartFiles) throws JsonProcessingException {
+    ApiResponseDto result = groupBuyingService.updateGroupBuying(userDetails.getUser(),groupBuyingId, requestDto, multipartFiles);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

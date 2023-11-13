@@ -3,6 +3,9 @@ package com.example.livingbymyselfserver.groupBuying;
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.like.entity.GroupBuyingPickLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
@@ -48,7 +51,7 @@ public class GroupBuying extends TimeStamped {
   private GroupBuyingCategoryEnum enumCategory;  //카테고리
 
   @Column(nullable = false)
-  private int viewCnt = 0;
+  private double viewCnt = 0;
 
   @Column(nullable = false)
   private String address; //주소
@@ -74,6 +77,9 @@ public class GroupBuying extends TimeStamped {
 
   public void setStatus(GroupBuyingStatusEnum groupBuyingStatusEnum){
     this.enumStatus = groupBuyingStatusEnum;
+  }
+  public void setViewCnt(double viewCnt){
+    this.viewCnt = viewCnt;
   }
   public GroupBuying(GroupBuyingRequestDto requestDto,User user){
     this.title = requestDto.getTitle();

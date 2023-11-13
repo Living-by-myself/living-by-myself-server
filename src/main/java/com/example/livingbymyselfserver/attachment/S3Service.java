@@ -2,6 +2,9 @@ package com.example.livingbymyselfserver.attachment;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.example.livingbymyselfserver.attachment.entity.Attachment;
+import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
+import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,5 +82,26 @@ public class S3Service {
 
         amazonS3.deleteObject(bucket, fileName);
         amazonS3.deleteObject(bucket, "resize/"+fileName);
+    }
+
+    public void updateS3Image(Attachment attachmentUrl, MultipartFile[] multipartFiles) {
+        String[] fileList = attachmentUrl.getFileName().split(",");
+
+        for (String file : fileList) {
+            deleteFile(file);
+        }
+        attachmentUrl.setFileName("");
+
+        if ((multipartFiles.length) > 5) {
+            throw new IllegalArgumentException("사진의 최대개수는 5개 입니다.");
+        }
+        List<String> uploadFileNames = uploadFiles(multipartFiles);
+        String combineUploadFileName = CombineString(uploadFileNames);
+
+        String replaceUploadFileName = combineUploadFileName.replaceFirst("^,", "");
+        String result = (replaceUploadFileName).replaceFirst("^,",
+                "");
+
+        attachmentUrl.setFileName(result);
     }
 }
