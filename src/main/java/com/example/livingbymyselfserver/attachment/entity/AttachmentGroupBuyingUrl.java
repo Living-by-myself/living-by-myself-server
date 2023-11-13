@@ -1,10 +1,7 @@
 package com.example.livingbymyselfserver.attachment.entity;
 
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
