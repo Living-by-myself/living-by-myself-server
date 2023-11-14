@@ -19,7 +19,7 @@ public interface CommunityService {
 
     Community findCommunity(Long id);
 
-    CommunityDetailResponseDto getCommunityDetailInfo(Long communityId);
+    CommunityDetailResponseDto getCommunityDetailInfo(User user, Long communityId);
 
     List<CommunityListResponseDto> getCommunityListInfo(Pageable pageable);
 }

@@ -1,27 +1,24 @@
 package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.attachment.S3Service;
-import com.example.livingbymyselfserver.attachment.community.AttachmentCommunityUrlRepository;
 import com.example.livingbymyselfserver.attachment.entity.Attachment;
-import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
 import com.example.livingbymyselfserver.attachment.fair.AttachmentGroupBuyingUrlRepository;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
-import com.example.livingbymyselfserver.community.Community;
-import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
-import com.example.livingbymyselfserver.config.redis.RedisViewCountUtil;
+import com.example.livingbymyselfserver.common.PostTypeEnum;
+import com.example.livingbymyselfserver.common.RedisUtil;
+import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.user.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,6 +32,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   final private GroupBuyingRepository groupBuyingRepository;
   final private ApplicationUsersRepository applicationUsersRepository;
   final private RedisViewCountUtil redisViewCountUtil;
+  final private RedisUtil redisUtil;
   private final S3Service s3Service;
   private final AttachmentGroupBuyingUrlRepository attachmentGroupBuyingUrlRepository;
   @Override
@@ -88,6 +86,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     }
 
     groupBuyingRepository.delete(groupBuying);
+    redisUtil.delete("GroupBuying:"+groupBuying);
 
     return new ApiResponseDto("공동구매 게시글 삭제완료", 200);
   }
@@ -98,11 +97,11 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     // 조회수 증가 로직
     if (redisViewCountUtil.checkAndIncrementViewCount(groupBuyingId.toString(),
-        user.getId().toString())) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
-      redisViewCountUtil.incrementPostViewCount(groupBuying.getId().toString());
+        user.getId().toString(), PostTypeEnum.GROUPBUYING)) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
+      redisViewCountUtil.incrementPostViewCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
     }
 
-    Double viewCount = redisViewCountUtil.getViewPostCount(groupBuyingId.toString());
+    double viewCount = redisViewCountUtil.getViewPostCount(groupBuyingId.toString(),PostTypeEnum.GROUPBUYING) ==null?1:redisViewCountUtil.getViewPostCount(groupBuyingId.toString(),PostTypeEnum.GROUPBUYING);
 
     return new GroupBuyingResponseDto(groupBuying,viewCount);
   }
@@ -139,7 +138,8 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     if (!applicationUsersRepository.existsByGroupBuyingAndUser(groupBuying, user)) {
       throw new IllegalArgumentException("해당 공고를 신청한 유저가 아닙니다.");
     }
-
+    redisUtil.delete("GroupBuying:"+user.getId()+groupBuyingId);
+    //삭제시 redis내 같은 키값 조회수 데이터도 삭제해주기
     ApplicationUsers applicationUsers = applicationUsersRepository.findByGroupBuyingAndUser(groupBuying, user);
     user.setCash(user.getCash()+groupBuying.getPerUserPrice());
     applicationUsersRepository.delete(applicationUsers);
