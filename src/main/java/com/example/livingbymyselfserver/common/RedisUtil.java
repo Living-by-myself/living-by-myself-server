@@ -3,6 +3,7 @@ package com.example.livingbymyselfserver.common;
 import com.example.livingbymyselfserver.security.JwtUtil;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.protocol.types.Field.Str;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
@@ -20,8 +21,10 @@ public class RedisUtil {
     redisTemplate.opsForValue().set(key, o, minutes, TimeUnit.MINUTES);
   }
 
-  public Object get(String key) {
-    return redisTemplate.opsForValue().get(key);
+  // null인 경우 null로 반환하도록 변경함
+  public String get(String key) {
+    Object value = redisTemplate.opsForValue().get(key);
+    return (value != null) ? value.toString() : null;
   }
 
 

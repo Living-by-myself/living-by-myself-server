@@ -8,6 +8,7 @@ import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileRespons
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ public class ProfileServiceImpl implements ProfileService{
 
   private final UserRepository userRepository;
   private final UserService userService;
+  private final PasswordEncoder passwordEncoder;
 
 
   @Override
@@ -38,4 +40,6 @@ public class ProfileServiceImpl implements ProfileService{
     User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
     return new OtherUserProfileResponseDto(user);
   }
+
+
 }

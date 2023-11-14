@@ -2,12 +2,9 @@ package com.example.livingbymyselfserver.user.profile;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
-import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 
 public interface ProfileService {
@@ -24,4 +21,7 @@ public interface ProfileService {
 
   // 다른 user 정보조회
   OtherUserProfileResponseDto getOtherUserProfile(Long userId);
+
+
+
 }
