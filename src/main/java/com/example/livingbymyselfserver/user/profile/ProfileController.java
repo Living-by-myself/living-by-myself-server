@@ -2,6 +2,8 @@ package com.example.livingbymyselfserver.user.profile;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
+import com.example.livingbymyselfserver.user.badge.BadgeService;
+import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileResponseDto;
@@ -14,12 +16,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Tag(name = "User Profile API", description = "유저 프로필 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/home/profile")
 public class ProfileController {
     private final ProfileService profileService;
+    private final BadgeService badgeService;
 
     @Operation(summary = "유저 정보 조회")
     @GetMapping
@@ -53,6 +58,14 @@ public class ProfileController {
             @RequestPart("fileName") MultipartFile multipartFiles
     ) {
         ApiResponseDto result = profileService.updateUserProfileImage(userDetails.getUser(), multipartFiles);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Operation(summary = "유저 뱃지 조회")
+    @GetMapping("/badge")
+    public ResponseEntity<List<BadgeResponseDto>> getBadgeList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<BadgeResponseDto> result = badgeService.getBadgeList(userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

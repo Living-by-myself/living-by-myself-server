@@ -8,6 +8,8 @@ import com.example.livingbymyselfserver.community.CommunityService;
 import com.example.livingbymyselfserver.like.entity.CommunityCommentLike;
 import com.example.livingbymyselfserver.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.badge.BadgeService;
+import com.example.livingbymyselfserver.user.badge.BadgeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class CommunityLikeServiceImpl implements CommunityLikeService {
     private final CommunityLikeRepository communityLikeRepository;
     private final CommunityCommentService communityCommentService;
     private final CommunityCommentLikeRepository communityCommentLikeRepository;
+    private final BadgeService badgeService;
     @Override
     public ApiResponseDto createCommunityLike(User user, Long communityId) {
         Community community = communityService.findCommunity(communityId);
@@ -29,6 +32,7 @@ public class CommunityLikeServiceImpl implements CommunityLikeService {
         CommunityLike communityLike = new CommunityLike(user, community);
         communityLikeRepository.save(communityLike);
 
+        badgeService.addBadgeForCommunityLike(community);
         return new ApiResponseDto("커뮤니티 좋아요 성공", 201);
     }
 

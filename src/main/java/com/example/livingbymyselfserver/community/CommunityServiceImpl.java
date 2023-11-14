@@ -12,6 +12,7 @@ import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.badge.BadgeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final CommunityRepository communityRepository;
     private final S3Service s3Service;
     private final AttachmentCommunityUrlRepository attachmentCommunityUrlRepository;
+    private final BadgeService badgeService;
     private final RedisViewCountUtil redisViewCountUtil;
     private final RedisUtil redisUtil;
     @Override
@@ -42,7 +44,7 @@ public class CommunityServiceImpl implements CommunityService{
         if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
             uploadImage(multipartFiles, community);
         }
-
+        badgeService.addBadgeForCommunityCount(user);
         return new ApiResponseDto("커뮤니티 게시글 생성 완료", 201);
     }
 
@@ -123,6 +125,7 @@ public class CommunityServiceImpl implements CommunityService{
         }
 
         Double viewCount = redisViewCountUtil.getViewPostCount(communityId.toString(),PostTypeEnum.COMMUNITY);
+        badgeService.addBadgeForCommunityView(community);
 
         if (attachmentCommunityUrl == null) {
             return new CommunityDetailResponseDto(community,viewCount);
