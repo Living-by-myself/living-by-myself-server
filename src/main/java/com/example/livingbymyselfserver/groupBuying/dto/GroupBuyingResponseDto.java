@@ -33,7 +33,7 @@ public class GroupBuyingResponseDto {
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
     }
-    public GroupBuyingResponseDto(GroupBuying groupBuying,Double viewCnt){
+    public GroupBuyingResponseDto(GroupBuying groupBuying,double viewCnt){
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
         this.itemLink = groupBuying.getItemLink();

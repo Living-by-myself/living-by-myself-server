@@ -20,9 +20,9 @@ public class CommunityDetailResponseDto {
     private final int likeCnt;
     private String fileUrls;
 
-    public CommunityDetailResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl) {
+    public CommunityDetailResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl, double viewCnt) {
         this.id = community.getId();
-        this.viewCnt = community.getViewCnt();
+        this.viewCnt = (int)viewCnt;
         this.title = community.getTitle();
         this.description = community.getDescription();
         this.category = community.getCategory();
@@ -34,9 +34,9 @@ public class CommunityDetailResponseDto {
         this.fileUrls = attachmentCommunityUrl.getFileName();
     }
 
-    public CommunityDetailResponseDto(Community community) {
+    public CommunityDetailResponseDto(Community community, double viewCnt) {
         this.id = community.getId();
-        this.viewCnt = community.getViewCnt();
+        this.viewCnt = (int)viewCnt;
         this.title = community.getTitle();
         this.description = community.getDescription();
         this.category = community.getCategory();
