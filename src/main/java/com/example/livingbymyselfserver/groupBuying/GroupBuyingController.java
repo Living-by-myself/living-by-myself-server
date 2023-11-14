@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
@@ -24,7 +25,7 @@ public class GroupBuyingController {
 
   final private GroupBuyingService groupBuyingService;
 
-  @Operation(summary = "공구 게시글 전체 조회")
+  /*@Operation(summary = "공구 게시글 전체 조회")
   @GetMapping
   public ResponseEntity<List<GroupBuyingResponseDto>> getGroupBuyingList(
       @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -32,7 +33,7 @@ public class GroupBuyingController {
     List<GroupBuyingResponseDto> result = groupBuyingService.getGroupBuyingList(userDetails.getUser(),pageable);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
-  }
+  }*/
 
   @Operation(summary = "공구 게시글 등록")
   @PostMapping
@@ -63,10 +64,10 @@ public class GroupBuyingController {
 
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{groupBuyingId}")
-  public GroupBuyingResponseDto getGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {
+  public ResponseEntity<GroupBuyingDetailResponseDto> getGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {
+    GroupBuyingDetailResponseDto result = groupBuyingService.getGroupBuying(userDetails.getUser(), groupBuyingId);
 
-
-   return groupBuyingService.getGroupBuying(userDetails.getUser(), groupBuyingId);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @Operation(summary = "공구 게시글 수정")
