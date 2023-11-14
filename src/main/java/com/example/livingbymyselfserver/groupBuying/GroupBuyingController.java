@@ -64,6 +64,8 @@ public class GroupBuyingController {
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{groupBuyingId}")
   public GroupBuyingResponseDto getGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {
+
+
    return groupBuyingService.getGroupBuying(userDetails.getUser(), groupBuyingId);
   }
 
@@ -83,6 +85,7 @@ public class GroupBuyingController {
   @DeleteMapping ("/{groupBuyingId}")   //공구게시글 등록
   public ResponseEntity<ApiResponseDto> deleteGroupBuying(@PathVariable Long groupBuyingId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
     ApiResponseDto result = groupBuyingService.deleteGroupBuying(groupBuyingId, userDetails.getUser());
+
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

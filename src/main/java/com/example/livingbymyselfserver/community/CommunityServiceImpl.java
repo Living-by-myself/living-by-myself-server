@@ -4,21 +4,22 @@ import com.example.livingbymyselfserver.attachment.S3Service;
 import com.example.livingbymyselfserver.attachment.community.AttachmentCommunityUrlRepository;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.common.PostTypeEnum;
+import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,6 +30,8 @@ public class CommunityServiceImpl implements CommunityService{
     private final CommunityRepository communityRepository;
     private final S3Service s3Service;
     private final AttachmentCommunityUrlRepository attachmentCommunityUrlRepository;
+    private final RedisViewCountUtil redisViewCountUtil;
+    private final RedisUtil redisUtil;
     @Override
     public ApiResponseDto createCommunity(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
         CommunityRequestDto communityRequestDto = conversionRequestDto(requestDto);
@@ -91,6 +94,7 @@ public class CommunityServiceImpl implements CommunityService{
             attachmentCommunityUrlRepository.deleteByCommunity(community);
         }
         communityRepository.delete(community);
+        redisUtil.delete("Community:"+communityId);
 
         return new ApiResponseDto("커뮤니티 게시글 삭제", 200);
     }
@@ -108,14 +112,22 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public CommunityDetailResponseDto getCommunityDetailInfo(Long communityId) {
+    public CommunityDetailResponseDto getCommunityDetailInfo(User user, Long communityId) {
         Community community = findCommunity(communityId);
         AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
 
+        // 조회수 증가 로직
+        if (redisViewCountUtil.communityCheckAndIncrementViewCount(communityId.toString(),
+            user.getId().toString(), PostTypeEnum.GROUPBUYING)) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
+            redisViewCountUtil.incrementPostViewCount(communityId.toString(),PostTypeEnum.COMMUNITY);
+        }
+
+        Double viewCount = redisViewCountUtil.getViewPostCount(communityId.toString(),PostTypeEnum.COMMUNITY);
+
         if (attachmentCommunityUrl == null) {
-            return new CommunityDetailResponseDto(community);
+            return new CommunityDetailResponseDto(community,viewCount);
         } else {
-            return new CommunityDetailResponseDto(community, attachmentCommunityUrl);
+            return new CommunityDetailResponseDto(community, attachmentCommunityUrl,viewCount);
         }
     }
 

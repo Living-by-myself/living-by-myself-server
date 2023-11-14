@@ -28,8 +28,8 @@ public class CommunityController {
     }
 
     @GetMapping("/{communityId}")
-    public ResponseEntity<CommunityDetailResponseDto> getCommunityDetailInfo(@PathVariable Long communityId) {
-        CommunityDetailResponseDto result = communityService.getCommunityDetailInfo(communityId);
+    public ResponseEntity<CommunityDetailResponseDto> getCommunityDetailInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long communityId) {
+        CommunityDetailResponseDto result = communityService.getCommunityDetailInfo(userDetails.getUser(),communityId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
