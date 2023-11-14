@@ -9,4 +9,6 @@ public interface CommunityLikeRepository extends JpaRepository<CommunityLike, Lo
     Boolean existsByCommunityAndUser(Community community, User user);
 
     CommunityLike findByCommunityAndUser(Community community, User user);
+
+    int countAllByCommunity(Community community);
 }

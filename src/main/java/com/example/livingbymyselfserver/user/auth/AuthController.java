@@ -32,13 +32,19 @@ public class AuthController {
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
-  @Operation(summary = "휴대폰 인증번호 확인")
+  @Operation(summary = "휴대폰 인증번호 확인 - 비밀번호 찾기")
   @PostMapping("/message-code")
-  public ResponseEntity<ApiResponseDto> confirmMessageCode(@RequestBody PhoneMessageRequestDto requestDto, HttpServletResponse response) {
-    ApiResponseDto result = authService.authMessageCode(requestDto, response);
+  public ResponseEntity<ApiResponseDto> confirmMessageCodePassword(@RequestBody PhoneMessageRequestDto requestDto, HttpServletResponse response) {
+    ApiResponseDto result = authService.authMessageCodePassword(requestDto, response);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
+  @Operation(summary = "휴대폰 인증번호 확인 - 회원가입")
+  @PostMapping("/message-code/signup")
+  public ResponseEntity<ApiResponseDto> confirmMessageCodeSignup(@RequestBody PhoneMessageRequestDto requestDto) {
+    ApiResponseDto result = authService.authMessageCodeSignup(requestDto);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
 
   @Operation(summary = "비밀번호 재설정")
   @PatchMapping("/new-password")
