@@ -54,8 +54,8 @@ public class AuthServiceImpl implements AuthService {
     params.put("to", requestDto.getPhoneNumber());
     params.put("from", fromNumber);
     params.put("type", "SMS");
-    params.put("text", "[grabMe] 인증번호 " + formattedRandomNumber + " 를 입력하세요.");
-    params.put("app_version", "test app 1.2"); // application name and version
+    params.put("text", "[혼자살때] 인증번호 [" + formattedRandomNumber + "] 를 입력해주세요.");
+    params.put("app_version", "app 1"); // application name and version
 
     try {
       JSONObject obj = coolsms.send(params);
@@ -69,25 +69,23 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public ApiResponseDto authMessageCode(PhoneMessageRequestDto requestDto, HttpServletResponse response) {
-    String getCode = redisUtil.get(requestDto.getPhoneNumber());
+  public ApiResponseDto authMessageCodePassword(PhoneMessageRequestDto requestDto, HttpServletResponse response) {
 
-    if (getCode == null) {
-      throw new IllegalArgumentException("만료시간이 지났습니다.");
-    }
-
-    int code = Integer.parseInt(getCode);
-    if(code == requestDto.getCode()) {
-      redisUtil.delete(requestDto.getPhoneNumber());
-    } else {
-      throw new IllegalArgumentException("인증 코드가 다릅니다.");
-    }
+    confirmMessageCode(requestDto.getPhoneNumber(), requestDto.getCode());
 
     User user = findUserByPhoneNumber(requestDto.getPhoneNumber());
 
     // 엑세스 토큰 헤더에 추가
     String atk = jwtUtil.createToken(user.getUsername(), user.getRole());
     response.addHeader(JwtUtil.AUTHORIZATION_HEADER, atk);
+
+    return new ApiResponseDto("핸드폰 인증번호 확인", 200);
+  }
+
+  @Override
+  public ApiResponseDto authMessageCodeSignup(PhoneMessageRequestDto requestDto) {
+
+    confirmMessageCode(requestDto.getPhoneNumber(), requestDto.getCode());
 
     return new ApiResponseDto("핸드폰 인증번호 확인", 200);
   }
@@ -109,5 +107,21 @@ public class AuthServiceImpl implements AuthService {
   private User findUserByPhoneNumber(String phoneNumber) {
     return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
         ()-> new IllegalArgumentException("핸드폰 번호와 일치하는 유저가 존재하지 않습니다."));
+  }
+
+  private void confirmMessageCode(String phoneNumber, int requestCode) {
+    String getCode = redisUtil.get(phoneNumber);
+
+    if (getCode == null) {
+      throw new IllegalArgumentException("만료시간이 지났습니다.");
+    }
+
+    int code = Integer.parseInt(getCode);
+
+    if(code == requestCode) {
+      redisUtil.delete(phoneNumber);
+    } else {
+      throw new IllegalArgumentException("인증 코드가 다릅니다.");
+    }
   }
 }
