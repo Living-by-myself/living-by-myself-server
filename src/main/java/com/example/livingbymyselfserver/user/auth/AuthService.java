@@ -10,8 +10,9 @@ public interface AuthService {
   ApiResponseDto sendMessage(PhoneMessageRequestDto requestDto) throws CoolsmsException;
 
   // 인증번호 확인
-  ApiResponseDto authMessageCode(PhoneMessageRequestDto requestDto, HttpServletResponse response);
+  ApiResponseDto authMessageCodePassword(PhoneMessageRequestDto requestDto, HttpServletResponse response);
 
+  ApiResponseDto authMessageCodeSignup(PhoneMessageRequestDto requestDto);
   // password 변경
   ApiResponseDto updatePassword(User user, PasswordRequestDto passwordRequestDto);
 
