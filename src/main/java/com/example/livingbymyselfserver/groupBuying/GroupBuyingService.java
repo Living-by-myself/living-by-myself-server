@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.user.User;
@@ -16,7 +17,7 @@ public interface GroupBuyingService {
   ApiResponseDto deleteGroupBuying(Long id, User user);
   GroupBuying findGroupBuying(Long id);
 
-  GroupBuyingResponseDto getGroupBuying(User user, Long groupBuyingId);
+  GroupBuyingDetailResponseDto getGroupBuying(User user, Long groupBuyingId);
 
   ApiResponseDto createApplication(User user, Long groupBuyingId);
 
@@ -24,5 +25,5 @@ public interface GroupBuyingService {
 
   ApiResponseDto closeGroupBuying(Long groupBuyingId, User user);
 
-  List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable);
+  //List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable);
 }
