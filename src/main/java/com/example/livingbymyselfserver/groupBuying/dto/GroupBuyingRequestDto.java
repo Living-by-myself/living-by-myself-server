@@ -1,7 +1,7 @@
 package com.example.livingbymyselfserver.groupBuying.dto;
 
-import com.example.livingbymyselfserver.groupBuying.GroupBuyingCategoryEnum;
-import com.example.livingbymyselfserver.groupBuying.GroupBuyingShareEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import lombok.Getter;
 
 @Getter

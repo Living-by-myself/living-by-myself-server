@@ -16,7 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@Table(name = "group_buying_pick_like")
+@Table(name = "group_buying_pick_likes")
 @DynamicUpdate
 @NoArgsConstructor
 public class GroupBuyingPickLike extends TimeStamped {

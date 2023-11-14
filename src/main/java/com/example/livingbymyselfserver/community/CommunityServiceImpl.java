@@ -7,6 +7,7 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,8 +31,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final BadgeService badgeService;
     @Override
     public ApiResponseDto createCommunity(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        CommunityRequestDto communityRequestDto = objectMapper.readValue(requestDto,CommunityRequestDto.class);
+        CommunityRequestDto communityRequestDto = conversionRequestDto(requestDto);
 
         Community community = new Community(communityRequestDto, user);
         communityRepository.save(community);
@@ -46,15 +46,14 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     @Transactional
     public ApiResponseDto updateCommunity(User user, Long communityId, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        CommunityRequestDto communityRequestDto = objectMapper.readValue(requestDto,CommunityRequestDto.class);
+        CommunityRequestDto communityRequestDto = conversionRequestDto(requestDto);
 
         Community community = findCommunity(communityId);
 
         communityUserVerification(community, user);
 
         if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
-            updateS3Image(community, multipartFiles);
+            updateCommunityS3Image(community, multipartFiles);
         }
 
         community.setTitle(communityRequestDto.getTitle());
@@ -64,28 +63,11 @@ public class CommunityServiceImpl implements CommunityService{
         return new ApiResponseDto("커뮤니티 게시글 수정 완료", 200);
     }
 
-    private void updateS3Image(Community community,  MultipartFile[] multipartFiles) {
+    private void updateCommunityS3Image(Community community,  MultipartFile[] multipartFiles) {
         AttachmentCommunityUrl attachmentUrl = attachmentCommunityUrlRepository.findByCommunity(community);
 
         if (attachmentUrl != null) {
-            String[] fileList = attachmentUrl.getFileName().split(",");
-
-            for (String file : fileList) {
-                s3Service.deleteFile(file);
-            }
-            attachmentUrl.setFileName("");
-
-            if ((multipartFiles.length) > 5) {
-                throw new IllegalArgumentException("사진의 최대개수는 5개 입니다.");
-            }
-            List<String> uploadFileNames = s3Service.uploadFiles(multipartFiles);
-            String combineUploadFileName = s3Service.CombineString(uploadFileNames);
-
-            String replaceUploadFileName = combineUploadFileName.replaceFirst("^,", "");
-            String result = (replaceUploadFileName).replaceFirst("^,",
-                    "");
-
-            attachmentUrl.setFileName(result);
+            s3Service.updateS3Image(attachmentUrl, multipartFiles);
         } else {
             uploadImage(multipartFiles, community);
         }
@@ -158,5 +140,11 @@ public class CommunityServiceImpl implements CommunityService{
         if (!community.getUser().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("게시글 작성한 유저가 아닙니다");
         }
+    }
+
+    private CommunityRequestDto conversionRequestDto(String requestDto) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(requestDto,CommunityRequestDto.class);
     }
 }

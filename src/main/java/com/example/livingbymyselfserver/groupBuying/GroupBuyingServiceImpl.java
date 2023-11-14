@@ -1,17 +1,32 @@
 package com.example.livingbymyselfserver.groupBuying;
 
+import com.example.livingbymyselfserver.attachment.S3Service;
+import com.example.livingbymyselfserver.attachment.community.AttachmentCommunityUrlRepository;
+import com.example.livingbymyselfserver.attachment.entity.Attachment;
+import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
+import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
+import com.example.livingbymyselfserver.attachment.fair.AttachmentGroupBuyingUrlRepository;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.community.Community;
+import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
+import com.example.livingbymyselfserver.config.redis.RedisViewCountUtil;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.user.User;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -19,33 +34,60 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
   final private GroupBuyingRepository groupBuyingRepository;
   final private ApplicationUsersRepository applicationUsersRepository;
-
+  final private RedisViewCountUtil redisViewCountUtil;
+  private final S3Service s3Service;
+  private final AttachmentGroupBuyingUrlRepository attachmentGroupBuyingUrlRepository;
   @Override
-  public ApiResponseDto createGroupBuying(User user, GroupBuyingRequestDto requestDto) {
-    GroupBuying groupBuying = new GroupBuying(requestDto,user);
+  public ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
+    GroupBuyingRequestDto groupBuyingRequestDto = conversionRequestDto(requestDto);
+
+    GroupBuying groupBuying = new GroupBuying(groupBuyingRequestDto, user);
     groupBuyingRepository.save(groupBuying);
+
+    if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+      uploadImage(multipartFiles, groupBuying);
+    }
 
     return new ApiResponseDto("공동구매 게시글 생성완료", 201);
   }
 
   @Override
   @Transactional
-  public ApiResponseDto updateGroupBuying(User user, Long groupBuyingId, GroupBuyingRequestDto requestDto) {
+  public ApiResponseDto updateGroupBuying(User user, Long groupBuyingId, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
 
+    GroupBuyingRequestDto groupBuyingRequestDto = conversionRequestDto(requestDto);
+
     groupBuyingUserVerification(groupBuying, user);
-    groupBuying.updateGroupBuying(requestDto);
+
+    if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+      updateGroupBuyingS3Image(groupBuying, multipartFiles);
+    }
+
+    groupBuying.updateGroupBuying(groupBuyingRequestDto);
 
     return new ApiResponseDto("공동구매 게시글 수정완료", 200);
   }
 
   @Override
+  @Transactional
   public ApiResponseDto deleteGroupBuying(Long id, User user) {
     GroupBuying groupBuying = findGroupBuying(id);
     groupBuyingUserVerification(groupBuying,user);
-    groupBuyingRepository.delete(groupBuying);
 
-    groupBuying.setStatus(GroupBuyingStatusEnum.DEADLINE);  //공고 마감공고로 상태 변경
+    AttachmentGroupBuyingUrl attachmentUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
+
+    if (attachmentUrl != null) {
+      String[] fileNames = attachmentUrl.getFileName().split(",");
+
+      for (String fileName : fileNames) {
+        s3Service.deleteFile(fileName);
+      }
+
+      attachmentGroupBuyingUrlRepository.deleteByGroupBuying(groupBuying);
+    }
+
+    groupBuyingRepository.delete(groupBuying);
 
     return new ApiResponseDto("공동구매 게시글 삭제완료", 200);
   }
@@ -54,7 +96,15 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   public GroupBuyingResponseDto getGroupBuying(User user, Long groupBuyingId) {
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
 
-    return new GroupBuyingResponseDto(groupBuying);
+    // 조회수 증가 로직
+    if (redisViewCountUtil.checkAndIncrementViewCount(groupBuyingId.toString(),
+        user.getId().toString())) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
+      redisViewCountUtil.incrementPostViewCount(groupBuying.getId().toString());
+    }
+
+    Double viewCount = redisViewCountUtil.getViewPostCount(groupBuyingId.toString());
+
+    return new GroupBuyingResponseDto(groupBuying,viewCount);
   }
 
   @Override
@@ -126,5 +176,33 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   private void groupBuyingUserVerification(GroupBuying groupBuying, User user){
     if(!user.getUsername().equals(groupBuying.getHost().getUsername()))
       throw new IllegalArgumentException("게시글 주인이 아닙니다.");
+  }
+
+  private void uploadImage(MultipartFile[] multipartFiles, GroupBuying groupBuying) {
+    List<String> filePaths = s3Service.uploadFiles(multipartFiles);
+    String fileUrls = "";
+    for (String fileUrl : filePaths) {
+      fileUrls = fileUrls + "," + fileUrl;
+    }
+
+    String fileUrlResult = fileUrls.replaceFirst("^,", "");
+    AttachmentGroupBuyingUrl file = new AttachmentGroupBuyingUrl(fileUrlResult, groupBuying);
+    attachmentGroupBuyingUrlRepository.save(file);
+  }
+
+  private GroupBuyingRequestDto conversionRequestDto(String requestDto) throws JsonProcessingException {
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    return objectMapper.readValue(requestDto,GroupBuyingRequestDto.class);
+  }
+
+  private void updateGroupBuyingS3Image(GroupBuying groupBuying,  MultipartFile[] multipartFiles) {
+    Attachment attachmentUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
+
+    if (attachmentUrl != null) {
+      s3Service.updateS3Image(attachmentUrl, multipartFiles);
+    } else {
+      uploadImage(multipartFiles, groupBuying);
+    }
   }
 }
