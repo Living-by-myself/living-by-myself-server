@@ -78,6 +78,9 @@ dependencies {
 
     //S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // OAuth2 access 토큰 발급 요청 라이브러리
+    implementation 'com.google.code.gson:gson:2.8.7'
 }
 
 tasks.named('test') {

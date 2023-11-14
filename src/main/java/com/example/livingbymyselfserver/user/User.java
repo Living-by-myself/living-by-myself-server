@@ -62,6 +62,14 @@ public class User {
     this.level = level;
   }
 
+  public User(String username, String nickname, UserRoleEnum role, OAuthProviderEnum oAuthProvider) {
+    this.username = username;
+    this.password = null;
+    this.nickname = nickname;
+    this.role = role;
+    this.oAuthProvider = oAuthProvider;
+  }
+
   public void setPassword(String password) {
     this.password = password;
   }
