@@ -16,11 +16,9 @@ public class RedisViewCountUtil {
   // 조회수 증가 가능 여부 확인
   public boolean checkAndIncrementViewCount(String id, String userId,PostTypeEnum postTypeEnum) {
     String userKey;
-    if(postTypeEnum.equals(PostTypeEnum.GROUPBUYING))
-      userKey = "GroupBuying:" + id + ":" + userId;
-    else
-      userKey = "Community" + id + ":" + userId;
+    String type = postTypeEnum.equals(PostTypeEnum.GROUPBUYING)? "GroupBuying":"Community";
 
+    userKey = type + id + ":" + userId;
       Long addedCount = redis.opsForSet().add(userKey, userId);
       if (addedCount == 1L) {
         redis.expire(userKey, 5, TimeUnit.SECONDS);
