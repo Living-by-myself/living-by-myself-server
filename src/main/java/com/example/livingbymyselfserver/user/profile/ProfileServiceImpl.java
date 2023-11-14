@@ -8,6 +8,7 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.UserService;
+import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileResponseDto;

@@ -1,11 +1,16 @@
 package com.example.livingbymyselfserver.user.badge;
 
+import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityRepository;
 import com.example.livingbymyselfserver.like.community.CommunityLikeRepository;
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +18,7 @@ public class BadgeServiceImpl implements BadgeService {
     private final BadgeRepository badgeRepository;
     private final CommunityRepository communityRepository;
     private final CommunityLikeRepository communityLikeRepository;
+    private final RedisViewCountUtil redisViewCountUtil;
 
     @Override
     public void addBadgeForCommunityCount(User user) {
@@ -77,6 +83,35 @@ public class BadgeServiceImpl implements BadgeService {
                 check = checkUserBadge(user, BadgeEnum.perfect);
                 if (check) break;
                 badge = new Badge(BadgeEnum.perfect, user);
+                badgeRepository.save(badge);
+            }
+        }
+    }
+
+    @Override
+    public List<BadgeResponseDto> getBadgeList(User user) {
+        List<Badge> badgeList = badgeRepository.findAllByUser(user);
+
+        return badgeList.stream().map(BadgeResponseDto::new).collect(Collectors.toList());
+    }
+
+    public void addBadgeForCommunityView(Community community) {
+        double count = redisViewCountUtil.getViewPostCount(String.valueOf(community.getId()), null);
+        boolean check;
+        User user = community.getUser();
+        Badge badge;
+
+        switch ((int) count) {
+            case 100 -> {
+                check = checkUserBadge(user, BadgeEnum.popular);
+                if (check) break;
+                badge = new Badge(BadgeEnum.popular, user);
+                badgeRepository.save(badge);
+            }
+            case 500 -> {
+                check = checkUserBadge(user, BadgeEnum.celebrity);
+                if (check) break;
+                badge = new Badge(BadgeEnum.celebrity, user);
                 badgeRepository.save(badge);
             }
         }

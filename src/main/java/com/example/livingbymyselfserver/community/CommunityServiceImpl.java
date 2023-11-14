@@ -125,6 +125,7 @@ public class CommunityServiceImpl implements CommunityService{
         }
 
         Double viewCount = redisViewCountUtil.getViewPostCount(communityId.toString(),PostTypeEnum.COMMUNITY);
+        badgeService.addBadgeForCommunityView(community);
 
         if (attachmentCommunityUrl == null) {
             return new CommunityDetailResponseDto(community,viewCount);
