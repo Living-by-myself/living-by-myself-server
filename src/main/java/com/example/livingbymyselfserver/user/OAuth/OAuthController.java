@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/home/auth")
+@RequestMapping("/home/oauth")
 public class OAuthController {
     private final OAuthKakaoService oAuthKakaoService;
     private final OAuthGoogleService oAuthGoogleService;
