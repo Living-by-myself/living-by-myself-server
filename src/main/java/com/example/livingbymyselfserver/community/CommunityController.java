@@ -2,8 +2,14 @@ package com.example.livingbymyselfserver.community;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,10 +25,22 @@ import java.util.List;
 @RequestMapping("/home/communities")
 public class CommunityController {
     private final CommunityService communityService;
+    @Operation(summary = "커뮤니티 조건검색")
+    @GetMapping("/search")
+    public ResponseEntity<CommunityListResponseDto> searchCommunityList(Pageable pageable,
+        @RequestParam(value = "keyword", required = false) String keyword,
+        @RequestParam(value = "category", required = false) CommunityCategoryEnum category,
+        @RequestParam(value = "sort", required = false) String sort)// 정렬시 asc는 오름, desc는 내림
+    {
+        CommunityListResponseDto result = communityService.searchCommunityList(pageable, keyword, category,
+            sort);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
     @GetMapping
-    public ResponseEntity<List<CommunityListResponseDto>> getCommunityListInfo(Pageable pageable) {
-        List<CommunityListResponseDto> result = communityService.getCommunityListInfo(pageable);
+    public ResponseEntity<List<CommunityResponseDto>> getCommunityListInfo(Pageable pageable) {
+        List<CommunityResponseDto> result = communityService.getCommunityListInfo(pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

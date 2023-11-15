@@ -58,13 +58,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     return new GroupBuyingListResponseDto(groupBuyingResponseDtoList, totalLen);
   }
-  @Override
-  public Long searchGroupBuyingListCnt(GroupBuyingCategoryEnum category,
-      GroupBuyingShareEnum enumShare,
-      GroupBuyingStatusEnum status, String beobJeongDong) {
-    return groupBuyingRepository.searchGroupBuyingListSize(category, enumShare,status,beobJeongDong);
 
-  }
   @Override
   public ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
     GroupBuyingRequestDto groupBuyingRequestDto = conversionRequestDto(requestDto);

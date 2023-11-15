@@ -16,5 +16,6 @@ public interface GroupBuyingRepositoryQuery   {
 
   BooleanExpression containsKeyword(String keyword);
 
-  Long searchGroupBuyingListSize(GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare, GroupBuyingStatusEnum status, String beobJeongDong);
+
+
 }

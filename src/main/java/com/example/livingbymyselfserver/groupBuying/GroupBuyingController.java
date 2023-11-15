@@ -40,7 +40,7 @@ public class GroupBuyingController {
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
-  @Operation(summary = "공구 검색기능")
+  @Operation(summary = "공구 조건검색")
   @GetMapping("/search")
   public ResponseEntity<GroupBuyingListResponseDto> searchGroupBuyingList(Pageable pageable,
       @RequestParam(value = "keyword", required = false) String keyword,

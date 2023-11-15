@@ -44,6 +44,7 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
 
     return new PageImpl<>(results.getResults(), pageable, results.getTotal());
   }
+
   @Override
   public BooleanExpression containsKeyword(String keyword) {
     if (keyword == null || keyword.trim().isEmpty()) {
@@ -52,16 +53,6 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
 
     return qGroupBuying.title.containsIgnoreCase(keyword);
   }
-  @Override
-  public Long searchGroupBuyingListSize(GroupBuyingCategoryEnum category,
-      GroupBuyingShareEnum enumShare, GroupBuyingStatusEnum status, String beobJeongDong) {
-
-    return jpaQueryFactory.selectFrom(qGroupBuying)
-        .where(categoryEq(category),statusEq(status),shareEq(enumShare),addressEq(beobJeongDong))
-        .fetchCount();
-  }
-
-
   private BooleanExpression addressEq(String beobJeongDong) {
     if (beobJeongDong == null) {
       return null;
