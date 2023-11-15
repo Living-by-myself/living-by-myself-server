@@ -32,35 +32,35 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
   }
 
   @Override
-  public Page<GroupBuying> searchItemList(Pageable pageable, GroupBuyingCategoryEnum category,
+  public Page<GroupBuying> searchItemList(Pageable pageable,String keyword, GroupBuyingCategoryEnum category,
       GroupBuyingShareEnum shareEnum, GroupBuyingStatusEnum statusEnum, String beobJeongDong) {
-//    BooleanExpression categoryPredicate = categoryEq(category)
-//        .and(statusEq(statusEnum))
-//        .and(shareEq(shareEnum))
-//        .and(addressEq(beobJeongDong));
 
     QueryResults<GroupBuying> results = jpaQueryFactory
         .selectFrom(qGroupBuying)
-        .where(categoryEq(category), statusEq(statusEnum),shareEq(shareEnum),addressEq(beobJeongDong))
+        .where(containsKeyword(keyword),categoryEq(category), statusEq(statusEnum),shareEq(shareEnum),addressEq(beobJeongDong))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetchResults();
 
     return new PageImpl<>(results.getResults(), pageable, results.getTotal());
   }
-
+  @Override
+  public BooleanExpression containsKeyword(String keyword) {
+    if (keyword == null || keyword.trim().isEmpty()) {
+      return null;
+    }
+    // Assuming 'name' is the field you want to search for keywords
+    return qGroupBuying.title.containsIgnoreCase(keyword);
+  }
   @Override
   public Long searchGroupBuyingListSize(GroupBuyingCategoryEnum category,
       GroupBuyingShareEnum enumShare, GroupBuyingStatusEnum status, String beobJeongDong) {
-//    BooleanExpression categoryPredicate = categoryEq(category)
-//        .and(statusEq(status))
-//        .and(shareEq(enumShare))
-//        .and(addressEq(beobJeongDong));
 
     return jpaQueryFactory.selectFrom(qGroupBuying)
         .where(categoryEq(category),statusEq(status),shareEq(enumShare),addressEq(beobJeongDong))
         .fetchCount();
   }
+
 
   private BooleanExpression addressEq(String beobJeongDong) {
     if (beobJeongDong == null) {

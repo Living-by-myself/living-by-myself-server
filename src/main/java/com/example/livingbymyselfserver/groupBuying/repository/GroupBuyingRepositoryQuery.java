@@ -10,9 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface GroupBuyingRepositoryQuery   {
-  Page<GroupBuying> searchItemList(Pageable pageable, GroupBuyingCategoryEnum category,
+  Page<GroupBuying> searchItemList(Pageable pageable, String keyword, GroupBuyingCategoryEnum category,
       GroupBuyingShareEnum shareEnum, GroupBuyingStatusEnum statusEnum,String beobJeongDong);
   List<GroupBuying> findCategory(GroupBuyingCategoryEnum categoryEnum, Pageable pageable);
+
+  BooleanExpression containsKeyword(String keyword);
 
   Long searchGroupBuyingListSize(GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare, GroupBuyingStatusEnum status, String beobJeongDong);
 }

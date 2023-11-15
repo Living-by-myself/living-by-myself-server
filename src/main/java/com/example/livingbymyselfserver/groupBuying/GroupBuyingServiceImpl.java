@@ -46,11 +46,12 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   public GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
       String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
       GroupBuyingStatusEnum status, String beobJeongDong) {
-    Page<GroupBuying> groupBuyingPage = groupBuyingRepository.searchItemList(pageable,
-        category,enumShare,status,beobJeongDong);
-    Long totalLen =  groupBuyingPage.getTotalElements();
 
-    List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,
+    Page<GroupBuying> groupBuyingPage = groupBuyingRepository.searchItemList(pageable, keyword,
+        category,enumShare,status,beobJeongDong); //전체 크기를 받아오기 위한 Page
+    Long totalLen =  groupBuyingPage.getTotalElements();  //total길이
+
+    List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,keyword,
         category,enumShare,status,beobJeongDong)
         .stream().map(GroupBuyingResponseDto::new)
         .toList();
