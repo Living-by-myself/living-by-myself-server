@@ -91,6 +91,12 @@ public class UserServiceImpl implements UserService{
         new IllegalArgumentException("회원을 찾을 수 없습니다."));
   }
 
+  @Override
+  public User findUser(Long userId) {
+    return userRepository.findById(userId).orElseThrow(()->
+        new IllegalArgumentException("회원을 찾을 수 없습니다."));
+  }
+
   private void passwordCheck(CharSequence rawPassword, String password) {
     if(!passwordEncoder.matches(rawPassword, password)) {
       throw new IllegalArgumentException("회원을 찾을 수 없습니다.");

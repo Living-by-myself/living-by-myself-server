@@ -12,7 +12,10 @@ import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
+import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,28 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   final private RedisUtil redisUtil;
   private final S3Service s3Service;
   private final AttachmentGroupBuyingUrlRepository attachmentGroupBuyingUrlRepository;
+
+  @Override
+  public Page<GroupBuyingResponseDto> searchGroupBuyingList(Pageable pageable,
+      String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
+      GroupBuyingStatusEnum status, String beobJeongDong) {
+    List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,
+        category,enumShare,status,beobJeongDong)
+        .stream().map(GroupBuyingResponseDto::new)
+        .toList();
+
+    Long len = searchGroupBuyingListCnt(category,enumShare,status,beobJeongDong);
+
+
+    return new PageImpl<>(groupBuyingResponseDtoList, pageable, len);
+  }
+  @Override
+  public Long searchGroupBuyingListCnt(GroupBuyingCategoryEnum category,
+      GroupBuyingShareEnum enumShare,
+      GroupBuyingStatusEnum status, String beobJeongDong) {
+    return groupBuyingRepository.searchGroupBuyingListSize(category, enumShare,status,beobJeongDong);
+
+  }
   @Override
   public ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
     GroupBuyingRequestDto groupBuyingRequestDto = conversionRequestDto(requestDto);
@@ -148,6 +175,18 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   }
 
   @Override
+  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
+    return groupBuyingRepository.findCategory(GroupBuyingCategoryEnum.FOOD ,pageable)
+        .stream()
+        .map(GroupBuyingResponseDto::new)
+        .collect(Collectors.toList());
+//    return groupBuyingRepository.findAll(pageable)
+//        .stream()
+//        .map(GroupBuyingResponseDto::new)
+//        .collect(Collectors.toList());
+  }
+
+  @Override
   @Transactional
   public ApiResponseDto closeGroupBuying(Long groupBuyingId, User user) {
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
@@ -157,15 +196,6 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     groupBuying.setStatus(GroupBuyingStatusEnum.DEADLINE);
 
     return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
-  }
-
-  @Override
-  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
-
-    return groupBuyingRepository.findAll(pageable)
-        .stream()
-        .map(GroupBuyingResponseDto::new)
-        .collect(Collectors.toList());
   }
 
 
