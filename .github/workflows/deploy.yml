@@ -10,10 +10,10 @@ name: Java CI with Gradle # workflow 이름
 on:
   push:
     branches:
-      - feature/branch
+      - feature/etc
   pull_request:
     branches:
-      - feature/branch
+      - feature/etc
 
 permissions:
   contents: read
