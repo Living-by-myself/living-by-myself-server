@@ -2,12 +2,14 @@ package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.attachment.S3Service;
 import com.example.livingbymyselfserver.attachment.entity.Attachment;
+import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
 import com.example.livingbymyselfserver.attachment.fair.AttachmentGroupBuyingUrlRepository;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
@@ -53,7 +55,11 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,keyword,
         category,enumShare,status,beobJeongDong,sort)
-        .stream().map(GroupBuyingResponseDto::new)
+        .stream().map(groupBuying -> {
+          double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
+          AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+        })
         .toList();
 
     return new GroupBuyingListResponseDto(groupBuyingResponseDtoList, totalLen);
@@ -174,13 +180,12 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   @Override
   public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
     return groupBuyingRepository.findCategory(GroupBuyingCategoryEnum.FOOD ,pageable)
-        .stream()
-        .map(GroupBuyingResponseDto::new)
-        .collect(Collectors.toList());
-//    return groupBuyingRepository.findAll(pageable)
-//        .stream()
-//        .map(GroupBuyingResponseDto::new)
-//        .collect(Collectors.toList());
+        .stream().map(groupBuying -> {
+          double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
+          AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+        })
+        .toList();
   }
 
   @Override

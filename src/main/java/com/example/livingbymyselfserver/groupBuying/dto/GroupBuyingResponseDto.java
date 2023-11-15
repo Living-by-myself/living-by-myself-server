@@ -1,5 +1,6 @@
 package com.example.livingbymyselfserver.groupBuying.dto;
 
+import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import java.time.LocalDateTime;
@@ -13,17 +14,17 @@ public class GroupBuyingResponseDto {
     private final String itemLink;
     private final Integer maxUser;
     private final Integer current_user_count;
-    //MultipartFile multipartFile;
+    private String fileUrls;
     private final Integer perUserPrice;
     private final GroupBuyingShareEnum enumShare;
-    private final double viewCnt;
+    private final int viewCnt;
     private final String address;
     private final String beobJeongDong;
     private final double lat;
     private final double lng;
     private final LocalDateTime createAt;
     private final LocalDateTime modifiedAt;
-    public GroupBuyingResponseDto(GroupBuying groupBuying){
+    public GroupBuyingResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt){
         this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
@@ -33,8 +34,9 @@ public class GroupBuyingResponseDto {
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
-        this.viewCnt = groupBuying.getViewCnt();
+        this.viewCnt = (int)viewCnt;
         this.beobJeongDong = groupBuying.getBeobJeongDong();
+        this.fileUrls = attachmentGroupBuyingUrl.getFileName().split(",")[0];
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
         this.createAt = groupBuying.getCreatedAt();
@@ -50,7 +52,7 @@ public class GroupBuyingResponseDto {
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
-        this.viewCnt = viewCnt;
+        this.viewCnt = (int)viewCnt;
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
