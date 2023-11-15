@@ -142,7 +142,8 @@ public class CommunityServiceImpl implements CommunityService{
                 .stream()
                 .map(community -> {
                     AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
-                    return (attachmentCommunityUrl == null) ? new CommunityResponseDto(community) : new CommunityResponseDto(community, attachmentCommunityUrl);
+                    double viewCount = redisViewCountUtil.getViewPostCount(community.getId().toString(),PostTypeEnum.COMMUNITY);
+                    return (attachmentCommunityUrl == null) ? new CommunityResponseDto(community,viewCount) : new CommunityResponseDto(community, attachmentCommunityUrl,viewCount);
                 })
                 .collect(Collectors.toList());
     }
@@ -156,7 +157,11 @@ public class CommunityServiceImpl implements CommunityService{
 
         List<CommunityResponseDto> communityResponseDtoList = communityRepository.searchItemList(pageable,keyword,
                 category,sort)
-            .stream().map(CommunityResponseDto::new)
+            .stream().map(community -> {
+                double viewCount = redisViewCountUtil.getViewPostCount(community.getId().toString(),PostTypeEnum.COMMUNITY);
+                AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
+                return (attachmentCommunityUrl == null) ? new CommunityResponseDto(community,viewCount) : new CommunityResponseDto(community, attachmentCommunityUrl,viewCount);
+            })
             .toList();
 
         return new CommunityListResponseDto(communityResponseDtoList, totalLen);

@@ -46,9 +46,9 @@ public class RedisViewCountUtil {
   // post 조회수 확인 *
   public Double getViewPostCount(String id, PostTypeEnum postTypeEnum) {
     if(postTypeEnum.equals(PostTypeEnum.GROUPBUYING))
-      return redis.opsForZSet().score("GroupBuying:", id);
+      return redis.opsForZSet().score("GroupBuying:", id) == null? 0 : redis.opsForZSet().score("GroupBuying:", id);
     else
-      return redis.opsForZSet().score("Community:", id);
+      return redis.opsForZSet().score("Community:", id)==null? 0 : redis.opsForZSet().score("Community:", id);
   }
 
   // post 조회수 증가 로직 *

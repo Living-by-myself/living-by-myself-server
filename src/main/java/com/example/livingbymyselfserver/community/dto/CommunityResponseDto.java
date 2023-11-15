@@ -22,9 +22,9 @@ public class CommunityResponseDto {
     private LocalDateTime createAt;
     private LocalDateTime modifiedAt;
 
-    public CommunityResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl) {
+    public CommunityResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl, double viewCnt) {
         this.id = community.getId();
-        this.viewCnt = community.getViewCnt();
+        this.viewCnt = (int)viewCnt;
         this.title = community.getTitle();
         this.description = community.getDescription();
         this.category = community.getCategory();
@@ -38,9 +38,9 @@ public class CommunityResponseDto {
         this.modifiedAt = community.getModifiedAt();
     }
 
-    public CommunityResponseDto(Community community) {
+    public CommunityResponseDto(Community community, double viewCnt) {
         this.id = community.getId();
-        this.viewCnt = community.getViewCnt();
+        this.viewCnt = (int)viewCnt;
         this.title = community.getTitle();
         this.description = community.getDescription();
         this.category = community.getCategory();
