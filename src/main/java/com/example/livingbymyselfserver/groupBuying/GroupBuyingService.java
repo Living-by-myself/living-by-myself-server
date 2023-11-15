@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface GroupBuyingService {
-  Page<GroupBuyingResponseDto> searchGroupBuyingList(Pageable pageable,
+  GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
       @RequestParam(value = "keyword", required = false) String keyword,
       @RequestParam(value = "category", required = false) GroupBuyingCategoryEnum category,
       @RequestParam(value = "category_share", required = false) GroupBuyingShareEnum enumShare,

@@ -5,10 +5,13 @@ import com.example.livingbymyselfserver.groupBuying.QGroupBuying;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -29,24 +32,34 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
   }
 
   @Override
-  public List<GroupBuying> searchItemList(Pageable pageable, GroupBuyingCategoryEnum category,
+  public Page<GroupBuying> searchItemList(Pageable pageable, GroupBuyingCategoryEnum category,
       GroupBuyingShareEnum shareEnum, GroupBuyingStatusEnum statusEnum, String beobJeongDong) {
-    return jpaQueryFactory.selectFrom(qGroupBuying)
-        .where(categoryEq(category),statusEq(statusEnum),shareEq(shareEnum),
-            addressEq(beobJeongDong))
+//    BooleanExpression categoryPredicate = categoryEq(category)
+//        .and(statusEq(statusEnum))
+//        .and(shareEq(shareEnum))
+//        .and(addressEq(beobJeongDong));
+
+    QueryResults<GroupBuying> results = jpaQueryFactory
+        .selectFrom(qGroupBuying)
+        .where(categoryEq(category), statusEq(statusEnum),shareEq(shareEnum),addressEq(beobJeongDong))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
-        .fetch();
+        .fetchResults();
+
+    return new PageImpl<>(results.getResults(), pageable, results.getTotal());
   }
 
   @Override
   public Long searchGroupBuyingListSize(GroupBuyingCategoryEnum category,
       GroupBuyingShareEnum enumShare, GroupBuyingStatusEnum status, String beobJeongDong) {
+//    BooleanExpression categoryPredicate = categoryEq(category)
+//        .and(statusEq(status))
+//        .and(shareEq(enumShare))
+//        .and(addressEq(beobJeongDong));
 
-    return (long) jpaQueryFactory.selectFrom(qGroupBuying)
-        .where(categoryEq(category),statusEq(status),shareEq(enumShare),
-            addressEq(beobJeongDong))
-        .fetch().size();
+    return jpaQueryFactory.selectFrom(qGroupBuying)
+        .where(categoryEq(category),statusEq(status),shareEq(enumShare),addressEq(beobJeongDong))
+        .fetchCount();
   }
 
   private BooleanExpression addressEq(String beobJeongDong) {

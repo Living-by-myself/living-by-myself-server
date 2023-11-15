@@ -6,10 +6,11 @@ import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface GroupBuyingRepositoryQuery   {
-  List<GroupBuying> searchItemList(Pageable pageable, GroupBuyingCategoryEnum category,
+  Page<GroupBuying> searchItemList(Pageable pageable, GroupBuyingCategoryEnum category,
       GroupBuyingShareEnum shareEnum, GroupBuyingStatusEnum statusEnum,String beobJeongDong);
   List<GroupBuying> findCategory(GroupBuyingCategoryEnum categoryEnum, Pageable pageable);
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class GroupBuyingResponseDto {
+    private final Long id;
     private final String title;
     private final String description;
     private final String itemLink;
@@ -20,6 +21,7 @@ public class GroupBuyingResponseDto {
     private final double lat;
     private final double lng;
     public GroupBuyingResponseDto(GroupBuying groupBuying){
+        this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
         this.itemLink = groupBuying.getItemLink();
@@ -34,6 +36,7 @@ public class GroupBuyingResponseDto {
         this.lng = groupBuying.getLng();
     }
     public GroupBuyingResponseDto(GroupBuying groupBuying,double viewCnt){
+        this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
         this.itemLink = groupBuying.getItemLink();

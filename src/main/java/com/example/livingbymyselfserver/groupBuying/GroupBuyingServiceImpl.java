@@ -10,6 +10,7 @@ import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
@@ -42,18 +43,19 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   private final AttachmentGroupBuyingUrlRepository attachmentGroupBuyingUrlRepository;
 
   @Override
-  public Page<GroupBuyingResponseDto> searchGroupBuyingList(Pageable pageable,
+  public GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
       String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
       GroupBuyingStatusEnum status, String beobJeongDong) {
+    Page<GroupBuying> groupBuyingPage = groupBuyingRepository.searchItemList(pageable,
+        category,enumShare,status,beobJeongDong);
+    Long totalLen =  groupBuyingPage.getTotalElements();
+
     List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,
         category,enumShare,status,beobJeongDong)
         .stream().map(GroupBuyingResponseDto::new)
         .toList();
 
-    Long len = searchGroupBuyingListCnt(category,enumShare,status,beobJeongDong);
-
-
-    return new PageImpl<>(groupBuyingResponseDtoList, pageable, len);
+    return new GroupBuyingListResponseDto(groupBuyingResponseDtoList, totalLen);
   }
   @Override
   public Long searchGroupBuyingListCnt(GroupBuyingCategoryEnum category,

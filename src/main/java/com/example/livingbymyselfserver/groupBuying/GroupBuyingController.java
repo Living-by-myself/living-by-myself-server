@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "GroupBuying API", description = "공동구매/나눔 게시물 API")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/home/group-buying")
 public class GroupBuyingController {
 
@@ -39,13 +42,13 @@ public class GroupBuyingController {
   }
   @Operation(summary = "공구 검색기능")
   @GetMapping("/search")
-  public ResponseEntity<Page<GroupBuyingResponseDto>> searchGroupBuyingList(Pageable pageable,
+  public ResponseEntity<GroupBuyingListResponseDto> searchGroupBuyingList(Pageable pageable,
       @RequestParam(value = "keyword", required = false) String keyword,
       @RequestParam(value = "category", required = false) GroupBuyingCategoryEnum category,
       @RequestParam(value = "category_share", required = false) GroupBuyingShareEnum enumShare,
       @RequestParam(value = "category_status", required = false) GroupBuyingStatusEnum status,
       @RequestParam(value = "address", required = false) String beobJeongDong) {
-    Page<GroupBuyingResponseDto> result = groupBuyingService.searchGroupBuyingList(pageable, keyword, category,
+    GroupBuyingListResponseDto result = groupBuyingService.searchGroupBuyingList(pageable, keyword, category,
         enumShare, status,beobJeongDong);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
