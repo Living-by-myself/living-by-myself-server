@@ -32,16 +32,15 @@ jobs:
           distribution: 'temurin'
       - name: make application.yml
         run: |
+          # Delete existing application.properties if it exists
+          rm -f ./src/main/resources/application.properties
+
           # create application.yml
-          cd ./src/main
-          mkdir resources
-          cd ./resources
-          
-          # application.yml 파일 생성하기
-          touch ./application.properties
+          mkdir -p ./src/main/resources  # -p 옵션은 이미 디렉토리가 존재하더라도 오류를 발생시키지 않음
+          touch ./src/main/resources/application.properties
           
           # Secrets에 저장한 값을 application.yml 파일에 쓰기
-          echo "${{ secrets.APPLICATION_INFO }}" >> ./application.properties
+          echo "${{ secrets.APPLICATION_INFO }}" >> ./src/main/resources/application.properties
         shell: bash
 
       - name: Build with Gradle
