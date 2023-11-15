@@ -45,14 +45,14 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   @Override
   public GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
       String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
-      GroupBuyingStatusEnum status, String beobJeongDong) {
+      GroupBuyingStatusEnum status, String beobJeongDong,String sort) {
 
     Page<GroupBuying> groupBuyingPage = groupBuyingRepository.searchItemList(pageable, keyword,
-        category,enumShare,status,beobJeongDong); //전체 크기를 받아오기 위한 Page
+        category,enumShare,status,beobJeongDong,sort); //전체 크기를 받아오기 위한 Page
     Long totalLen =  groupBuyingPage.getTotalElements();  //total길이
 
     List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,keyword,
-        category,enumShare,status,beobJeongDong)
+        category,enumShare,status,beobJeongDong,sort)
         .stream().map(GroupBuyingResponseDto::new)
         .toList();
 

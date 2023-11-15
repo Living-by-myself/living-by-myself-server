@@ -33,11 +33,11 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
 
   @Override
   public Page<GroupBuying> searchItemList(Pageable pageable,String keyword, GroupBuyingCategoryEnum category,
-      GroupBuyingShareEnum shareEnum, GroupBuyingStatusEnum statusEnum, String beobJeongDong) {
+      GroupBuyingShareEnum shareEnum, GroupBuyingStatusEnum statusEnum, String beobJeongDong, String sort) {
 
     QueryResults<GroupBuying> results = jpaQueryFactory
         .selectFrom(qGroupBuying)
-        .where(containsKeyword(keyword),categoryEq(category), statusEq(statusEnum),shareEq(shareEnum),addressEq(beobJeongDong))
+        .where(containsKeyword(keyword),categoryEq(category), statusEq(statusEnum),shareEq(shareEnum),addressEq(beobJeongDong)).orderBy(sort.equals("desc")? qGroupBuying.createdAt.desc():qGroupBuying.createdAt.asc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetchResults();
@@ -49,7 +49,7 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
     if (keyword == null || keyword.trim().isEmpty()) {
       return null;
     }
-    // Assuming 'name' is the field you want to search for keywords
+
     return qGroupBuying.title.containsIgnoreCase(keyword);
   }
   @Override

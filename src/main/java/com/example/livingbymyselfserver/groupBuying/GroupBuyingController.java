@@ -47,9 +47,11 @@ public class GroupBuyingController {
       @RequestParam(value = "category", required = false) GroupBuyingCategoryEnum category,
       @RequestParam(value = "category_share", required = false) GroupBuyingShareEnum enumShare,
       @RequestParam(value = "category_status", required = false) GroupBuyingStatusEnum status,
-      @RequestParam(value = "address", required = false) String beobJeongDong) {
+      @RequestParam(value = "address", required = false) String beobJeongDong,
+      @RequestParam(value = "sort", required = false) String sort)// 정렬시 asc는 오름, desc는 내림
+  {
     GroupBuyingListResponseDto result = groupBuyingService.searchGroupBuyingList(pageable, keyword, category,
-        enumShare, status,beobJeongDong);
+        enumShare, status,beobJeongDong, sort);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

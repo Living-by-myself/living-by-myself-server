@@ -23,7 +23,8 @@ public interface GroupBuyingService {
       @RequestParam(value = "category", required = false) GroupBuyingCategoryEnum category,
       @RequestParam(value = "category_share", required = false) GroupBuyingShareEnum enumShare,
       @RequestParam(value = "category_status", required = false) GroupBuyingStatusEnum status,
-      @RequestParam(value = "address", required = false) String beobJeongDong);
+      @RequestParam(value = "address", required = false) String beobJeongDong,
+      @RequestParam(value = "sort", required = false) String sort);// 정렬시 asc는 오름, desc는 내림
 
 
   Long searchGroupBuyingListCnt(GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,

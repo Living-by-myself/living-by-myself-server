@@ -2,6 +2,7 @@ package com.example.livingbymyselfserver.groupBuying.dto;
 
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
@@ -20,6 +21,8 @@ public class GroupBuyingResponseDto {
     private final String beobJeongDong;
     private final double lat;
     private final double lng;
+    private final LocalDateTime createAt;
+    private final LocalDateTime modifiedAt;
     public GroupBuyingResponseDto(GroupBuying groupBuying){
         this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
@@ -34,6 +37,8 @@ public class GroupBuyingResponseDto {
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
+        this.createAt = groupBuying.getCreatedAt();
+        this.modifiedAt = groupBuying.getModifiedAt();
     }
     public GroupBuyingResponseDto(GroupBuying groupBuying,double viewCnt){
         this.id = groupBuying.getId();
@@ -49,5 +54,7 @@ public class GroupBuyingResponseDto {
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
+        this.createAt = groupBuying.getCreatedAt();
+        this.modifiedAt = groupBuying.getModifiedAt();
     }
 }
