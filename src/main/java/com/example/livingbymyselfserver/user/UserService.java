@@ -2,6 +2,7 @@ package com.example.livingbymyselfserver.user;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.TokenResponseDto;
+import com.example.livingbymyselfserver.user.auth.PhoneMessageRequestDto;
 import com.example.livingbymyselfserver.user.dto.LoginRequestDto;
 import com.example.livingbymyselfserver.user.dto.SignupRequestDto;
 import jakarta.servlet.http.HttpServletRequest;

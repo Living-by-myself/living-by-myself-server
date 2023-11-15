@@ -2,6 +2,7 @@ package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
@@ -25,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "GroupBuying API", description = "공동구매/나눔 게시물 API")
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @RequestMapping("/home/group-buying")
 public class GroupBuyingController {
 
@@ -85,10 +85,10 @@ public class GroupBuyingController {
 
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{groupBuyingId}")
-  public GroupBuyingResponseDto getGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {
+  public ResponseEntity<GroupBuyingDetailResponseDto> getGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {
+    GroupBuyingDetailResponseDto result = groupBuyingService.getGroupBuying(userDetails.getUser(), groupBuyingId);
 
-
-   return groupBuyingService.getGroupBuying(userDetails.getUser(), groupBuyingId);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @Operation(summary = "공구 게시글 수정")

@@ -3,11 +3,13 @@ package com.example.livingbymyselfserver.user;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.TokenResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
+import com.example.livingbymyselfserver.user.auth.PhoneMessageRequestDto;
 import com.example.livingbymyselfserver.user.dto.LoginRequestDto;
 import com.example.livingbymyselfserver.user.dto.SignupRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +42,6 @@ public class UserController {
     TokenResponseDto result = userService.login(requestDto);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
-
-
-  // 변경 필요
   @Operation(summary = "엑세스 토큰 재발급")
   @GetMapping("/reissue")
   public TokenResponseDto reissue(
@@ -57,6 +56,4 @@ public class UserController {
     ApiResponseDto result = userService.logout(userDetails.getUser(), request);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
-
-
 }

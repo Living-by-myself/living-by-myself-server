@@ -3,12 +3,15 @@ package com.example.livingbymyselfserver.user.profile;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
+import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 public interface ProfileService {

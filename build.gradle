@@ -110,3 +110,7 @@ clean {
     delete file(generated)
 }
 
+bootJar {
+    archiveFileName = 'app.jar'
+}
+

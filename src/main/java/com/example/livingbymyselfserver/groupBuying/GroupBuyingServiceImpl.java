@@ -12,6 +12,7 @@ import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
@@ -122,9 +123,9 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   }
 
   @Override
-  public GroupBuyingResponseDto getGroupBuying(User user, Long groupBuyingId) {
+  public GroupBuyingDetailResponseDto getGroupBuying(User user, Long groupBuyingId) {
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
-
+    AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
     // 조회수 증가 로직
     if (redisViewCountUtil.checkAndIncrementViewCount(groupBuyingId.toString(),
         user.getId().toString(), PostTypeEnum.GROUPBUYING)) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
@@ -133,7 +134,11 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     double viewCount = redisViewCountUtil.getViewPostCount(groupBuyingId.toString(),PostTypeEnum.GROUPBUYING) ==null?1:redisViewCountUtil.getViewPostCount(groupBuyingId.toString(),PostTypeEnum.GROUPBUYING);
 
-    return new GroupBuyingResponseDto(groupBuying,viewCount);
+    if (attachmentGroupBuyingUrl == null) {
+      return new GroupBuyingDetailResponseDto(groupBuying,viewCount);
+    } else {
+      return new GroupBuyingDetailResponseDto(groupBuying,attachmentGroupBuyingUrl, viewCount);
+    }
   }
 
   @Override
@@ -199,6 +204,15 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
   }
+
+  /*@Override
+  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
+
+    return groupBuyingRepository.findAll(pageable)
+        .stream()
+        .map(GroupBuyingResponseDto::new)
+        .collect(Collectors.toList());
+  }*/
 
 
   public GroupBuying findGroupBuying(Long id) {
