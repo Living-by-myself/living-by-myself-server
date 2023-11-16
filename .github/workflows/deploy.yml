@@ -32,8 +32,8 @@ jobs:
 
       - name: Install Docker Compose
         run: |
-          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
-          sudo chmod +x /usr/bin/docker-compose
+          curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
 
       - name: Make application.yml
         run: |
@@ -70,14 +70,14 @@ jobs:
           port: 22
           script: |
             # 8080 포트를 사용 중인 도커 컨테이너 확인
-            RUNNING_CONTAINER=$(sudo docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
+            RUNNING_CONTAINER=$(docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
 
             # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
             if [ -n "$RUNNING_CONTAINER" ]; then
-              sudo docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
-              sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
+              docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
+              docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
             fi
 
             # 새로운 도커 이미지 pull 및 실행
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo /usr/bin/docker-compose -f docker-compose.yml up -d
+            docker pull ${{ secrets.DOCKER_REPO }}
+            /usr/local/bin/docker-compose -f docker-compose.yml up -d
