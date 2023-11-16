@@ -20,7 +20,7 @@ jobs:
         image: redis:latest
         ports:
           - "6379:6379"
-        options: --network app_network
+        options: --network github_network_d357c33f390f47ed8e629bad67166593
 
     steps:
       - uses: actions/checkout@v3
