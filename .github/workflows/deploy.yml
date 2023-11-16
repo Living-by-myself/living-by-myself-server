@@ -72,4 +72,5 @@ jobs:
 
       - name: Execute Docker Compose on EC2
         run: |
-          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose.yml up -d"
+          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "sudo docker pull ${{ secrets.DOCKER_REPO }}:latest"
+          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "sudo docker-compose -f ~/docker-compose.yml up -d"
