@@ -24,9 +24,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set Environment Variable for EC2
-        run: echo "APPLICATION_INFO=${{ secrets.APPLICATION_INFO }}" >> .env
-
       - name: Build with Gradle
         run: ./gradlew bootJar
 

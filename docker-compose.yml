@@ -14,8 +14,6 @@ services:
 
   web:
     image: bsb99/living-by-myself-server:latest
-    environment:
-      - APPLICATION_INFO=${APPLICATION_INFO}
     ports:
       - "8080:8080"
     depends_on:
