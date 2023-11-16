@@ -24,7 +24,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: make application.properties
+      - name: create application.properties
         run: |
           cd ./src/main/resources
           touch ./application.properties
