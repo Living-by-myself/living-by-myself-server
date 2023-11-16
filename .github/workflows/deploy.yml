@@ -37,8 +37,6 @@ jobs:
           chmod +x $HOME/.local/bin/docker-compose
           echo 'export PATH=$PATH:$HOME/.local/bin' >> $HOME/.bashrc  # or $HOME/.zshrc for Zsh
           source $HOME/.bashrc  # or source $HOME/.zshrc for Zsh
-          sudo usermod -aG docker $USER  # Add the GitHub Actions user to the docker group
-          newgrp docker  # Activate the changes to groups without logging out
 
       - name: Make application.yml
         run: |
@@ -76,15 +74,15 @@ jobs:
           script: |
             # 8080 포트를 사용 중인 도커 컨테이너 확인
             sleep 2 # 2초 동안 대기
-            sudo chmod 666 /var/run/docker.sock
+            chmod 666 /var/run/docker.sock
             RUNNING_CONTAINER=$(docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
 
             # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
             if [ -n "$RUNNING_CONTAINER" ]; then
-              sudo docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
-              sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
+              docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
+              docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
             fi
 
             # 새로운 도커 이미지 pull 및 실행
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker-compose -f docker-compose.yml up -d z
+            docker pull ${{ secrets.DOCKER_REPO }}
+            docker-compose -f docker-compose.yml up -d z
