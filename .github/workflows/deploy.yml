@@ -1,11 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle # workflow 이름
+name: Java CI with Gradle
 
 on:
   push:
@@ -30,13 +23,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: make application.yml
+      - name: Make application.yml
         run: |
           # Delete existing application.properties if it exists
           rm -f ./src/main/resources/application.properties
 
-          # create application.yml
-          mkdir -p ./src/main/resources  # -p 옵션은 이미 디렉토리가 존재하더라도 오류를 발생시키지 않음
+          # Create application.yml
+          mkdir -p ./src/main/resources
           touch ./src/main/resources/application.properties
           
           # Secrets에 저장한 값을 application.yml 파일에 쓰기
@@ -47,14 +40,18 @@ jobs:
         run: ./gradlew bootJar
 
       ## 도커 이미지 빌드 후 도커허브에 push하기
-      - name: web docker build and push
+      - name: Web Docker Build and Push
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          
+          # 이미지가 존재하면 삭제
+          docker image rm -f ${{ secrets.DOCKER_REPO }} || true
+          
           docker build -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
 
       ## 서버에 접속하여 도커 이미지를 pull 받고 실행하기
-      - name: executing remote ssh commands using password
+      - name: Executing Remote SSH Commands using Password
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.HOST }}
@@ -62,8 +59,16 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            sudo docker stop prod-server
-            sudo docker rm prod-server
-            sudo docker image rm ${{ secrets.DOCKER_REPO }}
+            # 8080 포트를 사용 중인 도커 컨테이너 확인
+            RUNNING_CONTAINER=$(sudo docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
+
+            # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
+            if [ -n "$RUNNING_CONTAINER" ]; then
+              sudo docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
+              sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
+            fi
+
+            # 새로운 도커 이미지 pull 및 실행
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_REPO }}
+            sudo docker run -d -p 8080:8080 --name ${{ secrets.DOCKER_CONTAINER_NAME }} ${{ secrets.DOCKER_REPO }}
+      
