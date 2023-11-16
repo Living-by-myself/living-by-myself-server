@@ -42,7 +42,7 @@ public class ProfileServiceImpl implements ProfileService{
     AttachmentUserUrl attachmentUserUrl = attachmentUserUrlRepository.findByUser(user);
 
     if (attachmentUserUrl == null) {
-      String fileUrlResult = profileImageUpload(multipartFiles, user);
+      String fileUrlResult = profileImageUpload(multipartFiles);
 
       AttachmentUserUrl file = new AttachmentUserUrl(user, fileUrlResult);
 
@@ -51,14 +51,14 @@ public class ProfileServiceImpl implements ProfileService{
       String file = attachmentUserUrl.getFileName();
       s3Service.deleteFile(file);
 
-      String replaceUploadFileName = profileImageUpload(multipartFiles, user);
+      String replaceUploadFileName = profileImageUpload(multipartFiles);
       attachmentUserUrl.setFileName(replaceUploadFileName);
     }
 
     return new ApiResponseDto("프로필 이미지 설정", 200);
   }
 
-  private String profileImageUpload(MultipartFile multipartFiles, User user) {
+  private String profileImageUpload(MultipartFile multipartFiles) {
     String filePath = s3Service.uploadFile(multipartFiles);
 
     return filePath.replaceFirst("^,", "");
