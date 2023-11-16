@@ -13,31 +13,16 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
 
-    services:
-      redis:
-        image: redis:latest
-        ports:
-          - "6379:6379"
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Install Docker Compose
-        run: |
-          mkdir -p $HOME/.local/bin
-          curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o $HOME/.local/bin/docker-compose
-          chmod +x $HOME/.local/bin/docker-compose
-          echo 'export PATH=$PATH:$HOME/.local/bin' >> $HOME/.bashrc  # or $HOME/.zshrc for Zsh
-          source $HOME/.bashrc  # or source $HOME/.zshrc for Zsh
-
       - name: Make application.yml
         run: |
           # Delete existing application.properties if it exists
@@ -54,6 +39,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bootJar
 
+      ## 도커 이미지 빌드 후 도커허브에 push하기
       - name: Web Docker Build and Push
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -64,7 +50,8 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
 
-      - name: 원격 SSH 명령 실행
+      ## 서버에 접속하여 도커 이미지를 pull 받고 실행하기
+      - name: Executing Remote SSH Commands using Password
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.HOST }}
@@ -73,16 +60,16 @@ jobs:
           port: 22
           script: |
             # 8080 포트를 사용 중인 도커 컨테이너 확인
-            sleep 2 # 2초 동안 대기
-            chmod 666 /var/run/docker.sock
-            RUNNING_CONTAINER=$(docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
+            RUNNING_CONTAINER=$(sudo docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
 
             # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
             if [ -n "$RUNNING_CONTAINER" ]; then
-              docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
-              docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
+              sudo docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
+              sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
             fi
 
             # 새로운 도커 이미지 pull 및 실행
-            docker pull ${{ secrets.DOCKER_REPO }}
-            docker-compose -f docker-compose.yml up -d z
+            sudo docker pull ${{ secrets.DOCKER_REPO }}
+            sudo docker pull redis:latest
+            sudo docker run -d -p 6379:6379
+            sudo docker run -d -p 8080:8080 --name ${{ secrets.DOCKER_CONTAINER_NAME }} ${{ secrets.DOCKER_REPO }}
