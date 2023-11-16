@@ -52,13 +52,8 @@ jobs:
         run: |
           echo "${{ secrets.KEY }}" > key.pem
           chmod 600 key.pem
-          scp -i key.pem ./src/main/resources/docker-compose-redis.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:~/docker-compose-redis.yml
           scp -i key.pem ./src/main/resources/docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:~/docker-compose.yml
 
       - name: Execute Docker Compose on EC2
         run: |
-          cd ~/
-          sudo docker-compose down
-          sudo docker-compose up -d
-          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose-redis.yml up -d"
           ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose.yml up -d"
