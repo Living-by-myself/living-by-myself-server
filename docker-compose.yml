@@ -4,6 +4,8 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+    networks:
+      - my_network
 
   web:
     image: bsb99/living-by-myself-server:latest
@@ -12,7 +14,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     networks:
       - my_network
 
