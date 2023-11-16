@@ -2,18 +2,24 @@ package com.example.livingbymyselfserver.groupBuying;
 
 import com.example.livingbymyselfserver.attachment.S3Service;
 import com.example.livingbymyselfserver.attachment.entity.Attachment;
+import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
 import com.example.livingbymyselfserver.attachment.fair.AttachmentGroupBuyingUrlRepository;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
+import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
+import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +27,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +44,28 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   final private RedisUtil redisUtil;
   private final S3Service s3Service;
   private final AttachmentGroupBuyingUrlRepository attachmentGroupBuyingUrlRepository;
+
+  @Override
+  public GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
+      String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
+      GroupBuyingStatusEnum status, String beobJeongDong,String sort) {
+
+    Page<GroupBuying> groupBuyingPage = groupBuyingRepository.searchItemList(pageable, keyword,
+        category,enumShare,status,beobJeongDong,sort); //전체 크기를 받아오기 위한 Page
+    Long totalLen =  groupBuyingPage.getTotalElements();  //total길이
+
+    List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,keyword,
+        category,enumShare,status,beobJeongDong,sort)
+        .stream().map(groupBuying -> {
+          double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
+          AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+        })
+        .toList();
+
+    return new GroupBuyingListResponseDto(groupBuyingResponseDtoList, totalLen);
+  }
+
   @Override
   public ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
     GroupBuyingRequestDto groupBuyingRequestDto = conversionRequestDto(requestDto);
@@ -150,6 +180,17 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     applicationUsersRepository.delete(applicationUsers);
 
     return new ApiResponseDto("공고 지원 취소", 200);
+  }
+
+  @Override
+  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
+    return groupBuyingRepository.findCategory(GroupBuyingCategoryEnum.FOOD ,pageable)
+        .stream().map(groupBuying -> {
+          double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
+          AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+        })
+        .toList();
   }
 
   @Override

@@ -16,6 +16,7 @@ public interface UserService {
   TokenResponseDto reissue(User user, HttpServletRequest request);
 
   User findUser(String username);
+  User findUser(Long userId);
 
   User findUser(Long userId);
 
