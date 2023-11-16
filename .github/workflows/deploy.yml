@@ -50,6 +50,12 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
 
+      - name: Add EC2 Host Key
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          ssh-keyscan -t rsa ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
       - name: Copy Docker Compose to EC2
         run: |
           echo "${{ secrets.KEY }}" > key.pem
