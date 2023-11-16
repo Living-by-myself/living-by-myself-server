@@ -20,7 +20,6 @@ jobs:
         image: redis:latest
         ports:
           - "6379:6379"
-        options: --network github_network_d357c33f390f47ed8e629bad67166593
 
     steps:
       - uses: actions/checkout@v3
@@ -47,7 +46,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bootJar
 
-      ## 도커 이미지 빌드 후 도커허브에 push하기
       - name: Web Docker Build and Push
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -58,7 +56,6 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
 
-      ## 서버에 접속하여 도커 이미지를 pull 받고 실행하기
       - name: Executing Remote SSH Commands using Password
         uses: appleboy/ssh-action@v0.1.6
         with:
