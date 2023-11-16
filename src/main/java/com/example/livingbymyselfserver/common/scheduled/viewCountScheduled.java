@@ -2,7 +2,7 @@ package com.example.livingbymyselfserver.common.scheduled;
 
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
-import com.example.livingbymyselfserver.groupBuying.GroupBuyingRepository;
+import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;

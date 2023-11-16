@@ -2,15 +2,15 @@ package com.example.livingbymyselfserver.user.badge;
 
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.Community;
-import com.example.livingbymyselfserver.community.CommunityRepository;
+
+import com.example.livingbymyselfserver.community.repository.CommunityRepository;
 import com.example.livingbymyselfserver.like.community.CommunityLikeRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
