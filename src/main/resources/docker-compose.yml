@@ -11,7 +11,6 @@ services:
       retries: 3
     networks:
       - my_network
-      -
   web:
     image: bsb99/living-by-myself-server:latest
     ports:
