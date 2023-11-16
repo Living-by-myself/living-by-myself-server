@@ -36,10 +36,10 @@ jobs:
 
       - name: Web Docker Build and Push
         run: |
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
           # Gradle 빌드에서 생성된 JAR 파일을 Docker 이미지로 복사
-          cp build/libs/*.jar app.jar
+          cp -n build/libs/*.jar app.jar
 
           # application.properties 파일도 Docker 이미지로 복사
           cp ./src/main/resources/application.properties ./src/main/resources/application.properties
