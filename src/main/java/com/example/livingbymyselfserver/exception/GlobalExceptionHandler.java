@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MaxUploadSizeExceededException.class})
     protected ResponseEntity<ApiResponseDto> handleMaxUploadSizeExceededException(
             MaxUploadSizeExceededException e) {
-        ApiResponseDto response = new ApiResponseDto("업로드 할 수 있는 파일의 최대 크기는 10MB 입니다.", HttpStatus.BAD_REQUEST.value());
+        ApiResponseDto response = new ApiResponseDto("업로드 할 수 있는 파일의 최대 크기는 50MB 입니다.", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
