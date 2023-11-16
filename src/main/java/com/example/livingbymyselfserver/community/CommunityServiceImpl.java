@@ -1,5 +1,8 @@
 package com.example.livingbymyselfserver.community;
 
+import com.example.livingbymyselfserver.alarm.AlarmCategoryEnum;
+import com.example.livingbymyselfserver.alarm.KafkaProducer;
+import com.example.livingbymyselfserver.alarm.NotificationMessage;
 import com.example.livingbymyselfserver.attachment.S3Service;
 import com.example.livingbymyselfserver.attachment.community.AttachmentCommunityUrlRepository;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
@@ -45,6 +48,7 @@ public class CommunityServiceImpl implements CommunityService{
             uploadImage(multipartFiles, community);
         }
         badgeService.addBadgeForCommunityCount(user);
+
         return new ApiResponseDto("커뮤니티 게시글 생성 완료", 201);
     }
 

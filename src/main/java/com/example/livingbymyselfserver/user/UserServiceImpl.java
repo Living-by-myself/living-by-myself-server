@@ -4,11 +4,9 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.security.JwtUtil;
 import com.example.livingbymyselfserver.security.TokenResponseDto;
-import com.example.livingbymyselfserver.user.auth.PhoneMessageRequestDto;
 import com.example.livingbymyselfserver.user.dto.LoginRequestDto;
 import com.example.livingbymyselfserver.user.dto.SignupRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -89,6 +87,12 @@ public class UserServiceImpl implements UserService{
   @Override
   public User findUser(String username) {
     return userRepository.findByUsername(username).orElseThrow(()->
+        new IllegalArgumentException("회원을 찾을 수 없습니다."));
+  }
+
+  @Override
+  public User findUser(Long userId) {
+    return userRepository.findById(userId).orElseThrow(() ->
         new IllegalArgumentException("회원을 찾을 수 없습니다."));
   }
 
