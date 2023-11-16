@@ -59,17 +59,8 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            # 8080 포트를 사용 중인 도커 컨테이너 확인
-            RUNNING_CONTAINER=$(sudo docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
+            # SSH로 접속 후 Docker Compose 파일 복사
+            scp -i ${{ secrets.KEY }} docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:/
 
-            # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
-            if [ -n "$RUNNING_CONTAINER" ]; then
-              sudo docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
-              sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
-            fi
-
-            # 새로운 도커 이미지 pull 및 실행
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker pull redis:latest
-            sudo docker run -d -p 6379:6379
-            sudo docker run -d -p 8080:8080 --name ${{ secrets.DOCKER_CONTAINER_NAME }} ${{ secrets.DOCKER_REPO }}
+            # Docker Compose로 실행
+            ssh -i ${{ secrets.KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose up -d"
