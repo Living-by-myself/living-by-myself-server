@@ -63,4 +63,5 @@ jobs:
 
       - name: Execute Docker Compose on EC2
         run: |
+          chmod 600 key.pem
           ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose.yml up -d"
