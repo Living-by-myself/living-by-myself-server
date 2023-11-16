@@ -65,7 +65,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
 
-      - name: Executing Remote SSH Commands using Password
+      - name: 원격 SSH 명령 실행
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.HOST }}
@@ -74,6 +74,7 @@ jobs:
           port: 22
           script: |
             # 8080 포트를 사용 중인 도커 컨테이너 확인
+            sleep 10 # 10초 동안 대기
             RUNNING_CONTAINER=$(docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
 
             # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
