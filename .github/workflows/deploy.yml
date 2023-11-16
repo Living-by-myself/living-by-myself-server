@@ -80,4 +80,4 @@ jobs:
 
             # 새로운 도커 이미지 pull 및 실행
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker-compose -f docker-compose.yml up -d
+            sudo /usr/local/bin/docker-compose -f docker-compose.yml up -d
