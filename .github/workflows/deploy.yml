@@ -40,11 +40,14 @@ jobs:
           # Remove the image if it exists
           docker image rm -f ${{ secrets.DOCKER_REPO }} || true
 
-          # Docker 이미지 빌드
+          # Docker 이미지 빌드 및 태그
           docker build -t ${{ secrets.DOCKER_REPO }} .
 
+          # Docker 이미지에 latest 태그 추가
+          docker tag ${{ secrets.DOCKER_REPO }}:latest ${{ secrets.DOCKER_REPO }}:latest
+
           # Docker 이미지를 Docker Hub에 푸시
-          docker push ${{ secrets.DOCKER_REPO }}
+          docker push ${{ secrets.DOCKER_REPO }}:latest
 
       - name: Add EC2 Host Key
         run: |
