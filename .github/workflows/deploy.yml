@@ -37,6 +37,7 @@ jobs:
           chmod +x $HOME/.local/bin/docker-compose
           echo 'export PATH=$PATH:$HOME/.local/bin' >> $HOME/.bashrc  # or $HOME/.zshrc for Zsh
           source $HOME/.bashrc  # or source $HOME/.zshrc for Zsh
+          sudo usermod -aG docker $USER  # Add the GitHub Actions user to the docker group
 
       - name: Make application.yml
         run: |
