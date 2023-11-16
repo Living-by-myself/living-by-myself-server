@@ -27,7 +27,7 @@ jobs:
       - name: Make application.properties
         run: |
           # Create application.properties from GitHub secret
-          echo "${{ secrets.APPLICATION_INFO }}" -d > ./src/main/resources/application.properties
+          echo "${{ secrets.APPLICATION_INFO }}" > ./src/main/resources/application.properties
 
       - name: Build with Gradle
         run: ./gradlew bootJar
