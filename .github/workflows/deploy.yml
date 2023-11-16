@@ -32,8 +32,11 @@ jobs:
 
       - name: Install Docker Compose
         run: |
-          curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          chmod +x /usr/local/bin/docker-compose
+          mkdir -p $HOME/.local/bin
+          curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o $HOME/.local/bin/docker-compose
+          chmod +x $HOME/.local/bin/docker-compose
+          echo 'export PATH=$PATH:$HOME/.local/bin' >> $HOME/.bashrc  # or $HOME/.zshrc for Zsh
+          source $HOME/.bashrc  # or source $HOME/.zshrc for Zsh
 
       - name: Make application.yml
         run: |
@@ -80,4 +83,4 @@ jobs:
 
             # 새로운 도커 이미지 pull 및 실행
             docker pull ${{ secrets.DOCKER_REPO }}
-            /usr/local/bin/docker-compose -f docker-compose.yml up -d
+            docker-compose -f docker-compose.yml up -d
