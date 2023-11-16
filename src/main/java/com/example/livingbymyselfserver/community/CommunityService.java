@@ -3,6 +3,7 @@ package com.example.livingbymyselfserver.community;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,7 @@ public interface CommunityService {
 
     CommunityDetailResponseDto getCommunityDetailInfo(User user, Long communityId);
 
-    List<CommunityListResponseDto> getCommunityListInfo(Pageable pageable);
+    List<CommunityResponseDto> getCommunityListInfo(Pageable pageable);
+
+    CommunityListResponseDto searchCommunityList(Pageable pageable, String keyword, CommunityCategoryEnum category, String sort);
 }

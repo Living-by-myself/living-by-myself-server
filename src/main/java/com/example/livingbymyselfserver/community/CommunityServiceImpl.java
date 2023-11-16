@@ -7,15 +7,20 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
-import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
+import com.example.livingbymyselfserver.community.repository.CommunityRepository;
 import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
+import com.example.livingbymyselfserver.groupBuying.GroupBuying;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,14 +140,34 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public List<CommunityListResponseDto> getCommunityListInfo(Pageable pageable) {
+    public List<CommunityResponseDto> getCommunityListInfo(Pageable pageable) {
         return communityRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
                 .map(community -> {
                     AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
-                    return (attachmentCommunityUrl == null) ? new CommunityListResponseDto(community) : new CommunityListResponseDto(community, attachmentCommunityUrl);
+                    double viewCount = redisViewCountUtil.getViewPostCount(community.getId().toString(),PostTypeEnum.COMMUNITY);
+                    return (attachmentCommunityUrl == null) ? new CommunityResponseDto(community,viewCount) : new CommunityResponseDto(community, attachmentCommunityUrl,viewCount);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CommunityListResponseDto searchCommunityList(Pageable pageable, String keyword,
+        CommunityCategoryEnum category, String sort) {
+        Page<Community> communityPage = communityRepository.searchItemList(pageable, keyword,
+            category,sort); //전체 크기를 받아오기 위한 Page
+        Long totalLen =  communityPage.getTotalElements();  //total길이
+
+        List<CommunityResponseDto> communityResponseDtoList = communityRepository.searchItemList(pageable,keyword,
+                category,sort)
+            .stream().map(community -> {
+                double viewCount = redisViewCountUtil.getViewPostCount(community.getId().toString(),PostTypeEnum.COMMUNITY);
+                AttachmentCommunityUrl attachmentCommunityUrl = attachmentCommunityUrlRepository.findByCommunity(community);
+                return (attachmentCommunityUrl == null) ? new CommunityResponseDto(community,viewCount) : new CommunityResponseDto(community, attachmentCommunityUrl,viewCount);
+            })
+            .toList();
+
+        return new CommunityListResponseDto(communityResponseDtoList, totalLen);
     }
 
 
