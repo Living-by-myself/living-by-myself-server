@@ -21,6 +21,11 @@ services:
         condition: service_healthy
     networks:
       - my_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f https://tracelover.shop/home/communities"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
 
 networks:
   my_network:
