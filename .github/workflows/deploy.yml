@@ -27,7 +27,7 @@ jobs:
       - name: Make application.properties
         run: |
           # Create application.properties from GitHub secret
-          echo "${{ secrets.APPLICATION_INFO }}" | base64 -d > ./src/main/resources/application.properties
+          echo "${{ secrets.APPLICATION_INFO }}" -d > ./src/main/resources/application.properties
 
       - name: Build with Gradle
         run: ./gradlew bootJar
@@ -52,8 +52,10 @@ jobs:
         run: |
           echo "${{ secrets.KEY }}" > key.pem
           chmod 600 key.pem
-          scp -i key.pem ./docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:~/docker-compose.yml
+          scp -i key.pem ./docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:~/src/main/resources/docker-compose-redis.yml
+          scp -i key.pem ./docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:~/src/main/resources/docker-compose.yml
 
       - name: Execute Docker Compose on EC2
         run: |
+          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose-redis.yml up -d"
           ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose.yml up -d"
