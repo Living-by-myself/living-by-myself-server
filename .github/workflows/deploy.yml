@@ -24,18 +24,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make application.yml
-        run: |
-          # Delete existing application.properties if it exists
-          rm -f ./src/main/resources/application.properties
-
-          # Create application.yml
-          mkdir -p ./src/main/resources
-          touch ./src/main/resources/application.properties
-          
-          # Write secrets.APPLICATION_INFO to application.yml
-          echo "application.info=${{ secrets.APPLICATION_INFO }}" >> ./src/main/resources/application.properties
-        shell: bash
+      - name: Set Environment Variable for EC2
+        run: echo "APPLICATION_INFO=${{ secrets.APPLICATION_INFO }}" >> .env
 
       - name: Build with Gradle
         run: ./gradlew bootJar
