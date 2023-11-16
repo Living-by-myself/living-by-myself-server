@@ -38,6 +38,7 @@ jobs:
           echo 'export PATH=$PATH:$HOME/.local/bin' >> $HOME/.bashrc  # or $HOME/.zshrc for Zsh
           source $HOME/.bashrc  # or source $HOME/.zshrc for Zsh
           sudo usermod -aG docker $USER  # Add the GitHub Actions user to the docker group
+          newgrp docker  # Activate the changes to groups without logging out
 
       - name: Make application.yml
         run: |
