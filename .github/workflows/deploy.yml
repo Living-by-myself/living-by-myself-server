@@ -20,6 +20,7 @@ jobs:
         image: redis:latest
         ports:
           - "6379:6379"
+        options: --network app_network
 
     steps:
       - uses: actions/checkout@v3
@@ -75,9 +76,6 @@ jobs:
               sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
             fi
 
-            # Redis 서비스 시작
-            sudo docker-compose -f docker-compose.yml up -d
-
             # 새로운 도커 이미지 pull 및 실행
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker run -d -p 8080:8080 --name ${{ secrets.DOCKER_CONTAINER_NAME }} --network bridge ${{ secrets.DOCKER_REPO }}
+            sudo docker-compose -f docker-compose.yml up -d
