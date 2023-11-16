@@ -50,17 +50,10 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
 
-      ## 서버에 접속하여 도커 이미지를 pull 받고 실행하기
-      - name: Executing Remote SSH Commands using Password
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: |
-            # SSH로 접속 후 Docker Compose 파일 복사
-            scp -i ${{ secrets.KEY }} docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:/
+      - name: Copy Docker Compose to EC2
+        run: |
+            scp -i ${{ secrets.KEY }} ./docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:/
 
-            # Docker Compose로 실행
-            ssh -i ${{ secrets.KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose up -d"
+      - name: Execute Docker Compose on EC2
+        run: |
+          ssh -i ${{ secrets.KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "docker-compose -f ~/docker-compose.yml up -d"
