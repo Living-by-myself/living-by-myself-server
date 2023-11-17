@@ -37,16 +37,18 @@ public class CommunityServiceImpl implements CommunityService{
     private final RedisViewCountUtil redisViewCountUtil;
     private final RedisUtil redisUtil;
     @Override
+    @Transactional
     public ApiResponseDto createCommunity(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
         CommunityRequestDto communityRequestDto = conversionRequestDto(requestDto);
 
         Community community = new Community(communityRequestDto, user);
 
+        communityRepository.save(community);
+
         if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
             uploadImage(multipartFiles, community);
         }
 
-        communityRepository.save(community);
         badgeService.addBadgeForCommunityCount(user);
 
         return new ApiResponseDto("커뮤니티 게시글 생성 완료", 201);
