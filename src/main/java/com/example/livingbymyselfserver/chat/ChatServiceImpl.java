@@ -38,10 +38,8 @@ public class ChatServiceImpl implements ChatService {
   public ApiResponseDto createChatRoom(Long userId,List<Long> userIdList) {
     User user = userService.findUser(userId);
 
-    for(int i =0;i<userIdList.size();i++){
-      if(userId.equals(userIdList.get(i))){
-        throw new IllegalArgumentException("자기 자신이랑 채팅은 안돼요ㅠ");
-      }
+    if (userIdList.stream().anyMatch(id -> id.equals(userId))) {
+      throw new IllegalArgumentException("You can't chat with yourself.");
     }
 
 //    if (findChatRoom != null) {

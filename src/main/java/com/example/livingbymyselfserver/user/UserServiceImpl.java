@@ -28,13 +28,14 @@ public class UserServiceImpl implements UserService{
     String username = dto.getUsername();
     String password = passwordEncoder.encode(dto.getPassword());
     String phoneNumber =dto.getPhoneNumber();
+    String address = dto.getAdress();
     UserRoleEnum role = UserRoleEnum.MEMBER;
     OAuthProviderEnum oAuthProviderEnum = OAuthProviderEnum.ORIGIN;
 
     // 비밀번호 확인
     passwordCheck(dto.getPasswordCheck(), password);
 
-    User user = new User(username, password, username, phoneNumber, role, oAuthProviderEnum);
+    User user = new User(username, password, username, address,  phoneNumber, role, oAuthProviderEnum,0L,10L);
     userRepository.save(user);
 
     return new ApiResponseDto("회원가입 성공", 201);

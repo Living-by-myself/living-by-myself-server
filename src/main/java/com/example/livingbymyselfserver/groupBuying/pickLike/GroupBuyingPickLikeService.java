@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.like.groupBuying;
+package com.example.livingbymyselfserver.groupBuying.pickLike;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;

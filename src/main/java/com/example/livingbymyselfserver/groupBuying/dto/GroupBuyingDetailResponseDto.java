@@ -3,6 +3,8 @@ package com.example.livingbymyselfserver.groupBuying.dto;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
+import com.example.livingbymyselfserver.user.User;
+import java.util.List;
 import lombok.Getter;
 
 @Getter
@@ -22,8 +24,9 @@ public class GroupBuyingDetailResponseDto {
     private final String beobJeongDong;
     private final double lat;
     private final double lng;
+    private final List<User> users;
 
-    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt){
+    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt, List<User> users){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
@@ -39,9 +42,10 @@ public class GroupBuyingDetailResponseDto {
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
         this.createdAt = groupBuying.getCreatedAtAsString();
+        this.users = users;
     }
 
-    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt){
+    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, List<User> users){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
@@ -57,5 +61,6 @@ public class GroupBuyingDetailResponseDto {
         this.lng = groupBuying.getLng();
         this.fileUrls = attachmentGroupBuyingUrl.getFileName();
         this.createdAt = groupBuying.getCreatedAtAsString();
+        this.users = users;
     }
 }

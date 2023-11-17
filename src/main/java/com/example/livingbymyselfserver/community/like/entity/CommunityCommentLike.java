@@ -1,6 +1,7 @@
-package com.example.livingbymyselfserver.like.entity;
+package com.example.livingbymyselfserver.community.like.entity;
 
 import com.example.livingbymyselfserver.comment.entity.CommunityComment;
+import com.example.livingbymyselfserver.common.entity.Like;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

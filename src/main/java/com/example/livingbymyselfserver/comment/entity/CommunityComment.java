@@ -2,7 +2,7 @@ package com.example.livingbymyselfserver.comment.entity;
 
 import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
 import com.example.livingbymyselfserver.community.Community;
-import com.example.livingbymyselfserver.like.entity.CommunityCommentLike;
+import com.example.livingbymyselfserver.community.like.entity.CommunityCommentLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
