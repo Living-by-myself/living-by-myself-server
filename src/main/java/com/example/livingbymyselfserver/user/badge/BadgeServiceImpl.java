@@ -1,5 +1,8 @@
 package com.example.livingbymyselfserver.user.badge;
 
+import com.example.livingbymyselfserver.alarm.AlarmCategoryEnum;
+import com.example.livingbymyselfserver.alarm.KafkaProducer;
+import com.example.livingbymyselfserver.alarm.NotificationMessage;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.Community;
 
@@ -19,6 +22,7 @@ public class BadgeServiceImpl implements BadgeService {
     private final CommunityRepository communityRepository;
     private final CommunityLikeRepository communityLikeRepository;
     private final RedisViewCountUtil redisViewCountUtil;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public void addBadgeForCommunityCount(User user) {
@@ -26,17 +30,13 @@ public class BadgeServiceImpl implements BadgeService {
         Badge badge;
         Boolean check;
 
-        if (communityCnt == 5) {
-            badge = new Badge(BadgeEnum.seed, user);
-            badgeRepository.save(badge);
-        }
-
         switch (communityCnt) {
             case 5 -> {
                 check = checkUserBadge(user, BadgeEnum.seed);
                 if (check) break;
                 badge = new Badge(BadgeEnum.seed, user);
                 badgeRepository.save(badge);
+
             }
             case 10 -> {
                 check = checkUserBadge(user, BadgeEnum.sprout);
@@ -63,6 +63,8 @@ public class BadgeServiceImpl implements BadgeService {
                 badgeRepository.save(badge);
             }
         }
+
+
     }
 
     @Override
