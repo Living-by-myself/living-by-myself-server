@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class ChatRoomListResponseDto {
   private Long id;
-  Set<User> users;
+  private Set<User> users;
 
   public ChatRoomListResponseDto(ChatRoom chatRoom) {
     this.id = chatRoom.getId();

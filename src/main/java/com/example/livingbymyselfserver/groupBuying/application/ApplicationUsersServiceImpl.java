@@ -38,10 +38,9 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
     ApplicationUsers applicationUsers = new ApplicationUsers(user, groupBuying);
     user.setCash(user.getCash()-groupBuying.getPerUserPrice());
     applicationUsersRepository.save(applicationUsers);
+
     return new ApiResponseDto("공동구매 신청완료", 200);
   }
-
-
 
   @Override
   @Transactional
@@ -59,6 +58,7 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
 
     return new ApiResponseDto("공고 지원 취소", 200);
   }
+
   public GroupBuying findGroupBuying(Long id) {
     return groupBuyingRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
   }

@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
     // 비밀번호 확인
     passwordCheck(dto.getPasswordCheck(), password);
 
-    User user = new User(username, password, username, address,  phoneNumber, role, oAuthProviderEnum,0L,10L);
+    User user = new User(username, password, username, address, phoneNumber, role, oAuthProviderEnum, 0L, 10L);
     userRepository.save(user);
 
     return new ApiResponseDto("회원가입 성공", 201);

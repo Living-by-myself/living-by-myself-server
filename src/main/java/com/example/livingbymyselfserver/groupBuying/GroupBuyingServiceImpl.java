@@ -8,7 +8,6 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
-import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
