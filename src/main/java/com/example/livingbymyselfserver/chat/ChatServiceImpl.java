@@ -25,7 +25,7 @@ public class ChatServiceImpl implements ChatService {
   private final UserRepository userRepository;
 
   @Override
-  public Chat createChat(Long roomNo, Long userId, String msg) {
+  public Chat createChat(Long roomNo, Long userId, String msg) {  //채팅메세지생성
     ChatRoom chatRoom = getRoom(roomNo);
     User user = userService.findUser(userId);
     Chat chat = new Chat(msg,chatRoom, user,attachmentUserUrlRepository);
