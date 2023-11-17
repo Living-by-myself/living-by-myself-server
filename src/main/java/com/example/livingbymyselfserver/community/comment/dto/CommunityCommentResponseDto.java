@@ -1,6 +1,6 @@
-package com.example.livingbymyselfserver.comment.dto;
+package com.example.livingbymyselfserver.community.comment.dto;
 
-import com.example.livingbymyselfserver.comment.entity.CommunityComment;
+import com.example.livingbymyselfserver.community.comment.CommunityComment;
 import lombok.Getter;
 
 @Getter

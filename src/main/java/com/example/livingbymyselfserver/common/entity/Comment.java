@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.comment.entity;
+package com.example.livingbymyselfserver.common.entity;
 
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.user.User;

@@ -1,6 +1,6 @@
 package com.example.livingbymyselfserver.like.community;
 
-import com.example.livingbymyselfserver.comment.entity.CommunityComment;
+import com.example.livingbymyselfserver.community.comment.CommunityComment;
 import com.example.livingbymyselfserver.like.entity.CommunityCommentLike;
 import com.example.livingbymyselfserver.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

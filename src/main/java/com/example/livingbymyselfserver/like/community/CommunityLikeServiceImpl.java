@@ -1,7 +1,7 @@
 package com.example.livingbymyselfserver.like.community;
 
-import com.example.livingbymyselfserver.comment.community.CommunityCommentService;
-import com.example.livingbymyselfserver.comment.entity.CommunityComment;
+import com.example.livingbymyselfserver.community.comment.CommunityCommentService;
+import com.example.livingbymyselfserver.community.comment.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
@@ -9,7 +9,6 @@ import com.example.livingbymyselfserver.like.entity.CommunityCommentLike;
 import com.example.livingbymyselfserver.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
-import com.example.livingbymyselfserver.user.badge.BadgeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
