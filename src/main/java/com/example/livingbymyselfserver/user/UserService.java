@@ -18,5 +18,7 @@ public interface UserService {
   User findUser(String username);
   User findUser(Long userId);
 
+  User findUser(Long userId);
+
   ApiResponseDto logout(User user, HttpServletRequest request);
 }
