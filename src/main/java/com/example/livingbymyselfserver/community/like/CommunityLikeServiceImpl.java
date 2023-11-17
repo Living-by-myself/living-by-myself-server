@@ -1,7 +1,7 @@
 package com.example.livingbymyselfserver.community.like;
 
-import com.example.livingbymyselfserver.comment.community.CommunityCommentService;
-import com.example.livingbymyselfserver.comment.entity.CommunityComment;
+import com.example.livingbymyselfserver.community.comment.CommunityCommentService;
+import com.example.livingbymyselfserver.community.comment.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;

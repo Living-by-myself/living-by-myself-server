@@ -63,6 +63,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   }
 
   @Override
+  @Transactional
   public ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
     GroupBuyingRequestDto groupBuyingRequestDto = conversionRequestDto(requestDto);
 

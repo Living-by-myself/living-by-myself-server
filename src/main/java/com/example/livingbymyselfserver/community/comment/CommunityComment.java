@@ -1,6 +1,7 @@
-package com.example.livingbymyselfserver.comment.entity;
+package com.example.livingbymyselfserver.community.comment;
 
-import com.example.livingbymyselfserver.comment.dto.CommentRequestDto;
+import com.example.livingbymyselfserver.community.comment.dto.CommentRequestDto;
+import com.example.livingbymyselfserver.common.entity.Comment;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.like.entity.CommunityCommentLike;
 import com.example.livingbymyselfserver.user.User;

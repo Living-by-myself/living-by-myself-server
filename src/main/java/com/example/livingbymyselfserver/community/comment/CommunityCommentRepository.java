@@ -1,6 +1,5 @@
-package com.example.livingbymyselfserver.comment.community;
+package com.example.livingbymyselfserver.community.comment;
 
-import com.example.livingbymyselfserver.comment.entity.CommunityComment;
 import com.example.livingbymyselfserver.community.Community;
 import org.springframework.data.jpa.repository.JpaRepository;
 
