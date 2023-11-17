@@ -35,9 +35,7 @@ public interface GroupBuyingService {
 
   GroupBuyingDetailResponseDto getGroupBuying(User user, Long groupBuyingId);
 
-  ApiResponseDto createApplication(User user, Long groupBuyingId);
 
-  ApiResponseDto deleteApplication(User user, Long groupBuyingId);
 
   ApiResponseDto closeGroupBuying(Long groupBuyingId, User user);
 

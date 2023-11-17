@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.like.community;
+package com.example.livingbymyselfserver.community.like;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;

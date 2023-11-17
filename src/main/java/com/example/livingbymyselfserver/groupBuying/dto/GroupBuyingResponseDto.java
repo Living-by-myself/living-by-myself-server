@@ -10,8 +10,6 @@ import lombok.Getter;
 public class GroupBuyingResponseDto {
     private final Long id;
     private final String title;
-    private final String description;
-    private final String itemLink;
     private final Integer maxUser;
     private final Integer current_user_count;
     private String fileUrls;
@@ -20,15 +18,11 @@ public class GroupBuyingResponseDto {
     private final int viewCnt;
     private final String address;
     private final String beobJeongDong;
-    private final double lat;
-    private final double lng;
     private final LocalDateTime createAt;
     private final LocalDateTime modifiedAt;
     public GroupBuyingResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt){
         this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
-        this.description = groupBuying.getDescription();
-        this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
         this.current_user_count = groupBuying.getAppUsers().size();
         this.perUserPrice = groupBuying.getPerUserPrice();
@@ -37,16 +31,12 @@ public class GroupBuyingResponseDto {
         this.viewCnt = (int)viewCnt;
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.fileUrls = attachmentGroupBuyingUrl.getFileName().split(",")[0];
-        this.lat = groupBuying.getLat();
-        this.lng = groupBuying.getLng();
         this.createAt = groupBuying.getCreatedAt();
         this.modifiedAt = groupBuying.getModifiedAt();
     }
     public GroupBuyingResponseDto(GroupBuying groupBuying,double viewCnt){
         this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
-        this.description = groupBuying.getDescription();
-        this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
         this.current_user_count = groupBuying.getAppUsers().size();
         this.perUserPrice = groupBuying.getPerUserPrice();
@@ -54,8 +44,6 @@ public class GroupBuyingResponseDto {
         this.enumShare = groupBuying.getEnumShare();
         this.viewCnt = (int)viewCnt;
         this.beobJeongDong = groupBuying.getBeobJeongDong();
-        this.lat = groupBuying.getLat();
-        this.lng = groupBuying.getLng();
         this.createAt = groupBuying.getCreatedAt();
         this.modifiedAt = groupBuying.getModifiedAt();
     }

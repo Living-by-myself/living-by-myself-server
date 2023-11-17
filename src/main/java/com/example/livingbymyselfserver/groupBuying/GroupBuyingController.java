@@ -40,6 +40,7 @@ public class GroupBuyingController {
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
+
   @Operation(summary = "공구 조건검색")
   @GetMapping("/search")
   public ResponseEntity<GroupBuyingListResponseDto> searchGroupBuyingList(Pageable pageable,
@@ -67,21 +68,7 @@ public class GroupBuyingController {
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
-  @Operation(summary = "공구 신청")
-  @PostMapping("/{groupBuyingId}/application")
-  public ResponseEntity<ApiResponseDto> createApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long groupBuyingId) {
-    ApiResponseDto result = groupBuyingService.createApplication(userDetails.getUser(),groupBuyingId);
 
-    return ResponseEntity.status(HttpStatus.OK).body(result);
-  }
-
-  @Operation(summary = "공구 지원 취소")
-  @DeleteMapping("/{groupBuyingId}/application")
-  public ResponseEntity<ApiResponseDto> deleteApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long groupBuyingId) {
-    ApiResponseDto result = groupBuyingService.deleteApplication(userDetails.getUser(),groupBuyingId);
-
-    return ResponseEntity.status(HttpStatus.OK).body(result);
-  }
 
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{groupBuyingId}")

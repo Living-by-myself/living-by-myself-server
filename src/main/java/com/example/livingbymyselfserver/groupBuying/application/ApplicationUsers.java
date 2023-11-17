@@ -16,11 +16,11 @@ public class ApplicationUsers {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    protected User user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "group_buying_id")
-    protected GroupBuying groupBuying;
+    private GroupBuying groupBuying;
 
     public ApplicationUsers(User user, GroupBuying groupBuying){
         this.user = user;
