@@ -1,23 +1,17 @@
 package com.example.livingbymyselfserver.community;
 
-import com.example.livingbymyselfserver.alarm.AlarmCategoryEnum;
-import com.example.livingbymyselfserver.alarm.KafkaProducer;
-import com.example.livingbymyselfserver.alarm.NotificationMessage;
 import com.example.livingbymyselfserver.attachment.S3Service;
 import com.example.livingbymyselfserver.attachment.community.AttachmentCommunityUrlRepository;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisUtil;
+import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
-import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.community.repository.CommunityRepository;
-import com.example.livingbymyselfserver.common.PostTypeEnum;
-import com.example.livingbymyselfserver.common.RedisViewCountUtil;
-import com.example.livingbymyselfserver.groupBuying.GroupBuying;
-import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
-import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,15 +37,18 @@ public class CommunityServiceImpl implements CommunityService{
     private final RedisViewCountUtil redisViewCountUtil;
     private final RedisUtil redisUtil;
     @Override
+    @Transactional
     public ApiResponseDto createCommunity(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
         CommunityRequestDto communityRequestDto = conversionRequestDto(requestDto);
 
         Community community = new Community(communityRequestDto, user);
+
         communityRepository.save(community);
 
         if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
             uploadImage(multipartFiles, community);
         }
+
         badgeService.addBadgeForCommunityCount(user);
 
         return new ApiResponseDto("커뮤니티 게시글 생성 완료", 201);

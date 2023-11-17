@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.comment.dto;
+package com.example.livingbymyselfserver.community.comment.dto;
 
 import lombok.Getter;
 
