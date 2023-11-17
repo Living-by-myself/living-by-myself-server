@@ -12,5 +12,5 @@ public interface ApplicationUsersRepository extends JpaRepository<ApplicationUse
 
     ApplicationUsers findByGroupBuyingAndUser(GroupBuying groupBuying, User user);
 
-    List<User> findAllByGroupBuyingId(Long groupBuying_id);
+    List<ApplicationUsers> findAllByGroupBuyingId(Long groupBuyingId);
 }
