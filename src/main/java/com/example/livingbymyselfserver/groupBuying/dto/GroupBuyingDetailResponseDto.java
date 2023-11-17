@@ -12,8 +12,8 @@ public class GroupBuyingDetailResponseDto {
     private final String description;
     private final String itemLink;
     private final Integer maxUser;
-    private final Integer current_user_count;
-    private final String created_at;
+    private final Integer currentUserCount;
+    private final String createdAt;
     private String fileUrls;
     private final Integer perUserPrice;
     private final GroupBuyingShareEnum enumShare;
@@ -28,16 +28,17 @@ public class GroupBuyingDetailResponseDto {
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
+
         this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
-        this.current_user_count = groupBuying.getAppUsers().size();
+        this.currentUserCount = groupBuying.getAppUsers().size();
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
-        this.created_at = groupBuying.getCreatedAtAsString();
+        this.createdAt = groupBuying.getCreatedAtAsString();
     }
 
     public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt){
@@ -47,7 +48,7 @@ public class GroupBuyingDetailResponseDto {
         this.description = groupBuying.getDescription();
         this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
-        this.current_user_count = groupBuying.getAppUsers().size();
+        this.currentUserCount = groupBuying.getAppUsers().size();
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
@@ -55,6 +56,6 @@ public class GroupBuyingDetailResponseDto {
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
         this.fileUrls = attachmentGroupBuyingUrl.getFileName();
-        this.created_at = groupBuying.getCreatedAtAsString();
+        this.createdAt = groupBuying.getCreatedAtAsString();
     }
 }

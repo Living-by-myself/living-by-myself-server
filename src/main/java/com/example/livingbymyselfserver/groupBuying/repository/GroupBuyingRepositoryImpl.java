@@ -53,24 +53,28 @@ public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
 
     return qGroupBuying.title.containsIgnoreCase(keyword);
   }
+
   private BooleanExpression addressEq(String beobJeongDong) {
     if (beobJeongDong == null) {
       return null;
     }
     return QGroupBuying.groupBuying.beobJeongDong.eq(beobJeongDong);
   }
+
   private BooleanExpression categoryEq(GroupBuyingCategoryEnum category) {
     if (category == null) {
       return null;
     }
     return QGroupBuying.groupBuying.enumCategory.eq(category);
   }
+
   private BooleanExpression statusEq(GroupBuyingStatusEnum category) {
     if (category == null) {
       return null;
     }
     return QGroupBuying.groupBuying.enumStatus.eq(category);
   }
+
   private BooleanExpression shareEq(GroupBuyingShareEnum category) {
     if (category == null) {
       return null;
