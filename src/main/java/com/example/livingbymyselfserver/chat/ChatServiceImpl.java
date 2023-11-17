@@ -20,8 +20,8 @@ public class ChatServiceImpl implements ChatService {
 
   private final ChatRoomRespository chatRoomRepository;
   private final ChatRepository chatRepository;
-  private final UserService userService;
   private final AttachmentUserUrlRepository attachmentUserUrlRepository;
+  private final UserService userService;
   private final UserRepository userRepository;
 
   @Override

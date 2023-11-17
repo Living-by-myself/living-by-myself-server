@@ -10,4 +10,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByPhoneNumber(String phoneNumber);
 
   List<User> findByIdIn(List<Long> userIdList);
+
 }
