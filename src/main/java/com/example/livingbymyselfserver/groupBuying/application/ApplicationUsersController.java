@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApplicationUsersController{
 
   private final ApplicationUsersService applicationUsersService;
+
   @Operation(summary = "공구 신청")
   @PostMapping("/{groupBuyingId}/application")
   public ResponseEntity<ApiResponseDto> createApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long groupBuyingId) {
