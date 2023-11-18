@@ -72,7 +72,7 @@ public class GroupBuying extends TimeStamped {
   private List<ApplicationUsers> appUsers = new ArrayList<>();
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "host_id")
   private User host;
 
   public void setStatus(GroupBuyingStatusEnum groupBuyingStatusEnum){
