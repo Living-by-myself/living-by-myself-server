@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
 public class WebSecurityConfig {
@@ -72,9 +74,9 @@ public class WebSecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.addAllowedOrigin("https://localhost:5173"); // 프론트엔드 도메인 설정
-    configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
-    configuration.addAllowedHeader("*"); // 모든 헤더 허용
+    configuration.setAllowedOrigins(Arrays.asList("https://localhost:5173")); // 프론트엔드 도메인 설정
+    configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","PATCH"));; // 모든 HTTP 메서드 허용
+    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
     configuration.setAllowCredentials(true); // credentials 허용
     configuration.setMaxAge(3600L); // 3600초(1시간) 동안 preflight 요청 결과를 캐시
 
