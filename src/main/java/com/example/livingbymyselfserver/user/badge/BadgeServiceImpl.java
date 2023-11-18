@@ -1,13 +1,11 @@
 package com.example.livingbymyselfserver.user.badge;
 
-import com.example.livingbymyselfserver.alarm.AlarmCategoryEnum;
 import com.example.livingbymyselfserver.alarm.KafkaProducer;
-import com.example.livingbymyselfserver.alarm.NotificationMessage;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.Community;
 
 import com.example.livingbymyselfserver.community.repository.CommunityRepository;
-import com.example.livingbymyselfserver.like.community.CommunityLikeRepository;
+import com.example.livingbymyselfserver.community.like.CommunityLikeRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
 import java.util.List;

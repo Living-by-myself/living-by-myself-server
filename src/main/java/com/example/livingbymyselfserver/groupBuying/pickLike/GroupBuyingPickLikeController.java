@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.like.groupBuying;
+package com.example.livingbymyselfserver.groupBuying.pickLike;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
@@ -24,6 +24,7 @@ public class GroupBuyingPickLikeController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
     @Operation(summary = "찜 취소")
     @DeleteMapping("/{groupBuyingId}/pick-like")
     public ResponseEntity<ApiResponseDto> deleteGroupBuyingPickLike(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {

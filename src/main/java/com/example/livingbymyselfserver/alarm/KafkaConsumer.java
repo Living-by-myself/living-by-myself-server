@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.alarm;
 
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.UserService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

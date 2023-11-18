@@ -1,12 +1,12 @@
-package com.example.livingbymyselfserver.like.community;
+package com.example.livingbymyselfserver.community.like;
 
 import com.example.livingbymyselfserver.community.comment.CommunityCommentService;
 import com.example.livingbymyselfserver.community.comment.CommunityComment;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
-import com.example.livingbymyselfserver.like.entity.CommunityCommentLike;
-import com.example.livingbymyselfserver.like.entity.CommunityLike;
+import com.example.livingbymyselfserver.community.like.entity.CommunityCommentLike;
+import com.example.livingbymyselfserver.community.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
 import lombok.RequiredArgsConstructor;

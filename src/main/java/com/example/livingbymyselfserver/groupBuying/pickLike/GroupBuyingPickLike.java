@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.like.entity;
+package com.example.livingbymyselfserver.groupBuying.pickLike;
 
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;

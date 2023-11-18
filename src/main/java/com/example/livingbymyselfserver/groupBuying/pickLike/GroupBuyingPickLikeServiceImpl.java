@@ -1,9 +1,8 @@
-package com.example.livingbymyselfserver.like.groupBuying;
+package com.example.livingbymyselfserver.groupBuying.pickLike;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.GroupBuyingService;
-import com.example.livingbymyselfserver.like.entity.GroupBuyingPickLike;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

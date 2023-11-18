@@ -3,7 +3,7 @@ package com.example.livingbymyselfserver.community;
 import com.example.livingbymyselfserver.community.comment.CommunityComment;
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
-import com.example.livingbymyselfserver.like.entity.CommunityLike;
+import com.example.livingbymyselfserver.community.like.entity.CommunityLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;

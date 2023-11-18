@@ -6,7 +6,7 @@ import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
-import com.example.livingbymyselfserver.like.entity.GroupBuyingPickLike;
+import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLike;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
