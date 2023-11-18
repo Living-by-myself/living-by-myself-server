@@ -1,6 +1,7 @@
 package com.example.livingbymyselfserver.user.badge;
 
 import com.example.livingbymyselfserver.alarm.KafkaProducer;
+import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.community.Community;
 
@@ -96,7 +97,7 @@ public class BadgeServiceImpl implements BadgeService {
     }
 
     public void addBadgeForCommunityView(Community community) {
-        double count = redisViewCountUtil.getViewPostCount(String.valueOf(community.getId()), null);
+        double count = redisViewCountUtil.getViewPostCount(String.valueOf(community.getId()), PostTypeEnum.COMMUNITY);
         boolean check;
         User user = community.getUser();
         Badge badge;
