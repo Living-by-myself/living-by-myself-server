@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -44,7 +45,6 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     // CSRF 설정
     http.csrf((csrf) -> csrf.disable());
-    http.cors(cors -> cors.disable());
 
     // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
     http.sessionManagement((sessionManagement) ->
@@ -53,6 +53,7 @@ public class WebSecurityConfig {
 
     http.authorizeHttpRequests((authorizeHttpRequests) ->
         authorizeHttpRequests
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
             .requestMatchers("/home/users/**", "/home/oauth/**").permitAll() // '/api'로 시작하는 요청 모두 접근 허가
             .requestMatchers(HttpMethod.GET, "/home/communities").permitAll() // 조회 메서드 허용
@@ -70,20 +71,4 @@ public class WebSecurityConfig {
 
     return http.build();
   }
-
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("https://localhost:5173")); // 프론트엔드 도메인 설정
-    configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","PATCH"));; // 모든 HTTP 메서드 허용
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-    configuration.setAllowCredentials(true); // credentials 허용
-    configuration.setMaxAge(3600L); // 3600초(1시간) 동안 preflight 요청 결과를 캐시
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-
-    return source;
-  }
-
 }
