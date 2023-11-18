@@ -88,6 +88,9 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     groupBuyingUserVerification(groupBuying, user);
 
+    if(groupBuying.getAppUsers().size() >0)
+      throw new IllegalArgumentException("신청한 유저가 있어 이제 공구수정이 불가능합니다.");
+
     if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
       updateGroupBuyingS3Image(groupBuying, multipartFiles);
     }
@@ -188,16 +191,6 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
   }
-
-  /*@Override
-  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
-
-    return groupBuyingRepository.findAll(pageable)
-        .stream()
-        .map(GroupBuyingResponseDto::new)
-        .collect(Collectors.toList());
-  }*/
-
 
   public GroupBuying findGroupBuying(Long id) {
     return groupBuyingRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
