@@ -8,6 +8,7 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
+import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
@@ -16,12 +17,15 @@ import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
+import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLike;
+import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLikeRepository;
 import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +38,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class GroupBuyingServiceImpl implements GroupBuyingService {
 
   final private GroupBuyingRepository groupBuyingRepository;
-  final private ApplicationUsersRepository applicationUsersRepository;
   final private RedisViewCountUtil redisViewCountUtil;
   final private RedisUtil redisUtil;
   private final S3Service s3Service;
@@ -129,12 +132,20 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     }
 
     double viewCount = redisViewCountUtil.getViewPostCount(groupBuyingId.toString(),PostTypeEnum.GROUPBUYING) ==null?1:redisViewCountUtil.getViewPostCount(groupBuyingId.toString(),PostTypeEnum.GROUPBUYING);
-    List<User> users = applicationUsersRepository.findAllByGroupBuyingId(groupBuyingId);
+
+    List<User> users = groupBuying.getAppUsers().stream()
+        .map(ApplicationUsers::getUser)
+        .collect(Collectors.toList());
+    users.add(groupBuying.getHost());
+
+    int pickLikeCount = groupBuying.getPickLikeList().stream()
+        .map(GroupBuyingPickLike::getUser)
+        .toList().size();
 
     if (attachmentGroupBuyingUrl == null) {
-      return new GroupBuyingDetailResponseDto(groupBuying,viewCount, users);
+      return new GroupBuyingDetailResponseDto(groupBuying,viewCount, users,pickLikeCount);
     } else {
-      return new GroupBuyingDetailResponseDto(groupBuying,attachmentGroupBuyingUrl, viewCount, users);
+      return new GroupBuyingDetailResponseDto(groupBuying,attachmentGroupBuyingUrl, viewCount, users,pickLikeCount);
     }
   }
 
