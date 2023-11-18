@@ -25,8 +25,9 @@ public class GroupBuyingDetailResponseDto {
     private final double lat;
     private final double lng;
     private final List<User> users;
+    private final Integer likeCount;
 
-    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt, List<User> users){
+    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt, List<User> users,Integer likeCount){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
@@ -43,9 +44,10 @@ public class GroupBuyingDetailResponseDto {
         this.lng = groupBuying.getLng();
         this.createdAt = groupBuying.getCreatedAtAsString();
         this.users = users;
+        this.likeCount = likeCount;
     }
 
-    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, List<User> users){
+    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, List<User> users, Integer likeCount){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
@@ -62,5 +64,6 @@ public class GroupBuyingDetailResponseDto {
         this.fileUrls = attachmentGroupBuyingUrl.getFileName();
         this.createdAt = groupBuying.getCreatedAtAsString();
         this.users = users;
+        this.likeCount = likeCount;
     }
 }

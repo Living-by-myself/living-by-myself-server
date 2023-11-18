@@ -50,6 +50,8 @@ public class User {
 
   private Long level;
 
+  private Long currentExp;
+
   @ManyToOne
   @JoinColumn(name = "chat_room_id")
   private ChatRoom chatRoom;

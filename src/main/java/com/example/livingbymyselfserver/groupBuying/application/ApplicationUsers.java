@@ -26,4 +26,7 @@ public class ApplicationUsers {
         this.user = user;
         this.groupBuying = groupBuying;
     }
+    public User getUser(){
+        return user;
+    }
 }
