@@ -7,6 +7,7 @@ import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface ChatService {
   /**
@@ -32,7 +33,7 @@ public interface ChatService {
    * @param user
    * @return
    */
-  ApiResponseDto createChatRoom(Long userId,List<Long> userIdList);
+  Long createChatRoom(Long userId,List<Long> userIdList);
 
   /**
    * 채팅 메세지 생성

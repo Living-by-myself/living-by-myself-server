@@ -6,12 +6,15 @@ import com.example.livingbymyselfserver.chat.entity.ChatRoom;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatMessageResponseDto;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.UserService;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,11 +38,11 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public ApiResponseDto createChatRoom(Long userId,List<Long> userIdList) {
+  public Long createChatRoom(Long userId,List<Long> userIdList) {
     User user = userService.findUser(userId);
 
     if (userIdList.stream().anyMatch(id -> id.equals(userId))) {
-      throw new IllegalArgumentException("You can't chat with yourself.");
+      throw new IllegalArgumentException("자기자신과는 채팅할 수 없습니다.");
     }
 
 //    if (findChatRoom != null) {
@@ -50,7 +53,8 @@ public class ChatServiceImpl implements ChatService {
     ChatRoom chatRoom = new ChatRoom(user, users);
     chatRoomRepository.save(chatRoom);
 
-    return new ApiResponseDto("채팅 방 생성 완료", 201);
+
+    return chatRoom.getId();
   }
 
   @Override

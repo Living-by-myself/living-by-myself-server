@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -38,11 +40,13 @@ public class ChatController {
 
   @Operation(summary = "채팅방 생성")
   @PostMapping("/room/user")
-  public ApiResponseDto createChatRoom(@AuthenticationPrincipal UserDetailsImpl userDetails,
+  public ResponseEntity<Long> createChatRoom(@AuthenticationPrincipal UserDetailsImpl userDetails,
       @RequestBody List<String> usersId) {
     List<Long> userIdList = usersId.stream()
         .map(Long::valueOf) // Convert each String to Long
         .collect(Collectors.toList());
-    return chatService.createChatRoom(userDetails.getUser().getId(), userIdList);
+    Long chatRoomId = chatService.createChatRoom(userDetails.getUser().getId(), userIdList);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomId);
   }
 }
