@@ -176,13 +176,13 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
         .stream()
         .map(ApplicationUsers::getUser)
         .peek(appUser -> { // Fix the parameter name to singular 'user'
-          appUser.setCurrentExp(10L);
+          appUser.setCurrentExp(appUser.getCurrentExp()+10L);
           userLevelCheck(appUser);//신청한 유저별로 경험치 10을 얻는 부분
         })
         .toList();
 
 
-    host.setCurrentExp(30L);
+    host.setCurrentExp(host.getCurrentExp()+30L);
     userLevelCheck(groupBuying.getHost());
 
 
@@ -237,7 +237,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   }
   private void userLevelCheck(User user){
     if(user.getCurrentExp() >=100L){
-      user.setLevel(1L);  //경험치가 넘었다면 레벨 증가
+      user.setLevel(user.getLevel()-1L);  //경험치가 넘었다면 레벨 증가
       user.setCurrentExp(user.getCurrentExp()-100L);  //경험치 초기화
     }
   }
