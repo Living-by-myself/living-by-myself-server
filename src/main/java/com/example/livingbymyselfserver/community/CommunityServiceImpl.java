@@ -126,7 +126,7 @@ public class CommunityServiceImpl implements CommunityService{
 
         // 조회수 증가 로직
         if (redisViewCountUtil.communityCheckAndIncrementViewCount(communityId.toString(),
-            user.getId().toString(), PostTypeEnum.GROUPBUYING)) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
+            user.getId().toString(), PostTypeEnum.COMMUNITY)) { // 조회수를 1시간이내에 올린적이 있는지 없는지 판단
             redisViewCountUtil.incrementPostViewCount(communityId.toString(),PostTypeEnum.COMMUNITY);
         }
 
