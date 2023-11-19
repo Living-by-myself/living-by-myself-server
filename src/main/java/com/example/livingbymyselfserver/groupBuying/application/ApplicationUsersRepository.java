@@ -3,6 +3,7 @@ package com.example.livingbymyselfserver.groupBuying.application;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.user.User;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,5 @@ public interface ApplicationUsersRepository extends JpaRepository<ApplicationUse
 
     ApplicationUsers findByGroupBuyingAndUser(GroupBuying groupBuying, User user);
 
+    List<ApplicationUsers> findAllByUser(User user);
 }

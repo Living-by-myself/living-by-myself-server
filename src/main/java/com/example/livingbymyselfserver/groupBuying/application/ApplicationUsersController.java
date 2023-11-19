@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +36,14 @@ public class ApplicationUsersController{
   @DeleteMapping("/{groupBuyingId}/application")
   public ResponseEntity<ApiResponseDto> deleteApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long groupBuyingId) {
     ApiResponseDto result = applicationUsersService.deleteApplication(userDetails.getUser(),groupBuyingId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
+
+  @Operation(summary = "물건 받음 확인")
+  @PutMapping("/{groupBuyingId}/application")
+  public ResponseEntity<ApiResponseDto> receivingItemCheck(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long groupBuyingId) {
+    ApiResponseDto result = applicationUsersService.receivingItemCheck(userDetails.getUser(),groupBuyingId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

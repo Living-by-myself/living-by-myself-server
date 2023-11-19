@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "User Auth API", description = "유저 비밀번호 인증 API")
@@ -27,8 +28,8 @@ public class AuthController {
 
   @Operation(summary = "휴대폰 인증번호 전송")
   @PostMapping("/message")
-  public ResponseEntity<ApiResponseDto> sendMessage(@RequestBody PhoneMessageRequestDto requestDto) throws Exception {
-    ApiResponseDto result = authService.sendMessage(requestDto);
+  public ResponseEntity<ApiResponseDto> sendMessage(@RequestBody PhoneMessageRequestDto requestDto,@RequestParam(value = "authentication", required = false) String keyword) throws Exception {
+    ApiResponseDto result = authService.sendMessage(requestDto, keyword);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 

@@ -20,14 +20,14 @@ import org.springframework.stereotype.Repository;
 public class GroupBuyingRepositoryImpl implements GroupBuyingRepositoryQuery{
 
   private final JPAQueryFactory jpaQueryFactory;
-   QGroupBuying qGroupBuying = QGroupBuying.groupBuying;
+  QGroupBuying qGroupBuying = QGroupBuying.groupBuying; //Q객체 받아오기
 
   public List<GroupBuying> findCategory(GroupBuyingCategoryEnum categoryEnum, Pageable pageable) {
-    BooleanExpression categoryPredicate = qGroupBuying.enumCategory.eq(categoryEnum);
+    BooleanExpression categoryPredicate = qGroupBuying.enumCategory.eq(categoryEnum);//Query로 검사한 Boolean값을 가져오는 듯 하다.
 
     return jpaQueryFactory
         .selectFrom(qGroupBuying)
-        .where(categoryPredicate)
+        .where(categoryPredicate) //여기서 조건검색
         .fetch();
   }
 
