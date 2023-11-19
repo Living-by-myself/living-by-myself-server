@@ -3,6 +3,7 @@ package com.example.livingbymyselfserver.user.profile;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingUserResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
@@ -27,8 +28,6 @@ public interface ProfileService {
   // 다른 user 정보조회
   OtherUserProfileResponseDto getOtherUserProfile(Long userId);
 
-  // 관심등록 조회
-
   // 게시물 조회 (자취꿀팁)
   List<CommunityResponseDto> getCommunityByUser(Long userId);
 
@@ -36,5 +35,8 @@ public interface ProfileService {
   List<GroupBuyingResponseDto> getGroupBuyingByUser(Long userId);
 
   // 지원한 공구 목록 조회
-//  List<GroupBuyingResponseDto> getApplicationByUser(Long userId);
+  List<GroupBuyingUserResponseDto> getApplicationByUser(Long userId);
+
+  // 관심등록 조회
+  List<GroupBuyingUserResponseDto> getGroupBuyingLikeByUser(Long userId);
 }
