@@ -1,11 +1,13 @@
 package com.example.livingbymyselfserver.user.auth;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.security.JwtUtil;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
@@ -36,8 +38,16 @@ public class AuthServiceImpl implements AuthService {
   private String fromNumber;
 
   @Override
-  public ApiResponseDto sendMessage(PhoneMessageRequestDto requestDto) throws CoolsmsException {
-    User user = findUserByPhoneNumber(requestDto.getPhoneNumber());
+  public ApiResponseDto sendMessage(PhoneMessageRequestDto requestDto, String keyword) throws CoolsmsException {
+    if ("find".equals(keyword)) {
+      if (!existsByPhoneNumber(requestDto.getPhoneNumber())) {
+        throw new NotFoundException(requestDto.getPhoneNumber() + "는 존재하지 않습니다.");
+      }
+    } else {
+      if (existsByPhoneNumber(requestDto.getPhoneNumber())) {
+        throw new InvalidParameterException(requestDto.getPhoneNumber() + "는 이미 존재합니다.");
+      }
+    }
 
     // 난수 생성 (0~9999)
     Random random = new Random();
@@ -107,6 +117,10 @@ public class AuthServiceImpl implements AuthService {
   private User findUserByPhoneNumber(String phoneNumber) {
     return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
         ()-> new IllegalArgumentException("핸드폰 번호와 일치하는 유저가 존재하지 않습니다."));
+  }
+
+  private boolean existsByPhoneNumber(String phoneNumber) {
+    return userRepository.existsByPhoneNumber(phoneNumber);
   }
 
   private void confirmMessageCode(String phoneNumber, int requestCode) {

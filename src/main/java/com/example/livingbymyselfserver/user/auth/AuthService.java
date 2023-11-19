@@ -7,7 +7,7 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 public interface AuthService {
   // 휴대폰 인증번호 전송
-  ApiResponseDto sendMessage(PhoneMessageRequestDto requestDto) throws CoolsmsException;
+  ApiResponseDto sendMessage(PhoneMessageRequestDto requestDto, String keyword) throws CoolsmsException;
 
   // 인증번호 확인
   ApiResponseDto authMessageCodePassword(PhoneMessageRequestDto requestDto, HttpServletResponse response);

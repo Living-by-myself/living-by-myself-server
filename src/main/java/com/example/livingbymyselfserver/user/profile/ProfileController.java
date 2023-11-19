@@ -1,6 +1,9 @@
 package com.example.livingbymyselfserver.user.profile;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingUserResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
 import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
@@ -67,6 +70,34 @@ public class ProfileController {
     public ResponseEntity<List<BadgeResponseDto>> getBadgeList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<BadgeResponseDto> result = badgeService.getBadgeList(userDetails.getUser());
 
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Operation(summary = "유저 게시물 조회(자취꿀팁)")
+    @GetMapping("/community/{userId}")
+    public ResponseEntity<List<CommunityResponseDto>> getCommunityByUser(@PathVariable Long userId) {
+        List<CommunityResponseDto> result = profileService.getCommunityByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Operation(summary = "유저 게시물 조회(같이살때)")
+    @GetMapping("/group-buying/{userId}")
+    public ResponseEntity<List<GroupBuyingResponseDto>> getGroupBuyingByUser(@PathVariable Long userId) {
+        List<GroupBuyingResponseDto> result = profileService.getGroupBuyingByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Operation(summary = "유저 관심등록한 게시물 조회")
+    @GetMapping("/group-buying/pick/{userId}")
+    public ResponseEntity<List<GroupBuyingUserResponseDto>> getGroupBuyingLikeByUser(@PathVariable Long userId) {
+        List<GroupBuyingUserResponseDto> result = profileService.getGroupBuyingLikeByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Operation(summary = "유저 공동구매 지원한 게시물 조회")
+    @GetMapping("/group-buying/application/{userId}")
+    public ResponseEntity<List<GroupBuyingUserResponseDto>> getApplicationByUser(@PathVariable Long userId) {
+        List<GroupBuyingUserResponseDto> result = profileService.getApplicationByUser(userId);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
