@@ -88,6 +88,9 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
 
     groupBuyingUserVerification(groupBuying, user);
 
+    if(groupBuying.getAppUsers().size() >0)
+      throw new IllegalArgumentException("신청한 유저가 있어 이제 공구수정이 불가능합니다.");
+
     if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
       updateGroupBuyingS3Image(groupBuying, multipartFiles);
     }
@@ -165,24 +168,29 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   @Override
   @Transactional
   public ApiResponseDto closeGroupBuying(Long groupBuyingId, User user) {
+
     GroupBuying groupBuying = findGroupBuying(groupBuyingId);
+    User host =groupBuying.getHost();
 
     groupBuyingUserVerification(groupBuying,user);
 
     groupBuying.setStatus(GroupBuyingStatusEnum.DEADLINE);
+    groupBuying.getAppUsers()
+        .stream()
+        .map(ApplicationUsers::getUser)
+        .peek(appUser -> { // Fix the parameter name to singular 'user'
+          appUser.setCurrentExp(appUser.getCurrentExp()+10L);
+          userLevelCheck(appUser);//신청한 유저별로 경험치 10을 얻는 부분
+        })
+        .toList();
+
+
+    host.setCurrentExp(host.getCurrentExp()+30L);
+    userLevelCheck(groupBuying.getHost());
+
 
     return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
   }
-
-  /*@Override
-  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
-
-    return groupBuyingRepository.findAll(pageable)
-        .stream()
-        .map(GroupBuyingResponseDto::new)
-        .collect(Collectors.toList());
-  }*/
-
 
   public GroupBuying findGroupBuying(Long id) {
     return groupBuyingRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
@@ -218,6 +226,12 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
       s3Service.updateS3Image(attachmentUrl, multipartFiles);
     } else {
       uploadImage(multipartFiles, groupBuying);
+    }
+  }
+  private void userLevelCheck(User user){
+    if(user.getCurrentExp() >=100L){
+      user.setLevel(user.getLevel()-1L);  //경험치가 넘었다면 레벨 증가
+      user.setCurrentExp(user.getCurrentExp()-100L);  //경험치 초기화
     }
   }
 }

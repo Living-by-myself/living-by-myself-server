@@ -8,4 +8,6 @@ public interface ApplicationUsersService {
   ApiResponseDto createApplication(User user, Long groupBuyingId);
 
   ApiResponseDto deleteApplication(User user, Long groupBuyingId);
+
+  ApiResponseDto receivingItemCheck(User user, Long groupBuyingId);
 }

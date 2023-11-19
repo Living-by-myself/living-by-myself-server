@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "application_users")
 @NoArgsConstructor
 @Getter
@@ -24,8 +25,15 @@ public class ApplicationUsers {
     @JoinColumn(name = "group_buying_id")
     private  GroupBuying groupBuying;
 
+    private ReceivingGoodsEnum receivingGoodsEnum;
+
+    public void setReceivingGoodsEnum(ReceivingGoodsEnum receivingGoodsEnum){
+        this.receivingGoodsEnum = receivingGoodsEnum;
+    }
+
     public ApplicationUsers(User user, GroupBuying groupBuying){
         this.user = user;
         this.groupBuying = groupBuying;
+        receivingGoodsEnum = ReceivingGoodsEnum.DO_NOT_RECEIVING_GOODS;
     }
 }

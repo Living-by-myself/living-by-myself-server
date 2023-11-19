@@ -22,6 +22,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @DynamicUpdate
 public class User {
+
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
@@ -68,6 +70,9 @@ public class User {
     this.phoneNumber = phoneNumber;
     this.role = role;
     this.oAuthProvider = oAuthProvider;
+    this.level = 10L;
+    this.cash = 0L;
+    this.currentExp = 0L;
   }
 
   public User(String username, String password, String nickname, String address, String phoneNumber,
@@ -81,6 +86,7 @@ public class User {
     this.oAuthProvider = oAuthProvider;
     this.cash = cash;
     this.level = level;
+    this.currentExp = 0L;
   }
 
   public User(String username, String nickname, UserRoleEnum role, OAuthProviderEnum oAuthProvider) {
@@ -107,11 +113,17 @@ public class User {
     this.role = role;
   }
 
+  public void setCurrentExp(Long exp) {this.currentExp =exp;}
+
   public void setCash(Long cash) {
     this.cash = cash;
   }
 
   public void setOAuthProvider(OAuthProviderEnum oAuthProvider) {
     this.oAuthProvider = oAuthProvider;
+  }
+
+  public void setLevel(long level) {
+    this.level = level;
   }
 }

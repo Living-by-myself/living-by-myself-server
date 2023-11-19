@@ -4,7 +4,9 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.security.JwtUtil;
 import com.example.livingbymyselfserver.security.TokenResponseDto;
+import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import com.example.livingbymyselfserver.user.auth.PhoneMessageRequestDto;
+import com.example.livingbymyselfserver.user.dto.CashRequestDto;
 import com.example.livingbymyselfserver.user.dto.LoginRequestDto;
 import com.example.livingbymyselfserver.user.dto.SignupRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,6 +87,18 @@ public class UserServiceImpl implements UserService{
     redisUtil.setBlackList(atk, expiration);
 
     return new ApiResponseDto("로그아웃 완료", 200);
+  }
+
+  @Override
+  @Transactional
+  public ApiResponseDto buyingCash(User user, CashRequestDto cashRequestDto) {
+
+    User existingUser = findUser(user.getId());
+
+    existingUser.setCash(existingUser.getCash() + cashRequestDto.getCash());
+
+
+    return new ApiResponseDto("캐쉬 충전 완료", 200);
   }
 
   @Override

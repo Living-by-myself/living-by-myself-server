@@ -4,6 +4,7 @@ import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.TokenResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import com.example.livingbymyselfserver.user.auth.PhoneMessageRequestDto;
+import com.example.livingbymyselfserver.user.dto.CashRequestDto;
 import com.example.livingbymyselfserver.user.dto.LoginRequestDto;
 import com.example.livingbymyselfserver.user.dto.SignupRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,4 +58,13 @@ public class UserController {
     ApiResponseDto result = userService.logout(userDetails.getUser(), request);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
+
+  @Operation(summary = "캐쉬 충전")
+  @PutMapping("/cash")
+  public ResponseEntity<ApiResponseDto> buyingCash(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CashRequestDto cashRequestDto) {
+    ApiResponseDto result = userService.buyingCash(userDetails.getUser(),cashRequestDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+  }
+
+
 }
