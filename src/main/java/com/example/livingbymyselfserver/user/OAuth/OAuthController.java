@@ -31,9 +31,9 @@ public class OAuthController {
 
     @Operation(summary = "Google 로그인")
     @GetMapping("/login/oauth2/code/google")
-    public String getGoogleAccessToken(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        oAuthGoogleService.googleLogin(code, response);
+    public ResponseEntity<TokenResponseDto> getGoogleAccessToken(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        TokenResponseDto result = oAuthGoogleService.googleLogin(code, response);
 
-        return "redirect:/";
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
