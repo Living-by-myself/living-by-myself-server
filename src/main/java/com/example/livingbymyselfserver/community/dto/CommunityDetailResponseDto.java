@@ -1,6 +1,5 @@
 package com.example.livingbymyselfserver.community.dto;
 
-import com.example.livingbymyselfserver.attachment.community.S3CommunityFileResponseDto;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityCategoryEnum;

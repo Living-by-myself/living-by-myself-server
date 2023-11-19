@@ -1,17 +1,15 @@
 package com.example.livingbymyselfserver.user.profile;
 
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingUserResponseDto;
 import com.example.livingbymyselfserver.user.User;
-import com.example.livingbymyselfserver.user.UserRepository;
-import com.example.livingbymyselfserver.user.badge.dto.BadgeResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.OtherUserProfileResponseDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileRequestDto;
 import com.example.livingbymyselfserver.user.profile.dto.ProfileResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public interface ProfileService {
@@ -29,4 +27,16 @@ public interface ProfileService {
 
   // 다른 user 정보조회
   OtherUserProfileResponseDto getOtherUserProfile(Long userId);
+
+  // 게시물 조회 (자취꿀팁)
+  List<CommunityResponseDto> getCommunityByUser(Long userId);
+
+  // 게시물 조회 (같이살때)
+  List<GroupBuyingResponseDto> getGroupBuyingByUser(Long userId);
+
+  // 지원한 공구 목록 조회
+  List<GroupBuyingUserResponseDto> getApplicationByUser(Long userId);
+
+  // 관심등록 조회
+  List<GroupBuyingUserResponseDto> getGroupBuyingLikeByUser(Long userId);
 }

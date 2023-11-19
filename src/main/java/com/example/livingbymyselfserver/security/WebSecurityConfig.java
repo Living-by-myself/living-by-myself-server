@@ -11,6 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -47,6 +53,7 @@ public class WebSecurityConfig {
 
     http.authorizeHttpRequests((authorizeHttpRequests) ->
         authorizeHttpRequests
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
             .requestMatchers("/home/users/**", "/home/oauth/**").permitAll() // '/api'로 시작하는 요청 모두 접근 허가
             .requestMatchers(HttpMethod.GET, "/home/communities").permitAll() // 조회 메서드 허용
@@ -64,5 +71,4 @@ public class WebSecurityConfig {
 
     return http.build();
   }
-
 }

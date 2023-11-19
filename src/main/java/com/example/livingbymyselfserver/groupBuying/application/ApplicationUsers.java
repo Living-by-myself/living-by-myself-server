@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "application_users")
 @NoArgsConstructor
+@Getter
 public class ApplicationUsers {
 
     @Id
@@ -22,7 +23,7 @@ public class ApplicationUsers {
 
     @ManyToOne
     @JoinColumn(name = "group_buying_id")
-    private GroupBuying groupBuying;
+    private  GroupBuying groupBuying;
 
     private ReceivingGoodsEnum receivingGoodsEnum;
 
@@ -34,8 +35,5 @@ public class ApplicationUsers {
         this.user = user;
         this.groupBuying = groupBuying;
         receivingGoodsEnum = ReceivingGoodsEnum.DO_NOT_RECEIVING_GOODS;
-    }
-    public User getUser(){
-        return user;
     }
 }
