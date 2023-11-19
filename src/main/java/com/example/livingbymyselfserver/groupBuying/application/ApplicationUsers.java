@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "application_users")
 @NoArgsConstructor
-@Getter
 public class ApplicationUsers {
 
     @Id
