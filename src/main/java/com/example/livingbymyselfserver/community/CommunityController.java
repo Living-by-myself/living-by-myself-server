@@ -1,15 +1,13 @@
 package com.example.livingbymyselfserver.community;
+
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
-import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
-import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnum;
-import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
-import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/home/communities")
+@Tag(name = "커뮤니티 API")
 public class CommunityController {
     private final CommunityService communityService;
     @Operation(summary = "커뮤니티 조건검색")
@@ -38,6 +37,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @Operation(summary = "커뮤니티 전체검색")
     @GetMapping
     public ResponseEntity<List<CommunityResponseDto>> getCommunityListInfo(Pageable pageable) {
         List<CommunityResponseDto> result = communityService.getCommunityListInfo(pageable);
@@ -45,6 +45,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @Operation(summary = "커뮤니티 상세조회")
     @GetMapping("/{communityId}")
     public ResponseEntity<CommunityDetailResponseDto> getCommunityDetailInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long communityId) {
         CommunityDetailResponseDto result = communityService.getCommunityDetailInfo(userDetails.getUser(),communityId);
@@ -52,6 +53,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @Operation(summary = "커뮤니티 생성")
     @PostMapping
     public ResponseEntity<ApiResponseDto> createCommunity(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -63,6 +65,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @Operation(summary = "커뮤니티 업데이트")
     @PutMapping("/{communityId}")
     public ResponseEntity<ApiResponseDto> updateCommunity(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -74,6 +77,7 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @Operation(summary = "커뮤니티 삭제")
     @DeleteMapping("/{communityId}")
     public ResponseEntity<ApiResponseDto> deleteCommunity(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long communityId) {
         ApiResponseDto result = communityService.deleteCommunity(userDetails.getUser(), communityId);

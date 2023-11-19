@@ -1,74 +1,76 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches:
-      - feature/etc
   pull_request:
     branches:
-      - feature/etc
+      - main
+  push:
+    branches:
+      - develop
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Make application.yml
-        run: |
-          # Delete existing application.properties if it exists
-          rm -f ./src/main/resources/application.properties
 
-          # Create application.yml
-          mkdir -p ./src/main/resources
-          touch ./src/main/resources/application.properties
-          
-          # Secrets에 저장한 값을 application.yml 파일에 쓰기
-          echo "${{ secrets.APPLICATION_INFO }}" >> ./src/main/resources/application.properties
+      - name: create application.properties
+        run: |
+          cd ./src/main/resources
+          touch ./application.properties
+          echo "${{ secrets.APPLICATION_INFO }}" > ./application.properties
         shell: bash
 
       - name: Build with Gradle
         run: ./gradlew bootJar
 
-      ## 도커 이미지 빌드 후 도커허브에 push하기
       - name: Web Docker Build and Push
         run: |
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-          
-          # 이미지가 존재하면 삭제
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+          # Gradle 빌드에서 생성된 JAR 파일을 Docker 이미지로 복사
+          cp -n build/libs/*.jar app.jar
+
+          # application.properties 파일도 Docker 이미지로 복사
+          if [ ! -f ./src/main/resources/application.properties ]; then
+            cp ./src/main/resources/application.properties ./src/main/resources/application.properties
+          fi
+
+          # Remove the image if it exists
           docker image rm -f ${{ secrets.DOCKER_REPO }} || true
-          
+
+          # Docker 이미지 빌드 및 태그
           docker build -t ${{ secrets.DOCKER_REPO }} .
-          docker push ${{ secrets.DOCKER_REPO }}
 
-      ## 서버에 접속하여 도커 이미지를 pull 받고 실행하기
-      - name: Executing Remote SSH Commands using Password
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: |
-            # 8080 포트를 사용 중인 도커 컨테이너 확인
-            RUNNING_CONTAINER=$(sudo docker ps -q -f "expose=8080" --filter "name=${{ secrets.DOCKER_CONTAINER_NAME }}")
+          # Docker 이미지에 latest 태그 추가
+          docker tag ${{ secrets.DOCKER_REPO }}:latest ${{ secrets.DOCKER_REPO }}:latest
 
-            # 해당 도커 컨테이너가 실행 중이면 중지 및 삭제
-            if [ -n "$RUNNING_CONTAINER" ]; then
-              sudo docker stop ${{ secrets.DOCKER_CONTAINER_NAME }}
-              sudo docker rm ${{ secrets.DOCKER_CONTAINER_NAME }}
-            fi
+          # Docker 이미지를 Docker Hub에 푸시
+          docker push ${{ secrets.DOCKER_REPO }}:latest
 
-            # 새로운 도커 이미지 pull 및 실행
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker run -d -p 8080:8080 --name ${{ secrets.DOCKER_CONTAINER_NAME }} ${{ secrets.DOCKER_REPO }}
-      
+      - name: Add EC2 Host Key
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          ssh-keyscan -t rsa ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy Docker Compose to EC2
+        run: |
+          echo "${{ secrets.KEY }}" > key.pem
+          chmod 600 key.pem
+          scp -i key.pem ./src/main/resources/docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }}:~/docker-compose.yml
+
+      - name: Execute Docker Compose on EC2
+        run: |
+          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "sudo docker pull ${{ secrets.DOCKER_REPO }}:latest"
+          ssh -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.HOST }} "sudo docker-compose -f ~/docker-compose.yml up -d"

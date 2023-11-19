@@ -11,6 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -47,6 +53,7 @@ public class WebSecurityConfig {
 
     http.authorizeHttpRequests((authorizeHttpRequests) ->
         authorizeHttpRequests
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
             .requestMatchers("/home/users/**", "/home/oauth/**").permitAll() // '/api'로 시작하는 요청 모두 접근 허가
             .requestMatchers(HttpMethod.GET, "/home/communities").permitAll() // 조회 메서드 허용
@@ -54,8 +61,9 @@ public class WebSecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll() // 조회 메서드 허용
             .requestMatchers("/home/auth/message", "/home/auth/message-code/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger 허용
+            .requestMatchers("/home/communities/search", "/home/group-buying/search").permitAll() // 공구 검색 & 커뮤니티 검색
+            .requestMatchers(HttpMethod.GET, "/home/community/**").permitAll() // 댓글 조회 api
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리
-
     );
 
     // 필터 관리
@@ -63,5 +71,4 @@ public class WebSecurityConfig {
 
     return http.build();
   }
-
 }

@@ -31,6 +31,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryQuery{
 
     return new PageImpl<>(results.getResults(), pageable, results.getTotal());
   }
+
   @Override
   public BooleanExpression containsKeyword(String keyword) {
     if (keyword == null || keyword.trim().isEmpty()) {
@@ -38,6 +39,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryQuery{
     }
     return qCommunity.title.containsIgnoreCase(keyword);
   }
+
   private BooleanExpression categoryEq(CommunityCategoryEnum category) {
     if (category == null) {
       return null;

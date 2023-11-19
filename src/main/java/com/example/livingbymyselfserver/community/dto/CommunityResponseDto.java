@@ -19,7 +19,7 @@ public class CommunityResponseDto {
     private final int commentCnt;
     private final int likeCnt;
     private String fileUrls;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     public CommunityResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl, double viewCnt) {
@@ -34,7 +34,7 @@ public class CommunityResponseDto {
         this.commentCnt = community.getCommentList().size();
         this.likeCnt = community.getLikeList().size();
         this.fileUrls = attachmentCommunityUrl.getFileName().split(",")[0];
-        this.createAt = community.getCreatedAt();
+        this.createdAt = community.getCreatedAt();
         this.modifiedAt = community.getModifiedAt();
     }
 
@@ -49,7 +49,7 @@ public class CommunityResponseDto {
         this.userNickname = community.getUser().getNickname();
         this.commentCnt = community.getCommentList().size();
         this.likeCnt = community.getLikeList().size();
-        this.createAt = community.getCreatedAt();
+        this.createdAt = community.getCreatedAt();
         this.modifiedAt = community.getModifiedAt();
     }
 }

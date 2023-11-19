@@ -3,6 +3,7 @@ package com.example.livingbymyselfserver.exception;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.jdi.request.DuplicateRequestException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 restApiException,
                 HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler({ExpiredJwtException.class})
+    public ResponseEntity<ApiResponseDto> handleException(ExpiredJwtException ex) {
+        ApiResponseDto restApiException = new ApiResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(
+            restApiException,
+            HttpStatus.BAD_REQUEST
         );
     }
 

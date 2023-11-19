@@ -1,5 +1,11 @@
-FROM openjdk:17
-ARG JAR_FILE=build/libs/app.jar
-COPY ${JAR_FILE} ./app.jar
+FROM openjdk:17-alpine
+
+WORKDIR /app
+
+COPY ./src/main/resources/application.properties ./application.properties
+
+COPY build/libs/*.jar app.jar
+
 ENV TZ=Asia/Seoul
-ENTRYPOINT ["java","-jar","./app.jar"]
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
