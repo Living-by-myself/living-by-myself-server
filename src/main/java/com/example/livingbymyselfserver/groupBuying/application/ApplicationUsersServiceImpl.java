@@ -3,10 +3,11 @@ package com.example.livingbymyselfserver.groupBuying.application;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
+import com.example.livingbymyselfserver.groupBuying.GroupBuyingServiceImpl;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
-import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationUsersServiceImpl implements ApplicationUsersService {
 
   private final ApplicationUsersRepository applicationUsersRepository;
-  private final GroupBuyingRepository groupBuyingRepository;
+  private final GroupBuyingServiceImpl groupBuyingService;
   private final RedisUtil redisUtil;
 
   @Override
   @Transactional
   public ApiResponseDto createApplication(User user, Long groupBuyingId) {
 
-    GroupBuying groupBuying = findGroupBuying(groupBuyingId);
+    GroupBuying groupBuying = groupBuyingService.findGroupBuying(groupBuyingId);
     if (applicationUsersRepository.existsByGroupBuyingAndUser(groupBuying, user))
       throw new IllegalArgumentException("이미 신청한 공고입니다.");
     if (groupBuying.getEnumStatus() == GroupBuyingStatusEnum.DEADLINE)
@@ -35,8 +36,11 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
     if (groupBuying.getAppUsers().size() + 1 > groupBuying.getMaxUser()) {
       throw new IllegalArgumentException("인원이 가득 찼습니다.");
     }
-    ApplicationUsers applicationUsers = new ApplicationUsers(user, groupBuying);
-    user.setCash(user.getCash()-groupBuying.getPerUserPrice());
+    Long cash = user.getCash()-Long.valueOf(groupBuying.getPerUserPrice());
+    user.setCash(cash); //유저 캐쉬 값이 DB에 적용되지 않는 에러
+
+    ApplicationUsers applicationUsers = new ApplicationUsers(user, groupBuying);  //신청
+
     applicationUsersRepository.save(applicationUsers);
 
     return new ApiResponseDto("공동구매 신청완료", 200);
@@ -45,7 +49,7 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
   @Override
   @Transactional
   public ApiResponseDto deleteApplication(User user, Long groupBuyingId) {
-    GroupBuying groupBuying = findGroupBuying(groupBuyingId);
+    GroupBuying groupBuying = groupBuyingService.findGroupBuying(groupBuyingId);
 
     if (!applicationUsersRepository.existsByGroupBuyingAndUser(groupBuying, user)) {
       throw new IllegalArgumentException("해당 공고를 신청한 유저가 아닙니다.");
@@ -57,10 +61,6 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
     applicationUsersRepository.delete(applicationUsers);
 
     return new ApiResponseDto("공고 지원 취소", 200);
-  }
-
-  public GroupBuying findGroupBuying(Long id) {
-    return groupBuyingRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("찾는 게시글이 존재하지 않습니다."));
   }
 }
 
