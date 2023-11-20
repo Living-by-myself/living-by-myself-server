@@ -21,9 +21,10 @@ public class CommunityCommentController {
 
     @GetMapping("/{communityId}/comments")
     public ResponseEntity<List<CommunityCommentResponseDto>> getCommunityComments(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long communityId,
             Pageable pageable){
-        List<CommunityCommentResponseDto> result = communityCommentService.getCommunityComments(communityId, pageable);
+        List<CommunityCommentResponseDto> result = communityCommentService.getCommunityComments(userDetails.getUser(), communityId, pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

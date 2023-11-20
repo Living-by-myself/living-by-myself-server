@@ -9,11 +9,13 @@ public class CommunityCommentResponseDto {
     private String description;
     private String nickName;
     private int likeCnt;
+    private Boolean existsLike;
 
-    public CommunityCommentResponseDto(CommunityComment comment) {
+    public CommunityCommentResponseDto(CommunityComment comment, Boolean existsLike) {
         this.id = comment.getId();
         this.description = comment.getDescription();
         this.nickName = comment.getUser().getNickname();
         this.likeCnt = comment.getCommunityCommentLikeList().size();
+        this.existsLike = existsLike;
     }
 }

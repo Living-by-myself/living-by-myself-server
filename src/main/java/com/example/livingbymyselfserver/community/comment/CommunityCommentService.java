@@ -17,5 +17,5 @@ public interface CommunityCommentService {
 
     CommunityComment findCommunityComment(Long commentId);
 
-    List<CommunityCommentResponseDto> getCommunityComments(Long communityId, Pageable pageable);
+    List<CommunityCommentResponseDto> getCommunityComments(User user, Long communityId, Pageable pageable);
 }
