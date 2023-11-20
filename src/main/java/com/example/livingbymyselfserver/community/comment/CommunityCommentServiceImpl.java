@@ -5,6 +5,7 @@ import com.example.livingbymyselfserver.community.comment.dto.CommunityCommentRe
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
+import com.example.livingbymyselfserver.community.like.CommunityCommentLikeRepository;
 import com.example.livingbymyselfserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +20,16 @@ import java.util.stream.Collectors;
 public class CommunityCommentServiceImpl implements CommunityCommentService {
     private final CommunityService communityService;
     private final CommunityCommentRepository communityCommentRepository;
-
+    private final CommunityCommentLikeRepository communityCommentLikeRepository;
     @Override
-    public List<CommunityCommentResponseDto> getCommunityComments(Long communityId, Pageable pageable) {
+    public List<CommunityCommentResponseDto> getCommunityComments(User user, Long communityId, Pageable pageable) {
         Community community = communityService.findCommunity(communityId);
         return communityCommentRepository.findByCommunityOrderByCreatedAtDesc(community,pageable)
                 .stream()
-                .map(CommunityCommentResponseDto::new)
+                .map(communityComment -> {
+                    Boolean existsLike = communityCommentLikeRepository.existsByCommunityCommentAndUser(communityComment, user);
+                    return new CommunityCommentResponseDto(communityComment, existsLike);
+                })
                 .collect(Collectors.toList());
     }
 

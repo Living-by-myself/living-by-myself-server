@@ -11,6 +11,7 @@ import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
+import com.example.livingbymyselfserver.community.like.CommunityLikeRepository;
 import com.example.livingbymyselfserver.community.repository.CommunityRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
@@ -36,6 +37,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final BadgeService badgeService;
     private final RedisViewCountUtil redisViewCountUtil;
     private final RedisUtil redisUtil;
+    private final CommunityLikeRepository communityLikeRepository;
     @Override
     @Transactional
     public ApiResponseDto createCommunity(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
@@ -133,10 +135,12 @@ public class CommunityServiceImpl implements CommunityService{
         Double viewCount = redisViewCountUtil.getViewPostCount(communityId.toString(),PostTypeEnum.COMMUNITY);
         badgeService.addBadgeForCommunityView(community);
 
+        Boolean existsLike = communityLikeRepository.existsByCommunityAndUser(community, user);
+
         if (attachmentCommunityUrl == null) {
-            return new CommunityDetailResponseDto(community,viewCount);
+            return new CommunityDetailResponseDto(community,viewCount, existsLike);
         } else {
-            return new CommunityDetailResponseDto(community, attachmentCommunityUrl,viewCount);
+            return new CommunityDetailResponseDto(community, attachmentCommunityUrl,viewCount, existsLike);
         }
     }
 
