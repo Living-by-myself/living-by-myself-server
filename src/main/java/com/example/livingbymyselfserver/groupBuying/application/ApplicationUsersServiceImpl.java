@@ -6,7 +6,6 @@ import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.GroupBuyingServiceImpl;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.user.User;
-import com.example.livingbymyselfserver.user.UserService;
 import com.example.livingbymyselfserver.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
   private final GroupBuyingServiceImpl groupBuyingService;
   private final RedisUtil redisUtil;
   private final UserServiceImpl userService;
+
   @Override
   @Transactional
   public ApiResponseDto createApplication(User user, Long groupBuyingId) {
@@ -77,10 +77,10 @@ public class ApplicationUsersServiceImpl implements ApplicationUsersService {
       throw new IllegalArgumentException("공고 신청유저가 아닙니다.");
     if(applicationUsers.getReceivingGoodsEnum().equals(ReceivingGoodsEnum.DO_RECEIVING_GOODS))
       throw new IllegalArgumentException("이미 상품 받음처리 되어있습니다.");
+
     applicationUsers.setReceivingGoodsEnum(ReceivingGoodsEnum.DO_RECEIVING_GOODS);
     User host = groupBuying.getHost();
     host.setCash(host.getCash()+groupBuying.getPerUserPrice());
-
 
     return new ApiResponseDto("확인 되었습니다.", 200);
   }
