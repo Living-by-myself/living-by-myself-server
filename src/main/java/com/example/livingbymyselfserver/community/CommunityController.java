@@ -58,7 +58,7 @@ public class CommunityController {
     public ResponseEntity<ApiResponseDto> createCommunity(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart("requestDto") String requestDto,
-            @RequestPart("fileName") MultipartFile[] multipartFiles
+            @RequestPart(name = "fileName", required = false) MultipartFile[] multipartFiles
     ) throws JsonProcessingException {
         ApiResponseDto result = communityService.createCommunity(userDetails.getUser(), requestDto, multipartFiles);
 
@@ -71,7 +71,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long communityId,
             @RequestPart("requestDto") String requestDto,
-            @RequestPart("fileName") MultipartFile[] multipartFiles) throws JsonProcessingException {
+            @RequestPart(name = "fileName", required = false) MultipartFile[] multipartFiles) throws JsonProcessingException {
         ApiResponseDto result = communityService.updateCommunity(userDetails.getUser(),communityId, requestDto, multipartFiles);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);

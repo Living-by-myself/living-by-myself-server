@@ -35,8 +35,8 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
                     AttachmentUserUrl attachmentUserUrl = attachmentUserUrlRepository.findByUser(user);
                     UserResponseDto userResponseDto;
                     userResponseDto = (attachmentUserUrl != null) ?
-                            new UserResponseDto(user, attachmentUserUrl) :
-                            new UserResponseDto(user);
+                            new UserResponseDto(community.getUser(), attachmentUserUrl) :
+                            new UserResponseDto(community.getUser());
                     return new CommunityCommentResponseDto(communityComment, existsLike, userResponseDto);
                 })
                 .collect(Collectors.toList());

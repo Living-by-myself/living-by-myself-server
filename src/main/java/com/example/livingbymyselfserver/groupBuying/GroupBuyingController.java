@@ -62,7 +62,7 @@ public class GroupBuyingController {
   public ResponseEntity<ApiResponseDto> createGroupBuying(
           @AuthenticationPrincipal UserDetailsImpl userDetails,
           @RequestPart("requestDto") String requestDto,
-          @RequestPart("fileName") MultipartFile[] multipartFiles) throws JsonProcessingException {
+          @RequestPart(name = "fileName", required = false) MultipartFile[] multipartFiles) throws JsonProcessingException {
     ApiResponseDto result = groupBuyingService.createGroupBuying(userDetails.getUser(), requestDto, multipartFiles);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
@@ -84,7 +84,7 @@ public class GroupBuyingController {
           @AuthenticationPrincipal UserDetailsImpl userDetails,
           @PathVariable Long groupBuyingId,
           @RequestPart("requestDto") String requestDto,
-          @RequestPart("fileName") MultipartFile[] multipartFiles) throws JsonProcessingException {
+          @RequestPart(name = "fileName", required = false) MultipartFile[] multipartFiles) throws JsonProcessingException {
     ApiResponseDto result = groupBuyingService.updateGroupBuying(userDetails.getUser(),groupBuyingId, requestDto, multipartFiles);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
