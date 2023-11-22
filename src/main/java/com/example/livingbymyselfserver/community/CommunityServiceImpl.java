@@ -11,6 +11,7 @@ import com.example.livingbymyselfserver.community.dto.CommunityDetailResponseDto
 import com.example.livingbymyselfserver.community.dto.CommunityListResponseDto;
 import com.example.livingbymyselfserver.community.dto.CommunityRequestDto;
 import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
+import com.example.livingbymyselfserver.community.like.CommunityLikeRepository;
 import com.example.livingbymyselfserver.community.repository.CommunityRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.badge.BadgeService;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final BadgeService badgeService;
     private final RedisViewCountUtil redisViewCountUtil;
     private final RedisUtil redisUtil;
+    private final CommunityLikeRepository communityLikeRepository;
     @Override
     @Transactional
     public ApiResponseDto createCommunity(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException {
@@ -45,7 +48,7 @@ public class CommunityServiceImpl implements CommunityService{
 
         communityRepository.save(community);
 
-        if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+        if (multipartFiles != null) {
             uploadImage(multipartFiles, community);
         }
 
@@ -63,7 +66,7 @@ public class CommunityServiceImpl implements CommunityService{
 
         communityUserVerification(community, user);
 
-        if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+        if (multipartFiles != null) {
             updateCommunityS3Image(community, multipartFiles);
         }
 
@@ -133,10 +136,12 @@ public class CommunityServiceImpl implements CommunityService{
         Double viewCount = redisViewCountUtil.getViewPostCount(communityId.toString(),PostTypeEnum.COMMUNITY);
         badgeService.addBadgeForCommunityView(community);
 
+        Boolean existsLike = communityLikeRepository.existsByCommunityAndUser(community, user);
+
         if (attachmentCommunityUrl == null) {
-            return new CommunityDetailResponseDto(community,viewCount);
+            return new CommunityDetailResponseDto(community,viewCount, existsLike);
         } else {
-            return new CommunityDetailResponseDto(community, attachmentCommunityUrl,viewCount);
+            return new CommunityDetailResponseDto(community, attachmentCommunityUrl,viewCount, existsLike);
         }
     }
 
