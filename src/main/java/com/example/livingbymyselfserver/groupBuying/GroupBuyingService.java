@@ -23,15 +23,12 @@ public interface GroupBuyingService {
       @RequestParam(value = "address", required = false) String beobJeongDong,
       @RequestParam(value = "sort", required = false) String sort);// 정렬시 asc는 오름, desc는 내림
 
-
   ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException;
   ApiResponseDto updateGroupBuying(User user, Long groupBuyingId, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException;
   ApiResponseDto deleteGroupBuying(Long id, User user);
   GroupBuying findGroupBuying(Long id);
 
   GroupBuyingDetailResponseDto getGroupBuying(User user, Long groupBuyingId);
-
-
 
   ApiResponseDto closeGroupBuying(Long groupBuyingId, User user);
 

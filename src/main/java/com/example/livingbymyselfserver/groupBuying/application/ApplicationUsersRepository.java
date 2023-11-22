@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplicationUsersRepository extends JpaRepository<ApplicationUsers,Long> {
+
     Boolean existsByGroupBuyingAndUser(GroupBuying groupBuying, User user);
 
     ApplicationUsers findByGroupBuyingAndUser(GroupBuying groupBuying, User user);

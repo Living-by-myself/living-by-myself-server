@@ -68,8 +68,6 @@ public class GroupBuyingController {
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
-
-
   @Operation(summary = "공구 게시글 상세조회")
   @GetMapping("/{groupBuyingId}")
   public ResponseEntity<GroupBuyingDetailResponseDto> getGroupBuying(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long groupBuyingId) {
