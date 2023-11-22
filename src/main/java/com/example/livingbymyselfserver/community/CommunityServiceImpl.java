@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class CommunityServiceImpl implements CommunityService{
 
         communityRepository.save(community);
 
-        if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+        if (multipartFiles != null) {
             uploadImage(multipartFiles, community);
         }
 
@@ -65,7 +66,7 @@ public class CommunityServiceImpl implements CommunityService{
 
         communityUserVerification(community, user);
 
-        if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+        if (multipartFiles != null) {
             updateCommunityS3Image(community, multipartFiles);
         }
 

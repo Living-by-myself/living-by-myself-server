@@ -70,7 +70,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     GroupBuying groupBuying = new GroupBuying(groupBuyingRequestDto, user);
     groupBuyingRepository.save(groupBuying);
 
-    if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+    if (multipartFiles != null) {
       uploadImage(multipartFiles, groupBuying);
     }
 
@@ -89,7 +89,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     if(groupBuying.getAppUsers().size() >0)
       throw new IllegalArgumentException("신청한 유저가 있어 이제 공구수정이 불가능합니다.");
 
-    if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+    if (multipartFiles != null) {
       updateGroupBuyingS3Image(groupBuying, multipartFiles);
     }
 
