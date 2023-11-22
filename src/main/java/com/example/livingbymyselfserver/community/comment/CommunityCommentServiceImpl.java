@@ -1,11 +1,15 @@
 package com.example.livingbymyselfserver.community.comment;
 
+import com.example.livingbymyselfserver.attachment.entity.AttachmentUserUrl;
+import com.example.livingbymyselfserver.attachment.user.AttachmentUserUrlRepository;
 import com.example.livingbymyselfserver.community.comment.dto.CommentRequestDto;
 import com.example.livingbymyselfserver.community.comment.dto.CommunityCommentResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.community.Community;
 import com.example.livingbymyselfserver.community.CommunityService;
+import com.example.livingbymyselfserver.community.like.CommunityCommentLikeRepository;
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,13 +23,22 @@ import java.util.stream.Collectors;
 public class CommunityCommentServiceImpl implements CommunityCommentService {
     private final CommunityService communityService;
     private final CommunityCommentRepository communityCommentRepository;
-
+    private final CommunityCommentLikeRepository communityCommentLikeRepository;
+    private final AttachmentUserUrlRepository attachmentUserUrlRepository;
     @Override
-    public List<CommunityCommentResponseDto> getCommunityComments(Long communityId, Pageable pageable) {
+    public List<CommunityCommentResponseDto> getCommunityComments(User user, Long communityId, Pageable pageable) {
         Community community = communityService.findCommunity(communityId);
         return communityCommentRepository.findByCommunityOrderByCreatedAtDesc(community,pageable)
                 .stream()
-                .map(CommunityCommentResponseDto::new)
+                .map(communityComment -> {
+                    Boolean existsLike = communityCommentLikeRepository.existsByCommunityCommentAndUser(communityComment, user);
+                    AttachmentUserUrl attachmentUserUrl = attachmentUserUrlRepository.findByUser(user);
+                    UserResponseDto userResponseDto;
+                    userResponseDto = (attachmentUserUrl != null) ?
+                            new UserResponseDto(community.getUser(), attachmentUserUrl) :
+                            new UserResponseDto(community.getUser());
+                    return new CommunityCommentResponseDto(communityComment, existsLike, userResponseDto);
+                })
                 .collect(Collectors.toList());
     }
 
