@@ -47,7 +47,7 @@ public class CommunityServiceImpl implements CommunityService{
         Community community = new Community(communityRequestDto, user);
 
         communityRepository.save(community);
-        System.out.println(Arrays.toString(multipartFiles));
+
         if (multipartFiles != null) {
             uploadImage(multipartFiles, community);
         }
