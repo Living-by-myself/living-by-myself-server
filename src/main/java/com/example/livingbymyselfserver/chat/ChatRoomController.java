@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/mya/chats")
+@RequestMapping("/home/chats")
 @Tag(name = "채팅방 조회 및 삭제")
 @RequiredArgsConstructor
 public class ChatRoomController {
