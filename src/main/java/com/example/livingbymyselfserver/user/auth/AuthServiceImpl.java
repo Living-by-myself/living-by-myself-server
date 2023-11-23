@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -101,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
+  @Transactional
   public ApiResponseDto updatePassword(User user, PasswordRequestDto passwordRequestDto) {
     String newPassword = passwordRequestDto.getNewPassword();
     String newPasswordCheck = passwordRequestDto.getNewPasswordCheck();
