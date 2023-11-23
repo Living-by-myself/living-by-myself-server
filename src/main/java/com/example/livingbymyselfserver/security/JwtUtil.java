@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -110,7 +111,8 @@ public class JwtUtil {
   // refreshToken 확인
   public boolean checkRefreshToken(String username, String token) {
     String storedToken = redisUtil.getRefreshToken(username);
-    return storedToken !=null && storedToken.equals(token);
+
+    return storedToken !=null && storedToken.substring(7).equals(token);
   }
 
   // atk 남은 만료 시간
@@ -132,7 +134,8 @@ public class JwtUtil {
 
   public String getUsernameFromToken(String token) {
     Claims claims = getUserInfoFromToken(token);
-    return claims.get("username", String.class);
+
+    return claims.get("sub", String.class);
   }
 
 }

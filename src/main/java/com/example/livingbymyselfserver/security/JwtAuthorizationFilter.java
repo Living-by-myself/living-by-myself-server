@@ -36,7 +36,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       }
       if(request.getRequestURI().equals("/home/users/reissue")) {
         String username = jwtUtil.getUsernameFromToken(token);
-        if(!jwtUtil.checkRefreshToken(username, token)) return;
+        if(!jwtUtil.checkRefreshToken(username, token)) {
+          // Handle the case when refresh token check fails
+          log.error("Refresh token check failed");
+          return;
+        }
       }
       Claims info = jwtUtil.getUserInfoFromToken(token);
       setAuthentication(info.getSubject());
