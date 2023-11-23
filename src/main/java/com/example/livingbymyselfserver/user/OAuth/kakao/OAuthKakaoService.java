@@ -49,8 +49,8 @@ public class OAuthKakaoService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=" + kakaoClientId); // 신선고 REST_API_KEY 입력
-            sb.append("&redirect_uri=" + kakaoRedirectUrl); // 신선고 인가코드 받은 redirect_uri 입력
+            sb.append("&client_id=" + kakaoClientId);
+            sb.append("&redirect_uri=" + kakaoRedirectUrl);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();

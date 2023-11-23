@@ -33,13 +33,13 @@ public class ChatController {
 
   @Operation(summary = "채팅방 접속 겸 채팅 보내")
   @MessageMapping("/{roomId}")
-  @SendTo("/topic/room/{roomId}")
+  @SendTo("/topic/room/{roomId}") //wss
   public Chat test(@DestinationVariable Long roomId, @RequestBody ChatRequestDto requestDto) {
     return chatService.createChat(roomId, requestDto.getUserId(), requestDto.getMessage());
   }
 
   @Operation(summary = "채팅방 생성")
-  @PostMapping("/room/user")
+  @PostMapping("/room")
   public ResponseEntity<Long> createChatRoom(@AuthenticationPrincipal UserDetailsImpl userDetails,
       @RequestBody List<String> usersId) {
     List<Long> userIdList = usersId.stream()

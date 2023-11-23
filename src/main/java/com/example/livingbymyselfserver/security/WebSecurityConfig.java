@@ -63,6 +63,7 @@ public class WebSecurityConfig {
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger 허용
             .requestMatchers("/home/communities/search", "/home/group-buying/search").permitAll() // 공구 검색 & 커뮤니티 검색
             .requestMatchers(HttpMethod.GET, "/home/community/**").permitAll() // 댓글 조회 api
+            .requestMatchers("/home/chat/**", "/topic/**").permitAll() // webSocket 허용
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리
     );
 

@@ -9,7 +9,6 @@ import com.example.livingbymyselfserver.common.PostTypeEnum;
 import com.example.livingbymyselfserver.common.RedisUtil;
 import com.example.livingbymyselfserver.common.RedisViewCountUtil;
 import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsers;
-import com.example.livingbymyselfserver.groupBuying.application.ApplicationUsersRepository;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingDetailResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingListResponseDto;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingRequestDto;
@@ -18,7 +17,6 @@ import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnu
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLike;
-import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLikeRepository;
 import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -72,7 +70,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     GroupBuying groupBuying = new GroupBuying(groupBuyingRequestDto, user);
     groupBuyingRepository.save(groupBuying);
 
-    if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+    if (multipartFiles != null) {
       uploadImage(multipartFiles, groupBuying);
     }
 
@@ -91,7 +89,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     if(groupBuying.getAppUsers().size() >0)
       throw new IllegalArgumentException("신청한 유저가 있어 이제 공구수정이 불가능합니다.");
 
-    if (!Objects.equals(multipartFiles[0].getOriginalFilename(), "")) {
+    if (multipartFiles != null) {
       updateGroupBuyingS3Image(groupBuying, multipartFiles);
     }
 
@@ -152,8 +150,6 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
     }
   }
 
-
-
   @Override
   public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
     return groupBuyingRepository.findCategory(GroupBuyingCategoryEnum.FOOD ,pageable)
@@ -184,10 +180,8 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
         })
         .toList();
 
-
     host.setCurrentExp(host.getCurrentExp()+30L);
     userLevelCheck(groupBuying.getHost());
-
 
     return new ApiResponseDto("공고가 마감상태로 변경 되었습니다.", 200);
   }
@@ -228,6 +222,7 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
       uploadImage(multipartFiles, groupBuying);
     }
   }
+
   private void userLevelCheck(User user){
     if(user.getCurrentExp() >=100L){
       user.setLevel(user.getLevel()-1L);  //경험치가 넘었다면 레벨 증가

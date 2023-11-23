@@ -18,8 +18,9 @@ public class CommunityDetailResponseDto {
     private final int commentCnt;
     private final int likeCnt;
     private String fileUrls;
+    private Boolean existsLike;
 
-    public CommunityDetailResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl, double viewCnt) {
+    public CommunityDetailResponseDto(Community community, AttachmentCommunityUrl attachmentCommunityUrl, double viewCnt, Boolean existsLike) {
         this.id = community.getId();
         this.viewCnt = (int)viewCnt;
         this.title = community.getTitle();
@@ -31,9 +32,10 @@ public class CommunityDetailResponseDto {
         this.commentCnt = community.getCommentList().size();
         this.likeCnt = community.getLikeList().size();
         this.fileUrls = attachmentCommunityUrl.getFileName();
+        this.existsLike = existsLike;
     }
 
-    public CommunityDetailResponseDto(Community community, double viewCnt) {
+    public CommunityDetailResponseDto(Community community, double viewCnt, Boolean existsLike) {
         this.id = community.getId();
         this.viewCnt = (int)viewCnt;
         this.title = community.getTitle();
@@ -44,5 +46,6 @@ public class CommunityDetailResponseDto {
         this.userNickname = community.getUser().getNickname();
         this.commentCnt = community.getCommentList().size();
         this.likeCnt = community.getLikeList().size();
+        this.existsLike = existsLike;
     }
 }
