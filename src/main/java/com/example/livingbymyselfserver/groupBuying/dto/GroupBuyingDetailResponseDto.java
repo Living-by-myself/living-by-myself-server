@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public class GroupBuyingDetailResponseDto {
     private final Long id;
+    private final User host;
     private final String title;
     private final String description;
     private final String itemLink;
@@ -26,16 +27,18 @@ public class GroupBuyingDetailResponseDto {
     private final double lng;
     private final List<User> users;
     private final Integer likeCount;
+    private String status;
 
     public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt, List<User> users,Integer likeCount){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
+        this.host = groupBuying.getHost();
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
-
+        this.status = groupBuying.getEnumStatus().toString();
         this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
-        this.currentUserCount = groupBuying.getAppUsers().size();
+        this.currentUserCount = groupBuying.getAppUsers().size() + 1;
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
@@ -50,11 +53,13 @@ public class GroupBuyingDetailResponseDto {
     public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, List<User> users, Integer likeCount){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
+        this.host = groupBuying.getHost();
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
         this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
-        this.currentUserCount = groupBuying.getAppUsers().size();
+        this.status = groupBuying.getEnumStatus().toString();
+        this.currentUserCount = groupBuying.getAppUsers().size()+1;
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
