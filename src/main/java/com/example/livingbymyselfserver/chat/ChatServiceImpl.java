@@ -40,10 +40,8 @@ public class ChatServiceImpl implements ChatService {
     log.info("채팅 메세지 만들기 채팅방 찾음");
     User user = userService.findUser(userId);
     log.info("채팅 메세지 만들기 유저 찾음");
-    AttachmentUserUrl attachmentUserUrl = attachmentUserUrlRepository.findByUser(user);
-    log.info("채팅 메세지 만들기 유저이미지 찾음");
 
-    Chat chat = new Chat(msg,chatRoom, user, attachmentUserUrl.getFileName());
+    Chat chat = new Chat(msg,chatRoom, user);
     log.info("채팅 메세지 만들기 채팅 생성완료");
     log.info("채팅 메세지 = "+chat.getMessage());
     chatRepository.save(chat);

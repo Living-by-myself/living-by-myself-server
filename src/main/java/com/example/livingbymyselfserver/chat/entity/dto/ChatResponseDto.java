@@ -1,7 +1,5 @@
 package com.example.livingbymyselfserver.chat.entity.dto;
 
-import com.example.livingbymyselfserver.attachment.user.AttachmentUserUrlRepository;
-import com.example.livingbymyselfserver.chat.entity.Chat;
 import com.example.livingbymyselfserver.user.User;
 import lombok.Getter;
 

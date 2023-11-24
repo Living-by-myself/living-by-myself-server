@@ -37,13 +37,10 @@ public class Chat extends TimeStamped {
   @JoinColumn(name = "user_id")
   private User user;
 
-  private String fileUrls;
-
-  public Chat(String message, ChatRoom chatRoom, User user,String fileUrls) {
+  public Chat(String message, ChatRoom chatRoom, User user) {
     this.message = message;
     this.chatRoom = chatRoom;
     this.user = user;
-    this.fileUrls = fileUrls;
   }
 
   public void setChatRoom() {

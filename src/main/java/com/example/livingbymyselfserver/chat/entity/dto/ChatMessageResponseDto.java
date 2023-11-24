@@ -17,6 +17,6 @@ public class ChatMessageResponseDto {
     this.chatId = chat.getId();
     this.msg = chat.getMessage();
     this.localTime = chat.getCreatedAtAsString();
-    this.responseDto = new ChatResponseDto(chat.getUser(),chat.getFileUrls());
+    this.responseDto = new ChatResponseDto(chat.getUser(),chat.getUser().getFileUrls());
   }
 }
