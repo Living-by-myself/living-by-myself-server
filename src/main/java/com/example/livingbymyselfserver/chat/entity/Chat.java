@@ -29,9 +29,6 @@ public class Chat extends TimeStamped {
 
   private String message;
 
-  @Column(name="file_urls")
-  private String fileUrls;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chat_room_id")
   private ChatRoom chatRoom;
@@ -40,11 +37,10 @@ public class Chat extends TimeStamped {
   @JoinColumn(name = "user_id")
   private User user;
 
-  public Chat(String message, ChatRoom chatRoom, User user, AttachmentUserUrlRepository attachmentUserUrlRepository) {
+  public Chat(String message, ChatRoom chatRoom, User user) {
     this.message = message;
     this.chatRoom = chatRoom;
     this.user = user;
-    this.fileUrls = attachmentUserUrlRepository.findByUser(user).getFileName();
   }
 
   public void setChatRoom() {

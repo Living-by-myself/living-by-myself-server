@@ -66,7 +66,7 @@ public class ProfileServiceImpl implements ProfileService{
 
     if (attachmentUserUrl == null) {
       String fileUrlResult = profileImageUpload(multipartFiles);
-
+      user.setFileUrls(fileUrlResult);
       AttachmentUserUrl file = new AttachmentUserUrl(user, fileUrlResult);
 
       attachmentUserUrlRepository.save(file);
