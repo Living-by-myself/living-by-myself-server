@@ -33,7 +33,7 @@ public class ChatController {
 
   @Operation(summary = "채팅방 접속 겸 채팅 보내")
   @MessageMapping("/{roomId}")
-  @SendTo("/topic/room/{roomId}") //wss
+  @SendTo("/topic/room/{roomId}")
   public Chat test(@DestinationVariable Long roomId, @RequestBody ChatRequestDto requestDto) {
     return chatService.createChat(roomId, requestDto.getUserId(), requestDto.getMessage());
   }
