@@ -1,4 +1,4 @@
-package com.example.livingbymyselfserver.chat;
+package com.example.livingbymyselfserver.chat.entity.dto;
 
 import lombok.Getter;
 
