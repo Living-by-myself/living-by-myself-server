@@ -13,10 +13,10 @@ public class ChatResponseDto {
   private String nickname;
   private String fileUrls;
 
-  public ChatResponseDto(User user, Chat chat) {
+  public ChatResponseDto(User user, String fileUrls) {
     this.id = user.getId();
     this.username = user.getUsername();
     this.nickname = user.getNickname();
-    this.fileUrls = chat.getFileUrls();
+    this.fileUrls = fileUrls;
   }
 }

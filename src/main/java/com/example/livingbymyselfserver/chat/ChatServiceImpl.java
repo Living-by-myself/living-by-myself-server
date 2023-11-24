@@ -1,5 +1,6 @@
 package com.example.livingbymyselfserver.chat;
 
+import com.example.livingbymyselfserver.attachment.entity.AttachmentUserUrl;
 import com.example.livingbymyselfserver.attachment.user.AttachmentUserUrlRepository;
 import com.example.livingbymyselfserver.chat.entity.Chat;
 import com.example.livingbymyselfserver.chat.entity.ChatRoom;
@@ -13,6 +14,7 @@ import com.example.livingbymyselfserver.user.UserService;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatServiceImpl implements ChatService {
 
   private final ChatRoomRespository chatRoomRepository;
@@ -31,10 +34,20 @@ public class ChatServiceImpl implements ChatService {
   @Override
   @Transactional
   public Chat createChat(Long roomNo, Long userId, String msg) {  //채팅메세지생성
+
+    log.info("채팅 메세지 만들기 들어옴");
     ChatRoom chatRoom = getRoom(roomNo);
+    log.info("채팅 메세지 만들기 채팅방 찾음");
     User user = userService.findUser(userId);
-    Chat chat = new Chat(msg,chatRoom, user,attachmentUserUrlRepository);
+    log.info("채팅 메세지 만들기 유저 찾음");
+    AttachmentUserUrl attachmentUserUrl = attachmentUserUrlRepository.findByUser(user);
+    log.info("채팅 메세지 만들기 유저이미지 찾음");
+
+    Chat chat = new Chat(msg,chatRoom, user, attachmentUserUrl.getFileName());
+    log.info("채팅 메세지 만들기 채팅 생성완료");
+    log.info("채팅 메세지 = "+chat.getMessage());
     chatRepository.save(chat);
+    log.info("채팅 메세지 저장로직 지나옴");
 
     return chat;
   }
