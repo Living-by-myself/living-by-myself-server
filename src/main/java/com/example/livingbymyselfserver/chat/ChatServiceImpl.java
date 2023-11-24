@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class ChatServiceImpl implements ChatService {
   private final UserRepository userRepository;
 
   @Override
+  @Transactional
   public Chat createChat(Long roomNo, Long userId, String msg) {  //채팅메세지생성
     ChatRoom chatRoom = getRoom(roomNo);
     User user = userService.findUser(userId);

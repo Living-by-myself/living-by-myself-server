@@ -32,6 +32,8 @@ public class ChatRoom {
   @Column(name = "chat_room_id")
   private Long id;
 
+  String title;
+
   @OneToMany(mappedBy = "chatRoom" , cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Chat> chat = new ArrayList<>();
 
