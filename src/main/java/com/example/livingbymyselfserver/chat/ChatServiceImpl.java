@@ -7,7 +7,9 @@ import com.example.livingbymyselfserver.chat.entity.ChatRoom;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatMessageResponseDto;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
+import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
+import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.UserService;
@@ -27,7 +29,6 @@ public class ChatServiceImpl implements ChatService {
 
   private final ChatRoomRespository chatRoomRepository;
   private final ChatRepository chatRepository;
-  private final AttachmentUserUrlRepository attachmentUserUrlRepository;
   private final UserService userService;
   private final UserRepository userRepository;
 
@@ -35,24 +36,21 @@ public class ChatServiceImpl implements ChatService {
   @Transactional
   public Chat createChat(Long roomNo, Long userId, String msg) {  //채팅메세지생성
 
-    log.info("채팅 메세지 만들기 들어옴");
     ChatRoom chatRoom = getRoom(roomNo);
-    log.info("채팅 메세지 만들기 채팅방 찾음");
     User user = userService.findUser(userId);
-    log.info("채팅 메세지 만들기 유저 찾음");
 
     Chat chat = new Chat(msg,chatRoom, user);
-    log.info("채팅 메세지 만들기 채팅 생성완료");
-    log.info("채팅 메세지 = "+chat.getMessage());
+    chatRoom.setLastChatMsg(chat.getMessage());
+    chatRoom.setLastChatTime(chat.getCreatedAtAsString());
     chatRepository.save(chat);
-    log.info("채팅 메세지 저장로직 지나옴");
 
     return chat;
   }
 
   @Override
-  public Long createChatRoom(Long userId,List<Long> userIdList) {
+  public Long createChatRoom(Long userId,List<Long> userIdList, String title) {
     User user = userService.findUser(userId);
+
 
     if (userIdList.stream().anyMatch(id -> id.equals(userId))) {
       throw new IllegalArgumentException("자기자신과는 채팅할 수 없습니다.");
@@ -62,7 +60,7 @@ public class ChatServiceImpl implements ChatService {
 //    }
     List<User> users = userRepository.findByIdIn(userIdList);
 
-    ChatRoom chatRoom = new ChatRoom(user, users);
+    ChatRoom chatRoom = new ChatRoom(user, users, title);
     chatRoomRepository.save(chatRoom);
 
 

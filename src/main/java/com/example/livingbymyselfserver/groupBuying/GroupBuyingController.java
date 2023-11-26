@@ -44,6 +44,7 @@ public class GroupBuyingController {
   @Operation(summary = "공구 조건검색")
   @GetMapping("/search")
   public ResponseEntity<GroupBuyingListResponseDto> searchGroupBuyingList(Pageable pageable,
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
       @RequestParam(value = "keyword", required = false) String keyword,
       @RequestParam(value = "category", required = false) GroupBuyingCategoryEnum category,
       @RequestParam(value = "category_share", required = false) GroupBuyingShareEnum enumShare,
@@ -51,7 +52,7 @@ public class GroupBuyingController {
       @RequestParam(value = "address", required = false) String beobJeongDong,
       @RequestParam(value = "sort", required = false) String sort)// 정렬시 asc는 오름, desc는 내림
   {
-    GroupBuyingListResponseDto result = groupBuyingService.searchGroupBuyingList(pageable, keyword, category,
+    GroupBuyingListResponseDto result = groupBuyingService.searchGroupBuyingList(pageable, userDetails.getUser(), keyword, category,
         enumShare, status,beobJeongDong, sort);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);

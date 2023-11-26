@@ -16,12 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface GroupBuyingService {
   GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
-      @RequestParam(value = "keyword", required = false) String keyword,
-      @RequestParam(value = "category", required = false) GroupBuyingCategoryEnum category,
-      @RequestParam(value = "category_share", required = false) GroupBuyingShareEnum enumShare,
-      @RequestParam(value = "category_status", required = false) GroupBuyingStatusEnum status,
-      @RequestParam(value = "address", required = false) String beobJeongDong,
-      @RequestParam(value = "sort", required = false) String sort);// 정렬시 asc는 오름, desc는 내림
+      User user,
+      String keyword,
+      GroupBuyingCategoryEnum category,
+      GroupBuyingShareEnum enumShare,
+      GroupBuyingStatusEnum status,
+      String beobJeongDong,
+      String sort);// 정렬시 asc는 오름, desc는 내림
 
   ApiResponseDto createGroupBuying(User user, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException;
   ApiResponseDto updateGroupBuying(User user, Long groupBuyingId, String requestDto, MultipartFile[] multipartFiles) throws JsonProcessingException;

@@ -15,12 +15,14 @@ public class GroupBuyingResponseDto {
     private String fileUrls;
     private final Integer perUserPrice;
     private final GroupBuyingShareEnum enumShare;
+    private final String enumStatus;
     private final int viewCnt;
     private final String address;
     private final String beobJeongDong;
     private final LocalDateTime createAt;
     private final LocalDateTime modifiedAt;
-    public GroupBuyingResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt){
+    private  boolean isPickLike;
+    public GroupBuyingResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, boolean isPickLike){
         this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
         this.maxUser = groupBuying.getMaxUser();
@@ -28,13 +30,15 @@ public class GroupBuyingResponseDto {
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
+        this.enumStatus = groupBuying.getEnumStatus().toString();
         this.viewCnt = (int)viewCnt;
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.fileUrls = attachmentGroupBuyingUrl.getFileName().split(",")[0];
         this.createAt = groupBuying.getCreatedAt();
         this.modifiedAt = groupBuying.getModifiedAt();
+        this.isPickLike = isPickLike;
     }
-    public GroupBuyingResponseDto(GroupBuying groupBuying,double viewCnt){
+    public GroupBuyingResponseDto(GroupBuying groupBuying,double viewCnt, boolean isPickLike){
         this.id = groupBuying.getId();
         this.title = groupBuying.getTitle();
         this.maxUser = groupBuying.getMaxUser();
@@ -42,9 +46,11 @@ public class GroupBuyingResponseDto {
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
+        this.enumStatus = groupBuying.getEnumStatus().toString();
         this.viewCnt = (int)viewCnt;
         this.beobJeongDong = groupBuying.getBeobJeongDong();
         this.createAt = groupBuying.getCreatedAt();
         this.modifiedAt = groupBuying.getModifiedAt();
+        this.isPickLike = isPickLike;
     }
 }
