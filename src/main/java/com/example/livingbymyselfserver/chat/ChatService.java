@@ -33,7 +33,7 @@ public interface ChatService {
    * @param user
    * @return
    */
-  Long createChatRoom(Long userId,List<Long> userIdList);
+  Long createChatRoom(Long userId,List<Long> userIdList, String title);
 
   /**
    * 채팅 메세지 생성
