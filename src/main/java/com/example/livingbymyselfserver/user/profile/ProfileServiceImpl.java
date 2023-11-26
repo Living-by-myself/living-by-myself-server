@@ -66,7 +66,7 @@ public class ProfileServiceImpl implements ProfileService{
 
     if (attachmentUserUrl == null) {
       String fileUrlResult = profileImageUpload(multipartFiles);
-
+      user.setFileUrls(fileUrlResult);
       AttachmentUserUrl file = new AttachmentUserUrl(user, fileUrlResult);
 
       attachmentUserUrlRepository.save(file);
@@ -125,9 +125,10 @@ public class ProfileServiceImpl implements ProfileService{
     User user = userService.findUser(userId);
     return groupBuyingRepository.findAllByHost(user)
         .stream().map(groupBuying -> {
+          boolean isPickLike = groupBuyingPickLikeRepository.existsByGroupBuyingAndUser(groupBuying, user);
           double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
           AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
-          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount,isPickLike) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount,isPickLike);
         })
         .toList();
   }

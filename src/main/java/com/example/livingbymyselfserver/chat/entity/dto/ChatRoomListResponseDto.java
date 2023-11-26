@@ -8,10 +8,14 @@ import lombok.Getter;
 @Getter
 public class ChatRoomListResponseDto {
   private Long id;
-  private Set<User> users;
+  private Integer userCount;
+  private String lastChatMsg;
+  private String lastChatTime;
 
   public ChatRoomListResponseDto(ChatRoom chatRoom) {
     this.id = chatRoom.getId();
-    this.users = chatRoom.getUsers();
+    this.userCount = chatRoom.getUsers().size();
+    this.lastChatTime = chatRoom.getLastChatTime();
+    this.lastChatMsg = chatRoom.getLastChatMsg();
   }
 }

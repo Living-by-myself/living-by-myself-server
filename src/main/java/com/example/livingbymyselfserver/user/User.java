@@ -1,7 +1,7 @@
 package com.example.livingbymyselfserver.user;
 
-import com.example.livingbymyselfserver.chat.entity.Chat;
 import com.example.livingbymyselfserver.chat.entity.ChatRoom;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,9 +9,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -38,6 +39,8 @@ public class User {
 
   private String address;
 
+  private String fileUrls;
+
   @Column(unique = true)
   private String phoneNumber;
 
@@ -54,13 +57,8 @@ public class User {
 
   private Long currentExp;
 
-  @ManyToOne
-  @JoinColumn(name = "chat_room_id")
-  private ChatRoom chatRoom;
-
-  @ManyToOne
-  @JoinColumn(name = "chat_id")
-  private Chat chat;
+  @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+  private Set<ChatRoom> chatRoom = new HashSet<>();
 
   public User(String username, String password, String nickname, String phoneNumber, UserRoleEnum role,
       OAuthProviderEnum oAuthProvider) {
@@ -73,6 +71,7 @@ public class User {
     this.level = 10L;
     this.cash = 0L;
     this.currentExp = 0L;
+    this.fileUrls = "https://tracelover.s3.ap-northeast-2.amazonaws.com/04a9aed2-293d-44b3-88f6-7406c578f11dIMG_9856.JPG";//기본이미지 넣기
   }
 
   public User(String username, String password, String nickname, String address, String phoneNumber,
@@ -87,6 +86,7 @@ public class User {
     this.cash = cash;
     this.level = level;
     this.currentExp = 0L;
+    this.fileUrls = "https://tracelover.s3.ap-northeast-2.amazonaws.com/04a9aed2-293d-44b3-88f6-7406c578f11dIMG_9856.JPG";
   }
 
   public User(String username, String nickname, UserRoleEnum role, OAuthProviderEnum oAuthProvider) {
@@ -95,6 +95,7 @@ public class User {
     this.nickname = nickname;
     this.role = role;
     this.oAuthProvider = oAuthProvider;
+    this.fileUrls = "https://tracelover.s3.ap-northeast-2.amazonaws.com/04a9aed2-293d-44b3-88f6-7406c578f11dIMG_9856.JPG";
   }
 
   public void setPassword(String password) {
@@ -113,7 +114,9 @@ public class User {
     this.role = role;
   }
 
-  public void setCurrentExp(Long exp) {this.currentExp =exp;}
+  public void setCurrentExp(Long exp) {this.currentExp = exp;}
+
+  public void setFileUrls(String fileUrls){this.fileUrls = fileUrls;}
 
   public void setCash(Long cash) {
     this.cash = cash;

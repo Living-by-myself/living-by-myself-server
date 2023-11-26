@@ -26,16 +26,18 @@ public class GroupBuyingDetailResponseDto {
     private final double lng;
     private final List<User> users;
     private final Integer likeCount;
+    private String enumStatus;
+    private boolean isPickLike;
 
-    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt, List<User> users,Integer likeCount){
+    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, double viewCnt, List<User> users,Integer likeCount, boolean isPickLike){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
-
+        this.enumStatus = groupBuying.getEnumStatus().toString();
         this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
-        this.currentUserCount = groupBuying.getAppUsers().size();
+        this.currentUserCount = users.size();
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
@@ -45,16 +47,18 @@ public class GroupBuyingDetailResponseDto {
         this.createdAt = groupBuying.getCreatedAtAsString();
         this.users = users;
         this.likeCount = likeCount;
+        this.isPickLike = isPickLike;
     }
 
-    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, List<User> users, Integer likeCount){
+    public GroupBuyingDetailResponseDto(GroupBuying groupBuying, AttachmentGroupBuyingUrl attachmentGroupBuyingUrl, double viewCnt, List<User> users, Integer likeCount, boolean isPickLike){
         this.id = groupBuying.getId();
         this.viewCnt = (int)viewCnt;
         this.title = groupBuying.getTitle();
         this.description = groupBuying.getDescription();
         this.itemLink = groupBuying.getItemLink();
         this.maxUser = groupBuying.getMaxUser();
-        this.currentUserCount = groupBuying.getAppUsers().size();
+        this.enumStatus = groupBuying.getEnumStatus().toString();
+        this.currentUserCount = users.size();
         this.perUserPrice = groupBuying.getPerUserPrice();
         this.address = groupBuying.getAddress();
         this.enumShare = groupBuying.getEnumShare();
@@ -65,5 +69,6 @@ public class GroupBuyingDetailResponseDto {
         this.createdAt = groupBuying.getCreatedAtAsString();
         this.users = users;
         this.likeCount = likeCount;
+        this.isPickLike = isPickLike;
     }
 }

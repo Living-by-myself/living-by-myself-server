@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupBuyingRepository extends JpaRepository<GroupBuying, Long>, GroupBuyingRepositoryQuery {
   List<GroupBuying> findAllByHost(User user);
+
 }

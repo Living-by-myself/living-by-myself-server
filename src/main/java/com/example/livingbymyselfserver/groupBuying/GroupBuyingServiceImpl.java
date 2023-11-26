@@ -17,6 +17,7 @@ import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingCategoryEnu
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingStatusEnum;
 import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLike;
+import com.example.livingbymyselfserver.groupBuying.pickLike.GroupBuyingPickLikeRepository;
 import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingRepository;
 import com.example.livingbymyselfserver.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,22 +41,26 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   final private RedisUtil redisUtil;
   private final S3Service s3Service;
   private final AttachmentGroupBuyingUrlRepository attachmentGroupBuyingUrlRepository;
+  private final GroupBuyingPickLikeRepository groupBuyingPickLikeRepository;
 
   @Override
   public GroupBuyingListResponseDto searchGroupBuyingList(Pageable pageable,
-      String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
+      User user, String keyword, GroupBuyingCategoryEnum category, GroupBuyingShareEnum enumShare,
       GroupBuyingStatusEnum status, String beobJeongDong,String sort) {
 
     Page<GroupBuying> groupBuyingPage = groupBuyingRepository.searchItemList(pageable, keyword,
         category,enumShare,status,beobJeongDong,sort); //전체 크기를 받아오기 위한 Page
     Long totalLen =  groupBuyingPage.getTotalElements();  //total길이
 
+
+
     List<GroupBuyingResponseDto> groupBuyingResponseDtoList = groupBuyingRepository.searchItemList(pageable,keyword,
         category,enumShare,status,beobJeongDong,sort)
         .stream().map(groupBuying -> {
+          boolean isPickLike = groupBuyingPickLikeRepository.existsByGroupBuyingAndUser(groupBuying, user);
           double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
           AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
-          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount,isPickLike) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount,isPickLike);
         })
         .toList();
 
@@ -143,10 +148,12 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
         .map(GroupBuyingPickLike::getUser)
         .toList().size();
 
+    boolean isPickLike = groupBuyingPickLikeRepository.existsByGroupBuyingAndUser(groupBuying, user);
+
     if (attachmentGroupBuyingUrl == null) {
-      return new GroupBuyingDetailResponseDto(groupBuying,viewCount, users,pickLikeCount);
+      return new GroupBuyingDetailResponseDto(groupBuying,viewCount, users,pickLikeCount, isPickLike);
     } else {
-      return new GroupBuyingDetailResponseDto(groupBuying,attachmentGroupBuyingUrl, viewCount, users,pickLikeCount);
+      return new GroupBuyingDetailResponseDto(groupBuying,attachmentGroupBuyingUrl, viewCount, users,pickLikeCount, isPickLike);
     }
   }
 
@@ -154,9 +161,10 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
     return groupBuyingRepository.findCategory(GroupBuyingCategoryEnum.FOOD ,pageable)
         .stream().map(groupBuying -> {
+          boolean isPickLike = groupBuyingPickLikeRepository.existsByGroupBuyingAndUser(groupBuying,user);
           double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
           AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
-          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount);
+          return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount,isPickLike) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount,isPickLike);
         })
         .toList();
   }
