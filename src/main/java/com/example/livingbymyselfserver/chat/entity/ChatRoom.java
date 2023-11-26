@@ -34,8 +34,9 @@ public class ChatRoom {
 
   String title;
 
-  @OneToMany(mappedBy = "chatRoom" , cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Chat> chat = new ArrayList<>();
+  String lastChatTime;
+
+  String lastChatMsg;
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinTable(
@@ -49,7 +50,12 @@ public class ChatRoom {
     this.users = new HashSet<>(users);
     this.users.add(user);
   }
-
+  public void setLastChatMsg(String lastChatMsg){
+    this.lastChatMsg =  lastChatMsg;
+  }
+  public void setLastChatTime(String lastChatTime){
+    this.lastChatTime = lastChatTime;
+  }
   public void addUser(User user){
     this.users.add(user);
   }

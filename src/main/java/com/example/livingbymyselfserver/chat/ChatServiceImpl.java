@@ -35,17 +35,13 @@ public class ChatServiceImpl implements ChatService {
   @Transactional
   public Chat createChat(Long roomNo, Long userId, String msg) {  //채팅메세지생성
 
-    log.info("채팅 메세지 만들기 들어옴");
     ChatRoom chatRoom = getRoom(roomNo);
-    log.info("채팅 메세지 만들기 채팅방 찾음");
     User user = userService.findUser(userId);
-    log.info("채팅 메세지 만들기 유저 찾음");
 
     Chat chat = new Chat(msg,chatRoom, user);
-    log.info("채팅 메세지 만들기 채팅 생성완료");
-    log.info("채팅 메세지 = "+chat.getMessage());
+    chatRoom.setLastChatMsg(chat.getMessage());
+    chatRoom.setLastChatTime(chat.getCreatedAtAsString());
     chatRepository.save(chat);
-    log.info("채팅 메세지 저장로직 지나옴");
 
     return chat;
   }
