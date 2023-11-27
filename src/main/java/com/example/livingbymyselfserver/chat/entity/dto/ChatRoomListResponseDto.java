@@ -11,11 +11,15 @@ public class ChatRoomListResponseDto {
   private Integer userCount;
   private String lastChatMsg;
   private String lastChatTime;
+  private String title;
 
   public ChatRoomListResponseDto(ChatRoom chatRoom) {
     this.id = chatRoom.getId();
     this.userCount = chatRoom.getUsers().size();
     this.lastChatTime = chatRoom.getLastChatTime();
     this.lastChatMsg = chatRoom.getLastChatMsg();
+    if(userCount>1){
+      this.title = chatRoom.getTitle();
+    }
   }
 }
