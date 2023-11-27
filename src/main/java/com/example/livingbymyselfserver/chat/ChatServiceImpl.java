@@ -51,7 +51,6 @@ public class ChatServiceImpl implements ChatService {
   public Long createChatRoom(Long userId,List<Long> userIdList, String title) {
     User user = userService.findUser(userId);
 
-
     if (userIdList.stream().anyMatch(id -> id.equals(userId))) {
       throw new IllegalArgumentException("자기자신과는 채팅할 수 없습니다.");
     }
