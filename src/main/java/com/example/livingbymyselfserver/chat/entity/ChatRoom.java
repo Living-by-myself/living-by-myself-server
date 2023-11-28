@@ -48,7 +48,7 @@ public class ChatRoom {
 
   public ChatRoom(User user, List<User> users, String title) {
     this.users = new HashSet<>(users);
-    this.users.add(user);
+    addUser(user);
     this.title = title;
   }
   public void setLastChatMsg(String lastChatMsg){
