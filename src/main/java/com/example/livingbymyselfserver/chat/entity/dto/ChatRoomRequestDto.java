@@ -8,4 +8,5 @@ public class ChatRoomRequestDto {
 
   List<String> usersId;
   String title;
+  Long groupBuyingRoomId;
 }

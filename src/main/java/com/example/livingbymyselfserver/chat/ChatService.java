@@ -4,6 +4,7 @@ import com.example.livingbymyselfserver.chat.entity.Chat;
 import com.example.livingbymyselfserver.chat.entity.ChatRoom;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatMessageResponseDto;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
+import com.example.livingbymyselfserver.chat.entity.dto.ChatUserResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.dto.UserResponseDto;
@@ -34,7 +35,7 @@ public interface ChatService {
    * @param user
    * @return
    */
-  Long createChatRoom(Long userId,List<Long> userIdList, String title);
+  Long createChatRoom(Long userId,List<Long> userIdList, String title, Long groupBuyingRoomId);
 
   /**
    * 채팅 메세지 생성
@@ -56,5 +57,5 @@ public interface ChatService {
 
   ChatRoom getRoom(Long roomNo);
 
-  List<UserResponseDto> getChatRoomUsers(User user, Long roomId);
+  List<ChatUserResponseDto> getChatRoomUsers(User user, Long roomId);
 }

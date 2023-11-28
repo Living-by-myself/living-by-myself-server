@@ -6,6 +6,7 @@ import com.example.livingbymyselfserver.chat.entity.Chat;
 import com.example.livingbymyselfserver.chat.entity.ChatRoom;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatMessageResponseDto;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
+import com.example.livingbymyselfserver.chat.entity.dto.ChatUserResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.dto.GroupBuyingResponseDto;
@@ -64,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public Long createChatRoom(Long userId,List<Long> userIdList, String title) {
+  public Long createChatRoom(Long userId,List<Long> userIdList, String title, Long groupBuyingRoomId) {
     User user = userService.findUser(userId);
 
     if (userIdList.stream().anyMatch(id -> id.equals(userId))) {
@@ -75,7 +76,7 @@ public class ChatServiceImpl implements ChatService {
 //    }
     List<User> users = userRepository.findByIdIn(userIdList);
 
-    ChatRoom chatRoom = new ChatRoom(user, users, title);
+    ChatRoom chatRoom = new ChatRoom(user, users, title,groupBuyingRoomId);
     chatRoomRepository.save(chatRoom);
 
 
@@ -90,7 +91,7 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public List<UserResponseDto> getChatRoomUsers(User user, Long roomId) {
+  public List<ChatUserResponseDto> getChatRoomUsers(User user, Long roomId) {
     //user 예외처리해주기
     boolean isRoomUser = false;
     ChatRoom chatRoom = getRoom(roomId);
@@ -104,7 +105,7 @@ public class ChatServiceImpl implements ChatService {
     }
     return chatRoom.getUsers()
         .stream()
-        .map(chatRoomUser -> new UserResponseDto(chatRoomUser, attachmentUserUrlRepository.findByUser(chatRoomUser) == null ?
+        .map(chatRoomUser -> new ChatUserResponseDto(chatRoomUser, chatRoom.getGroupBuyingRoomId(), attachmentUserUrlRepository.findByUser(chatRoomUser) == null ?
             new AttachmentUserUrl(chatRoomUser, "https://tracelover.s3.ap-northeast-2.amazonaws.com/04a9aed2-293d-44b3-88f6-7406c578f11dIMG_9856.JPG")
             :attachmentUserUrlRepository.findByUser(chatRoomUser)))
         .toList();
