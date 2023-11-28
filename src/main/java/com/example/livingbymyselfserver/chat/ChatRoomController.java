@@ -4,6 +4,7 @@ import com.example.livingbymyselfserver.chat.entity.dto.ChatMessageResponseDto;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.security.UserDetailsImpl;
+import com.example.livingbymyselfserver.user.dto.UserResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -40,5 +41,12 @@ public class ChatRoomController {
   public List<ChatRoomListResponseDto> getChatRooms(
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return chatService.getChatRooms(userDetails.getUser());
+  }
+  //사진 닉네임 주소 유저id
+  @Operation(summary = "채팅방 유저리스트 조회")
+  @GetMapping("/rooms/{roomId}/users")
+  public List<UserResponseDto> getChatRoomUsers(
+      @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long roomId) {
+    return chatService.getChatRoomUsers(userDetails.getUser(),roomId);
   }
 }

@@ -13,6 +13,7 @@ import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingReposi
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.UserService;
+import com.example.livingbymyselfserver.user.dto.UserResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class ChatServiceImpl implements ChatService {
   private final ChatRepository chatRepository;
   private final UserService userService;
   private final UserRepository userRepository;
+  private final AttachmentUserUrlRepository attachmentUserUrlRepository;
 
   @Override
   @Transactional
@@ -85,6 +87,27 @@ public class ChatServiceImpl implements ChatService {
     return chatRoomRepository.findById(roomNo).orElseThrow(() -> {
       throw new IllegalArgumentException("채팅방이 존재하지 않습니다.");
     });
+  }
+
+  @Override
+  public List<UserResponseDto> getChatRoomUsers(User user, Long roomId) {
+    //user 예외처리해주기
+    boolean isRoomUser = false;
+    ChatRoom chatRoom = getRoom(roomId);
+
+    for(User chatRoomUser :chatRoom.getUsers()){
+        if(chatRoomUser.equals(user))
+          isRoomUser = true;
+    }
+    if(!isRoomUser){
+      throw new IllegalArgumentException("해당 채팅방 유저가 아닙니다.");
+    }
+    return chatRoom.getUsers()
+        .stream()
+        .map(chatRoomUser -> new UserResponseDto(chatRoomUser, attachmentUserUrlRepository.findByUser(chatRoomUser) == null ?
+            new AttachmentUserUrl(chatRoomUser, "https://tracelover.s3.ap-northeast-2.amazonaws.com/04a9aed2-293d-44b3-88f6-7406c578f11dIMG_9856.JPG")
+            :attachmentUserUrlRepository.findByUser(chatRoomUser)))
+        .toList();
   }
 
   @Override
