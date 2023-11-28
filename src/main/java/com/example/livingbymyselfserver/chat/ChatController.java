@@ -31,6 +31,7 @@ public class ChatController {
   @MessageMapping("/{roomId}")
   @SendTo("/topic/room/{roomId}")
   public Chat test(@DestinationVariable Long roomId, @RequestBody ChatRequestDto requestDto) {
+
     return chatService.createChat(roomId, requestDto.getUserId(), requestDto.getMessage());
   }
 
