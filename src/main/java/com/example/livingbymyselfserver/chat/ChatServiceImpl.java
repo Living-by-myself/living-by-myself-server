@@ -13,6 +13,7 @@ import com.example.livingbymyselfserver.groupBuying.repository.GroupBuyingReposi
 import com.example.livingbymyselfserver.user.User;
 import com.example.livingbymyselfserver.user.UserRepository;
 import com.example.livingbymyselfserver.user.UserService;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -35,18 +36,29 @@ public class ChatServiceImpl implements ChatService {
   @Override
   @Transactional
   public Chat createChat(Long roomNo, Long userId, String msg) {  //채팅메세지생성
-    log.info("채팅 생성 입장");
-    ChatRoom chatRoom = getRoom(roomNo);
-    User user = userService.findUser(userId);
-    log.info("user, chatroom 찾기");
-    Chat chat = new Chat(msg, chatRoom, user);
-    log.info("채팅 생성");
-    chatRoom.setLastChatMsg(chat.getMessage());
-    chatRoom.setLastChatTime(chat.getCreatedAtAsString());
-    chatRepository.save(chat);
-    log.info("채팅 저장");
+    try {
+      log.info("채팅 생성 입장");
+      ChatRoom chatRoom = getRoom(roomNo);
+      User user = userService.findUser(userId);
+      log.info("user, chatroom 찾기");
+      Chat chat = new Chat(msg, chatRoom, user);
 
-    return chat;
+      log.info("채팅 생성");
+      chatRoom.setLastChatMsg(chat.getMessage());
+      if (chat.getCreatedAt() == null) {
+        chatRoom.setLastChatTime(LocalDateTime.now().toString());
+      } else {
+        chatRoom.setLastChatTime(chat.getCreatedAtAsString());
+      }
+      chatRepository.save(chat);
+      log.info("채팅 저장");
+
+      return chat;
+    }catch (Exception e) {
+      log.error("Error creating chat", e);
+
+      throw new RuntimeException("Error creating chat", e);
+    }
   }
 
   @Override
