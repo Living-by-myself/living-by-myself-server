@@ -38,6 +38,8 @@ public class ChatRoom {
 
   String lastChatMsg;
 
+  Long groupBuyingRoomId;
+
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "chat_room_user",
@@ -46,10 +48,11 @@ public class ChatRoom {
   )
   private Set<User> users = new HashSet<>();
 
-  public ChatRoom(User user, List<User> users, String title) {
+  public ChatRoom(User user, List<User> users, String title, Long groupBuyingRoomId) {
     this.users = new HashSet<>(users);
     addUser(user);
     this.title = title;
+    this.groupBuyingRoomId = groupBuyingRoomId;
   }
   public void setLastChatMsg(String lastChatMsg){
     this.lastChatMsg =  lastChatMsg;

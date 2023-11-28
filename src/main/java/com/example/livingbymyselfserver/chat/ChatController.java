@@ -43,7 +43,7 @@ public class ChatController {
     List<Long> userIdList = requestDto.getUsersId().stream()
         .map(Long::valueOf) // Convert each String to Long
         .collect(Collectors.toList());
-    Long chatRoomId = chatService.createChatRoom(userDetails.getUser().getId(), userIdList,requestDto.getTitle());
+    Long chatRoomId = chatService.createChatRoom(userDetails.getUser().getId(), userIdList,requestDto.getTitle(),requestDto.getGroupBuyingRoomId());
 
     return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomId);
   }
