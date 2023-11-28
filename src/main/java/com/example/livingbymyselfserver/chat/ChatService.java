@@ -6,6 +6,7 @@ import com.example.livingbymyselfserver.chat.entity.dto.ChatMessageResponseDto;
 import com.example.livingbymyselfserver.chat.entity.dto.ChatRoomListResponseDto;
 import com.example.livingbymyselfserver.common.ApiResponseDto;
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.dto.UserResponseDto;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
@@ -54,4 +55,6 @@ public interface ChatService {
   List<ChatRoomListResponseDto> getChatRooms(User user);
 
   ChatRoom getRoom(Long roomNo);
+
+  List<UserResponseDto> getChatRoomUsers(User user, Long roomId);
 }
