@@ -1,6 +1,5 @@
 package com.example.livingbymyselfserver.chat.entity;
 
-import com.example.livingbymyselfserver.attachment.user.AttachmentUserUrlRepository;
 import com.example.livingbymyselfserver.common.entity.TimeStamped;
 import com.example.livingbymyselfserver.user.User;
 import jakarta.persistence.Column;
