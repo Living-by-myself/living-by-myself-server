@@ -96,7 +96,7 @@ public class ChatServiceImpl implements ChatService {
     ChatRoom chatRoom = getRoom(roomId);
 
     for(User chatRoomUser :chatRoom.getUsers()){
-        if(chatRoomUser.equals(user))
+        if(chatRoomUser.getUsername().equals(user.getUsername()))
           isRoomUser = true;
     }
     if(!isRoomUser){
