@@ -158,10 +158,10 @@ public class GroupBuyingServiceImpl implements GroupBuyingService {
   }
 
   @Override
-  public List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable) {
-    return groupBuyingRepository.findCategory(GroupBuyingCategoryEnum.FOOD ,pageable)
+  public List<GroupBuyingResponseDto> getLatestGroupBuyingList() {
+    return groupBuyingRepository.findTop5ByOrderByCreatedAtDesc()
         .stream().map(groupBuying -> {
-          boolean isPickLike = groupBuyingPickLikeRepository.existsByGroupBuyingAndUser(groupBuying,user);
+          boolean isPickLike = false;
           double viewCount = redisViewCountUtil.getViewPostCount(groupBuying.getId().toString(),PostTypeEnum.GROUPBUYING);
           AttachmentGroupBuyingUrl attachmentGroupBuyingUrl = attachmentGroupBuyingUrlRepository.findByGroupBuying(groupBuying);
           return (attachmentGroupBuyingUrl == null) ? new GroupBuyingResponseDto(groupBuying,viewCount,isPickLike) : new GroupBuyingResponseDto(groupBuying, attachmentGroupBuyingUrl,viewCount,isPickLike);
