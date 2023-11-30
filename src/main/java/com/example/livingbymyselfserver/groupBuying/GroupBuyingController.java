@@ -31,12 +31,10 @@ public class GroupBuyingController {
 
   final private GroupBuyingService groupBuyingService;
 
-  @Operation(summary = "공구 게시글 전체 조회")
+  @Operation(summary = "공구 게시글 최신글 조회")
   @GetMapping
-  public ResponseEntity<List<GroupBuyingResponseDto>> getGroupBuyingList(
-      @AuthenticationPrincipal UserDetailsImpl userDetails,
-      Pageable pageable){
-    List<GroupBuyingResponseDto> result = groupBuyingService.getGroupBuyingList(userDetails.getUser(),pageable);
+  public ResponseEntity<List<GroupBuyingResponseDto>> getLatestGroupBuyingList(){
+    List<GroupBuyingResponseDto> result = groupBuyingService.getLatestGroupBuyingList();
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

@@ -33,5 +33,5 @@ public interface GroupBuyingService {
 
   ApiResponseDto closeGroupBuying(Long groupBuyingId, User user);
 
-  List<GroupBuyingResponseDto> getGroupBuyingList(User user, Pageable pageable);
+  List<GroupBuyingResponseDto> getLatestGroupBuyingList();
 }
