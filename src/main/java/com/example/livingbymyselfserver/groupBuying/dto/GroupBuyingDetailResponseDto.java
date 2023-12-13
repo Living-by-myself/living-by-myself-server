@@ -1,10 +1,15 @@
 package com.example.livingbymyselfserver.groupBuying.dto;
 
+import com.example.livingbymyselfserver.attachment.entity.AttachmentCommunityUrl;
 import com.example.livingbymyselfserver.attachment.entity.AttachmentGroupBuyingUrl;
+import com.example.livingbymyselfserver.common.PostTypeEnum;
+import com.example.livingbymyselfserver.community.dto.CommunityResponseDto;
 import com.example.livingbymyselfserver.groupBuying.GroupBuying;
 import com.example.livingbymyselfserver.groupBuying.enums.GroupBuyingShareEnum;
 import com.example.livingbymyselfserver.user.User;
+import com.example.livingbymyselfserver.user.dto.UserResponseDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
@@ -24,7 +29,7 @@ public class GroupBuyingDetailResponseDto {
     private final String beobJeongDong;
     private final double lat;
     private final double lng;
-    private final List<User> users;
+    private final List<UserResponseDto> users;
     private final Integer likeCount;
     private String enumStatus;
     private boolean isPickLike;
@@ -45,7 +50,9 @@ public class GroupBuyingDetailResponseDto {
         this.lat = groupBuying.getLat();
         this.lng = groupBuying.getLng();
         this.createdAt = groupBuying.getCreatedAtAsString();
-        this.users = users;
+        this.users = users.stream()
+            .map(UserResponseDto::new)
+            .collect(Collectors.toList());
         this.likeCount = likeCount;
         this.isPickLike = isPickLike;
     }
@@ -67,7 +74,9 @@ public class GroupBuyingDetailResponseDto {
         this.lng = groupBuying.getLng();
         this.fileUrls = attachmentGroupBuyingUrl.getFileName();
         this.createdAt = groupBuying.getCreatedAtAsString();
-        this.users = users;
+        this.users = users.stream()
+            .map(UserResponseDto::new)
+            .collect(Collectors.toList());
         this.likeCount = likeCount;
         this.isPickLike = isPickLike;
     }
